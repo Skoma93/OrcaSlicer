@@ -25,6 +25,7 @@ else()
             -Djbig:BOOL=OFF
             -Dzstd:BOOL=OFF
             -Dpixarlog:BOOL=OFF
+            -DCMAKE_C_FLAGS="/Dstrncasecmp=_strnicmp"
     )
 
 endif()
