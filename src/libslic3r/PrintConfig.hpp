@@ -43,7 +43,9 @@ enum GCodeFlavor : unsigned char {
     gcfMach3, 
     gcfMachinekit,
     gcfSmoothie, 
-    gcfNoExtrusion
+    gcfNoExtrusion,
+    gcfCraftbotPlus, 
+    gcfCraftbotFlow
 };
 
 
@@ -77,7 +79,7 @@ enum class WipeTowerType {
 };
 
 enum PrintHostType {
-    htPrusaLink, htPrusaConnect, htOctoPrint, htDuet, htFlashAir, htAstroBox, htRepetier, htMKS, htESP3D, htCrealityPrint, htObico, htFlashforge, htSimplyPrint, htElegooLink, ht3DPrinterOS, htMoonraker
+    htPrusaLink, htPrusaConnect, htOctoPrint, htDuet, htFlashAir, htAstroBox, htRepetier, htMKS, htESP3D, htCrealityPrint, htObico, htFlashforge, htSimplyPrint, htElegooLink, ht3DPrinterOS, htMoonraker, htCraftbotPlus, htCraftbotFlow
 };
 
 enum AuthorizationType {
