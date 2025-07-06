@@ -150,7 +150,6 @@ public:
     unsigned int  m_travel_acceleration;
     unsigned int  m_travel_jerk;
 
-
     //BBS
     unsigned int    m_last_additional_fan_speed;
     int             m_last_bed_temperature;
@@ -273,11 +272,14 @@ public:
         return std::string(this->buf, ptr_err.ptr - buf);
     }
 
+    static void addLeadingZeros(bool enable) { emit_leading_zeros = enable; }
+
 protected:
     static constexpr const size_t   buflen = 256;
     char                            buf[buflen];
     char* buf_end;
     std::to_chars_result            ptr_err;
+    static bool                     emit_leading_zeros;
 };
 
 class GCodeG1Formatter : public GCodeFormatter {
