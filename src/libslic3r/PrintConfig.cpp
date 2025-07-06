@@ -91,7 +91,9 @@ static t_config_enum_values s_keys_map_PrintHostType {
     { "obico",          htObico },
     { "flashforge",     htFlashforge },
     { "simplyprint",    htSimplyPrint },
-    { "elegoolink",     htElegooLink }
+    { "elegoolink",     htElegooLink },
+    {"craftbotplus",    htCraftbotPlus },
+    {"craftbotflow",    htCraftbotFlow },
 };
 CONFIG_OPTION_ENUM_DEFINE_STATIC_MAPS(PrintHostType)
 
@@ -114,7 +116,9 @@ static t_config_enum_values s_keys_map_GCodeFlavor {
     { "smoothie",       gcfSmoothie },
     { "mach3",          gcfMach3 },
     { "machinekit",     gcfMachinekit },
-    { "no-extrusion",   gcfNoExtrusion }
+    { "no-extrusion",   gcfNoExtrusion },
+    { "craftbotplus",   gcfCraftbotPlus },
+    { "craftbotflow",   gcfCraftbotFlow }
 };
 CONFIG_OPTION_ENUM_DEFINE_STATIC_MAPS(GCodeFlavor)
 
@@ -3087,6 +3091,8 @@ void PrintConfigDef::init_fff_params()
     def->tooltip = L("What kind of G-code the printer is compatible with.");
     def->enum_keys_map = &ConfigOptionEnum<GCodeFlavor>::get_enum_values();
     def->enum_values.push_back("marlin");
+    def->enum_values.push_back("craftbotplus");
+    def->enum_values.push_back("craftbotflow");
     def->enum_values.push_back("klipper");
     def->enum_values.push_back("reprapfirmware");
     //def->enum_values.push_back("repetier");
@@ -3099,6 +3105,8 @@ void PrintConfigDef::init_fff_params()
     //def->enum_values.push_back("smoothie");
     //def->enum_values.push_back("no-extrusion");
     def->enum_labels.push_back("Marlin(legacy)");
+    def->enum_labels.push_back("CraftbotPlus");
+    def->enum_labels.push_back("CraftbotFlow");
     def->enum_labels.push_back(L("Klipper"));
     def->enum_labels.push_back("RepRapFirmware");
     //def->enum_labels.push_back("RepRap/Sprinter");
