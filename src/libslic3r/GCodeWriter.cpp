@@ -17,6 +17,8 @@
 namespace Slic3r {
 
 bool GCodeWriter::full_gcode_comment = true;
+bool GCodeFormatter::emit_leading_zeros = false;
+
 
 bool GCodeWriter::supports_separate_travel_acceleration(GCodeFlavor flavor)
 {
@@ -1006,10 +1008,16 @@ void GCodeFormatter::emit_axis(const char axis, const double v, size_t digits) {
         memset(this->ptr_err.ptr - writen_digits, '0', remaining_digits);
         this->ptr_err.ptr += remaining_digits;
     }
-
-    // Move all newly inserted chars by one to allocate space for a decimal point.
-    for (char *to_ptr = this->ptr_err.ptr, *from_ptr = to_ptr - 1; from_ptr >= this->ptr_err.ptr - digits; --to_ptr, --from_ptr)
-        *to_ptr = *from_ptr;
+    if (emit_leading_zeros && v < 1 && v > -1) {
+        for (char *to_ptr = ++this->ptr_err.ptr, *from_ptr = to_ptr - 2; from_ptr >= this->ptr_err.ptr - digits - 1; --to_ptr, --from_ptr)
+            *to_ptr = *from_ptr;
+        *(ptr_err.ptr - digits - 1) = '0';
+    } 
+    else {
+        // Move all newly inserted chars by one to allocate space for a decimal point.
+        for (char *to_ptr = this->ptr_err.ptr, *from_ptr = to_ptr - 1; from_ptr >= this->ptr_err.ptr - digits; --to_ptr, --from_ptr)
+            *to_ptr = *from_ptr;
+    }
 
     *(this->ptr_err.ptr - digits) = '.';
     for (size_t i = 0; i < digits; ++i) {
