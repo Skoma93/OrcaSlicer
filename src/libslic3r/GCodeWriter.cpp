@@ -101,6 +101,8 @@ void GCodeWriter::apply_print_config(const PrintConfig &print_config)
     m_max_jerk_z = LIMITS(machine_max_jerk_z);
     m_max_jerk_e = LIMITS(machine_max_jerk_e);
     m_resolution = print_config.resolution.value;
+    bool emit_leading_zeros = (print_config.gcode_flavor.value == gcfCraftbotPlus || print_config.gcode_flavor.value == gcfCraftbotFlow);
+    GCodeFormatter::addLeadingZeros(emit_leading_zeros);
 
 #undef LIMITS
 #undef LIMITS_UINT
@@ -132,14 +134,16 @@ std::string GCodeWriter::preamble()
         gcode << "G90\n";
         gcode << "G21\n";
     }
-    if (FLAVOR_IS(gcfRepRapSprinter) ||
-        FLAVOR_IS(gcfRepRapFirmware) ||
-        FLAVOR_IS(gcfMarlinLegacy) ||
-        FLAVOR_IS(gcfMarlinFirmware) ||
-        FLAVOR_IS(gcfTeacup) ||
-        FLAVOR_IS(gcfRepetier) ||
-        FLAVOR_IS(gcfSmoothie) ||
-        FLAVOR_IS(gcfKlipper))
+    if (FLAVOR_IS(gcfRepRapSprinter)||
+        FLAVOR_IS(gcfRepRapFirmware)||
+        FLAVOR_IS(gcfMarlinLegacy)  ||
+        FLAVOR_IS(gcfMarlinFirmware)||
+        FLAVOR_IS(gcfTeacup)        ||
+        FLAVOR_IS(gcfRepetier)      ||
+        FLAVOR_IS(gcfSmoothie)      ||
+        FLAVOR_IS(gcfKlipper))      ||
+        FLAVOR_IS(gcfCraftbotPlus)  ||
+        FLAVOR_IS(gcfCraftbotFlow)  ||
     {
         if (this->config.use_relative_e_distances) {
             gcode << "M83 ; use relative distances for extrusion\n";
