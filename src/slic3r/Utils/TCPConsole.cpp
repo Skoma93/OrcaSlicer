@@ -90,6 +90,11 @@ void TCPConsole::handle_read(
     }
     else {
         std::string line = extract_next_line();
+        if (m_last_msg_ptr != nullptr)
+        {
+            *m_last_msg_ptr = line;
+        }
+        
         boost::trim(line);
 
         BOOST_LOG_TRIVIAL(debug) << boost::format("TCPConsole: received '%3%' from %1%:%2%")
@@ -99,7 +104,8 @@ void TCPConsole::handle_read(
 
         boost::to_lower(line);
 
-        if (line == m_done_string)
+        if ((line == m_done_string && !m_is_done_string_in_msg) || (m_is_done_string_in_msg && m_done_string.empty()) ||
+            (line.compare(line.size() - m_done_string.size(), m_done_string.size(), m_done_string) == 0 && m_is_done_string_in_msg)) 
             transmit_next_command();
         else
             wait_next_line();
@@ -146,7 +152,6 @@ void TCPConsole::handle_connect(const boost::system::error_code& ec)
         BOOST_LOG_TRIVIAL(info) << boost::format("TCPConsole: connected to %1%:%2%")
             % m_host_name
             % m_port_name;
-
         transmit_next_command();
     }
 }
@@ -160,6 +165,16 @@ bool TCPConsole::is_deadline_over() const
     return m_deadline < std::chrono::steady_clock::now();
 }
 
+bool TCPConsole::send_and_receive(std::string message,std::string &recv_msg)
+{
+    enqueue_cmd(SerialMessage{std::move(message), Slic3r::Utils::Command});
+    m_last_msg_ptr = &recv_msg;
+    bool ret= run_queue();
+    m_last_msg_ptr = nullptr;
+    return ret;
+}
+
+
 bool TCPConsole::run_queue()
 {
     try {
@@ -167,7 +182,6 @@ bool TCPConsole::run_queue()
         set_deadline_in(m_connect_timeout);
         m_is_connected = false;
         m_io_context.restart();
-
         auto endpoints = m_resolver.resolve(m_host_name, m_port_name);
 
         m_socket.async_connect(endpoints->endpoint(),
@@ -214,6 +228,8 @@ bool TCPConsole::run_queue()
 
     return true;
 }
+
+
 
 } // namespace Utils
 } // namespace Slic3r

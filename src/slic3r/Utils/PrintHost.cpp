@@ -27,6 +27,8 @@
 #include "Flashforge.hpp"
 #include "SimplyPrint.hpp"
 #include "ElegooLink.hpp"
+#include "CraftbotFlowLink.hpp"
+#include "CraftbotPlusLink.hpp"
 
 namespace fs = boost::filesystem;
 using boost::optional;
@@ -67,6 +69,8 @@ PrintHost* PrintHost::get_print_host(DynamicPrintConfig *config)
             case htFlashforge: return new Flashforge(config);
             case htSimplyPrint: return new SimplyPrint(config);
             case htElegooLink: return new ElegooLink(config);
+            case htCraftbotFlow: return new CraftbotFlowLink(config);
+            case htCraftbotPlus: return new CraftbotPlusLink(config);
             default:          return nullptr;
         }
     } else {
