@@ -205,6 +205,8 @@ private:
 
     wxBoxSizer* m_scrolled_sizer = nullptr;
     ComboBox* m_bed_type_list = nullptr;
+    wxStaticText*   m_idex_mode_title  = nullptr;
+    ComboBox*       m_idex_mode_list = nullptr;
     ScalableButton* connection_btn = nullptr;
     ScalableButton* ams_btn = nullptr;
 };

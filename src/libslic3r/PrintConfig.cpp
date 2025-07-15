@@ -3879,6 +3879,8 @@ void PrintConfigDef::init_fff_params()
     def->enum_keys_map = &ConfigOptionEnum<PrintHostType>::get_enum_values();
     def->enum_values.push_back("prusalink");
     def->enum_values.push_back("prusaconnect");
+    def->enum_values.push_back("craftbotplus");
+    def->enum_values.push_back("craftbotflow");
     def->enum_values.push_back("octoprint");
     def->enum_values.push_back("duet");
     def->enum_values.push_back("flashair");
@@ -3893,6 +3895,8 @@ void PrintConfigDef::init_fff_params()
     def->enum_values.push_back("elegoolink");
     def->enum_labels.push_back("PrusaLink");
     def->enum_labels.push_back("PrusaConnect");
+    def->enum_labels.push_back("CraftbotPlus");
+    def->enum_labels.push_back("CraftbotFlow");
     def->enum_labels.push_back("Octo/Klipper");
     def->enum_labels.push_back("Duet");
     def->enum_labels.push_back("FlashAir");
@@ -6754,6 +6758,58 @@ void PrintConfigDef::init_sla_params()
     def->enum_labels.push_back(" ");
     def->mode = comAdvanced;
     def->set_default_value(new ConfigOptionEnum<SLAMaterialSpeed>(slamsFast));
+
+    def = this->add("idex_print_mode", coEnum);
+    def->enum_keys_map = &ConfigOptionEnum<IdexPrintMode>::get_enum_values();
+    def->enum_values.push_back("normal");
+    def->enum_values.push_back("parallel");
+    def->enum_values.push_back("mirror");
+    def->enum_values.push_back("backup");
+    def->enum_labels.push_back(L("Normal"));
+    def->enum_labels.push_back(L("Parallel"));
+    def->enum_labels.push_back(L("Mirror"));
+    def->enum_labels.push_back(L("Backup"));
+    def->mode = comSimple;
+    def->set_default_value(new ConfigOptionEnum<IdexPrintMode>(IdexPrintMode::Normal));
+
+    def = this->add("is_idex_printer", coBool);
+    def->label = L("Idex Printer");
+    // def->category = L("");
+    def->tooltip = L("Independent Dual Extruder");
+    def->mode = comAdvanced;
+    def->set_default_value(new ConfigOptionBool(false));
+
+     def           = this->add("bed_exclude_area_left_mode", coPoints);
+    def->label    = L("Exclude area left mode");
+    def->tooltip  = L("Unprintable area in XY plane."
+                       "The area is expressed as polygon by points in following format: \"XxY, XxY, ...\"");
+    def->mode     = comAdvanced;
+    def->gui_type = ConfigOptionDef::GUIType::one_string;
+    def->set_default_value(new ConfigOptionPoints{Vec2d(0, 0)});
+
+    def           = this->add("bed_exclude_area_right_mode", coPoints);
+    def->label    = L("Exclude area right mode");
+    def->tooltip  = L("Unprintable area in XY plane."
+                       "The area is expressed as polygon by points in following format: \"XxY, XxY, ...\"");
+    def->mode     = comAdvanced;
+    def->gui_type = ConfigOptionDef::GUIType::one_string;
+    def->set_default_value(new ConfigOptionPoints{Vec2d(0, 0)});
+
+    def           = this->add("bed_exclude_area_mirror_mode", coPoints);
+    def->label    = L("Exclude area mirror mode");
+    def->tooltip  = L("Unprintable area in XY plane."
+                       "The area is expressed as polygon by points in following format: \"XxY, XxY, ...\"");
+    def->mode     = comAdvanced;
+    def->gui_type = ConfigOptionDef::GUIType::one_string;
+    def->set_default_value(new ConfigOptionPoints{Vec2d(0, 0)});
+
+    def           = this->add("bed_exclude_area_parallel_mode", coPoints);
+    def->label    = L("Exclude area parallel mode");
+    def->tooltip  = L("Unprintable area in XY plane."
+                       "The area is expressed as polygon by points in following format: \"XxY, XxY, ...\"");
+    def->mode     = comAdvanced;
+    def->gui_type = ConfigOptionDef::GUIType::one_string;
+    def->set_default_value(new ConfigOptionPoints{Vec2d(0, 0)});
 }
 
 void PrintConfigDef::handle_legacy(t_config_option_key &opt_key, std::string &value)

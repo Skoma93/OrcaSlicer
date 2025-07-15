@@ -587,6 +587,10 @@ set(SLIC3R_GUI_SOURCES
     Utils/SimplyPrint.hpp
     Utils/ElegooLink.hpp
     Utils/ElegooLink.cpp
+    Utils/CraftbotPlusLink.hpp
+    Utils/CraftbotPlusLink.cpp
+    Utils/CraftbotFlowLink.hpp
+    Utils/CraftbotFlowLink.cpp
     Utils/WebSocketClient.hpp
     Utils/bambu_networking.hpp
 )

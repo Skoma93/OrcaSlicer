@@ -2383,6 +2383,7 @@ void GCode::_do_export(Print& print, GCodeOutputStream &file, ThumbnailsGenerato
     // Write the custom start G-code
     file.writeln(machine_start_gcode);
 
+    file.write(m_writer.set_idex_print_mode(m_config.idex_print_mode));
     //BBS: gcode writer doesn't know where the real position of extruder is after inserting custom gcode
     m_writer.set_current_position_clear(false);
     m_start_gcode_filament = GCodeProcessor::get_gcode_last_filament(machine_start_gcode);

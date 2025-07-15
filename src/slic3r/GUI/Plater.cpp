@@ -843,6 +843,36 @@ Sidebar::Sidebar(Plater *parent)
         p->m_panel_printer_content->SetSizer(vsizer_printer);
         p->m_panel_printer_content->Layout();
         scrolled_sizer->Add(p->m_panel_printer_content, 0, wxEXPAND, 0);
+
+         wxBoxSizer* dual_mode_sizer = new wxBoxSizer(wxHORIZONTAL);
+        m_idex_mode_title= new wxStaticText(p->m_panel_printer_content, wxID_ANY, _L("Idex mode"));
+        m_idex_mode_title->Wrap(-1);
+        m_idex_mode_title->SetFont(Label::Body_14);
+
+        m_idex_mode_list = new ComboBox(p->m_panel_printer_content, wxID_ANY, wxString(""), wxDefaultPosition, {-1, FromDIP(30)}, 0,
+                                        nullptr, wxCB_READONLY);
+
+        m_idex_mode_list->Bind(wxEVT_COMBOBOX, [=](wxCommandEvent& evt) {
+            int           selected_index = m_idex_mode_list->GetSelection();
+            int           new_value      = selected_index + 1;
+            IdexPrintMode mode           = static_cast<IdexPrintMode>(new_value);
+            wxGetApp().preset_bundle->project_config.set_key_value("idex_print_mode", new ConfigOptionEnum<IdexPrintMode>(mode));
+        });
+
+        const ConfigOptionDef* idex_mode_def = print_config_def.get("idex_print_mode");
+        if (idex_mode_def && idex_mode_def->enum_keys_map) {
+            for (auto item : idex_mode_def->enum_labels) {
+                m_idex_mode_list->AppendString(_L(item));
+            }
+        }
+
+        m_idex_mode_list->Select(0);
+        dual_mode_sizer->Add(m_idex_mode_title, 0, wxLEFT | wxALIGN_CENTER_VERTICAL, FromDIP(SidebarProps::ContentMargin()));
+        dual_mode_sizer->Add(m_idex_mode_list, 1, wxLEFT | wxEXPAND, FromDIP(SidebarProps::ElementSpacing()));
+        dual_mode_sizer->AddSpacer(FromDIP(SidebarProps::ContentMargin()));
+        vsizer_printer->Add(dual_mode_sizer, 0, wxEXPAND | wxTOP, FromDIP(5));
+
+        vsizer_printer->AddSpacer(FromDIP(16));
     }
 
     {
@@ -1282,6 +1312,16 @@ void Sidebar::update_all_preset_comboboxes()
 
         p_mainframe->set_print_button_to_default(print_btn_type);
 
+    }
+
+    if (cfg.opt_bool("is_idex_printer")){
+        m_idex_mode_title->Show();
+        m_idex_mode_list->Show();
+    }
+    else{
+        m_idex_mode_title->Hide();
+        m_idex_mode_list->Hide();
+        
     }
 
     if (cfg.opt_bool("pellet_modded_printer")) {
@@ -2796,7 +2836,7 @@ Plater::priv::priv(Plater *q, MainFrame *main_frame)
     , main_frame(main_frame)
     //BBS: add bed_exclude_area
     , config(Slic3r::DynamicPrintConfig::new_from_defaults_keys({
-        "printable_area", "bed_exclude_area", "bed_custom_texture", "bed_custom_model", "print_sequence",
+        "printable_area", "bed_exclude_area", "bed_exclude_area_left_mode","bed_exclude_area_right_mode","bed_exclude_area_mirror_mode","bed_exclude_area_parallel_mode", "idex_print_mode", "bed_custom_texture", "bed_custom_model", "print_sequence",
         "extruder_clearance_radius", "extruder_clearance_height_to_lid", "extruder_clearance_height_to_rod",
 		"nozzle_height", "skirt_type", "skirt_loops", "skirt_speed","min_skirt_length", "skirt_distance", "skirt_start_angle",
         "brim_width", "brim_object_gap", "brim_type", "nozzle_diameter", "single_extruder_multi_material", "preferred_orientation",
@@ -13236,9 +13276,46 @@ void Plater::set_bed_shape() const
             }
         }
     }
+    const Pointfs* exclude_area = nullptr;
+
+    IdexPrintMode idex_mode     = p->config->opt_enum<IdexPrintMode>("idex_print_mode");
+    
+   
+    switch (p->config->opt_enum<IdexPrintMode>("idex_print_mode"))
+    {
+        case IdexPrintMode::Normal:
+        {
+            exclude_area = &p->config->option<ConfigOptionPoints>("bed_exclude_area")->values;
+            break;
+        }
+        case IdexPrintMode::Backup:
+        {
+            exclude_area = &p->config->option<ConfigOptionPoints>("bed_exclude_area")->values;
+            break;
+        }
+        case IdexPrintMode::Mirror:
+        {
+            exclude_area = &p->config->option<ConfigOptionPoints>("bed_exclude_area_mirror_mode")->values;
+            break;
+        }
+        case IdexPrintMode::Parallel:
+        {
+            exclude_area = &p->config->option<ConfigOptionPoints>("bed_exclude_area_parallel_mode")->values;
+            break;
+        }
+        default:
+        {
+            exclude_area = &p->config->option<ConfigOptionPoints>("bed_exclude_area")->values;
+            break;
+        }
+    }
+  
+    
+
+
     set_bed_shape(p->config->option<ConfigOptionPoints>("printable_area")->values,
         //BBS: add bed exclude areas
-        p->config->option<ConfigOptionPoints>("bed_exclude_area")->values,
+        *exclude_area,
         p->config->option<ConfigOptionFloat>("printable_height")->value,
         p->config->option<ConfigOptionString>("bed_custom_texture")->value.empty() ? texture_filename : p->config->option<ConfigOptionString>("bed_custom_texture")->value,
         p->config->option<ConfigOptionString>("bed_custom_model")->value);

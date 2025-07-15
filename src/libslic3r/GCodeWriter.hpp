@@ -58,6 +58,7 @@ public:
     std::string set_input_shaping(char axis, float damp, float freq) const;
     std::string reset_e(bool force = false);
     std::string update_progress(unsigned int num, unsigned int tot, bool allow_100 = false) const;
+    std::string set_idex_print_mode(IdexPrintMode mode) const;
     // return false if this extruder was already selected
     bool        need_toolchange(unsigned int extruder_id) const 
         { return m_extruder == nullptr || m_extruder->id() != extruder_id; }

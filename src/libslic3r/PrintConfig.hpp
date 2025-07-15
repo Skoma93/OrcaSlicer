@@ -318,6 +318,7 @@ static std::unordered_map<std::string, NozzleType>NozzleTypeStrToEumn = {
     {"brass", NozzleType::ntBrass}
 };
 
+enum class IdexPrintMode { Normal, Parallel, Mirror, Backup };
 // BBS
 enum PrinterStructure {
     psUndefine=0,
@@ -1173,6 +1174,7 @@ PRINT_CONFIG_CLASS_DEFINE(
     ((ConfigOptionBool,                gcode_add_line_number))
     ((ConfigOptionBool,                bbl_bed_temperature_gcode))
     ((ConfigOptionEnum<GCodeFlavor>,   gcode_flavor))
+    ((ConfigOptionBool,                is_idex_printer)) 
 
     ((ConfigOptionFloat,               time_cost)) 
     ((ConfigOptionString,              layer_change_gcode))
@@ -1276,6 +1278,11 @@ PRINT_CONFIG_CLASS_DERIVED_DEFINE(
     ((ConfigOptionPoints,             printable_area))
     //BBS: add bed_exclude_area
     ((ConfigOptionPoints,             bed_exclude_area))
+    ((ConfigOptionPoints,             bed_exclude_area_left_mode))
+    ((ConfigOptionPoints,             bed_exclude_area_right_mode))
+    ((ConfigOptionPoints,             bed_exclude_area_mirror_mode))
+    ((ConfigOptionPoints,             bed_exclude_area_parallel_mode))
+    ((ConfigOptionEnum<IdexPrintMode>, idex_print_mode))
     ((ConfigOptionPoints,             head_wrap_detect_zone))
     // BBS
     ((ConfigOptionString,             bed_custom_texture))

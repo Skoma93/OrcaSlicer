@@ -32,6 +32,11 @@ public:
         m_write_timeout = std::chrono::milliseconds(10000);
         m_read_timeout = std::chrono::milliseconds(10000);
         m_tcp_queue_delay = std::chrono::milliseconds(0);
+        m_is_done_string_in_msg = false;
+    }
+
+    void set_done_str_in_msg(bool val) {
+        m_is_done_string_in_msg=val;
     }
 
     void set_write_timeout(std::chrono::steady_clock::duration timeout) {
@@ -65,8 +70,14 @@ public:
         return true;
     }
 
+    size_t get_cmd_queue_size() const {
+        return static_cast<int>(m_cmd_queue.size()); 
+    }
+
+
     bool run_queue();
     std::string error_message() const { return m_error_code.message(); }
+    bool        send_and_receive(std::string message, std::string& recv_msg);
 
 private:
     void handle_connect(const boost::system::error_code& ec);
@@ -84,6 +95,7 @@ private:
     std::string                             m_port_name;
     std::string                             m_newline;
     std::string                             m_done_string;
+    bool                                    m_is_done_string_in_msg;
     std::chrono::steady_clock::duration     m_connect_timeout;
     std::chrono::steady_clock::duration     m_write_timeout;
     std::chrono::steady_clock::duration     m_read_timeout;
@@ -100,6 +112,7 @@ private:
     bool                                    m_is_connected;
     boost::system::error_code               m_error_code;
     std::chrono::steady_clock::time_point   m_deadline;
+    std::string*                            m_last_msg_ptr = nullptr;
 };
 
 } // Utils

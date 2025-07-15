@@ -30,7 +30,8 @@ void GCodeWriter::apply_print_config(const PrintConfig &print_config)
     this->config.apply(print_config, true);
     m_single_extruder_multi_material = print_config.single_extruder_multi_material.value;
     bool use_mach_limits = print_config.gcode_flavor.value == gcfMarlinLegacy || print_config.gcode_flavor.value == gcfMarlinFirmware ||
-                           print_config.gcode_flavor.value == gcfKlipper || print_config.gcode_flavor.value == gcfRepRapFirmware;
+                           print_config.gcode_flavor.value == gcfKlipper || print_config.gcode_flavor.value == gcfRepRapFirmware ||
+                           print_config.gcode_flavor.value == gcfCraftbotPlus || print_config.gcode_flavor.value == gcfCraftbotFlow;
     m_max_acceleration = std::lrint(use_mach_limits ? print_config.machine_max_acceleration_extruding.values.front() : 0);
     m_max_travel_acceleration = static_cast<unsigned int>(
         std::round((use_mach_limits && supports_separate_travel_acceleration(print_config.gcode_flavor.value)) ?
@@ -78,9 +79,9 @@ std::string GCodeWriter::preamble()
         FLAVOR_IS(gcfTeacup)        ||
         FLAVOR_IS(gcfRepetier)      ||
         FLAVOR_IS(gcfSmoothie)      ||
-        FLAVOR_IS(gcfKlipper))      ||
+        FLAVOR_IS(gcfKlipper)       ||
         FLAVOR_IS(gcfCraftbotPlus)  ||
-        FLAVOR_IS(gcfCraftbotFlow)  ||
+        FLAVOR_IS(gcfCraftbotFlow))
     {
         if (this->config.use_relative_e_distances) {
             gcode << "M83 ; use relative distances for extrusion\n";
@@ -229,7 +230,9 @@ std::string GCodeWriter::set_acceleration_internal(Acceleration type, unsigned i
             if (GCodeWriter::full_gcode_comment)
                 gcode << " ; adjust ACCEL_TO_DECEL";
         }
-    }
+    } 
+    else if (FLAVOR_IS(gcfCraftbotPlus) || FLAVOR_IS(gcfCraftbotFlow)) 
+        gcode << "M1203 A" << acceleration << " D" << acceleration;
     else
         gcode << "M204 S" << acceleration;
 
@@ -450,6 +453,25 @@ std::string GCodeWriter::update_progress(unsigned int num, unsigned int tot, boo
     if (GCodeWriter::full_gcode_comment) gcode << " ; update progress";
     gcode << "\n";
     return gcode.str();
+}
+
+std::string GCodeWriter::set_idex_print_mode(IdexPrintMode mode) const
+{ 
+    if (FLAVOR_IS(gcfCraftbotPlus) || FLAVOR_IS(gcfCraftbotFlow))
+    {
+        switch (mode) {
+        case IdexPrintMode::Parallel:   return "M9006 S2\n";
+        case IdexPrintMode::Mirror:     return "M9006 S1\n";
+        case IdexPrintMode::Backup:     return "M9006 S6\n";
+        case IdexPrintMode::Normal:
+        default: 
+            {
+               return "M9006 S0\n";
+            }
+        }
+    }
+
+    return std::string();
 }
 
 std::string GCodeWriter::toolchange_prefix() const
