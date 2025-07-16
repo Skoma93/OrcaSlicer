@@ -8,6 +8,7 @@
 #include <boost/format.hpp>
 #include <boost/log/trivial.hpp>
 #include <boost/algorithm/string.hpp>
+#include <boost/asio.hpp>
 
 #include <iostream>
 #include <string>
@@ -46,6 +47,7 @@ void TCPConsole::transmit_next_command()
         m_send_buffer += m_newline;
     }
 
+
     set_deadline_in(m_write_timeout);
     boost::asio::async_write(
         m_socket,
@@ -53,6 +55,7 @@ void TCPConsole::transmit_next_command()
         boost::bind(&TCPConsole::handle_write, this, boost::placeholders::_1, boost::placeholders::_2, cmd.messageType)
     );
 }
+
 
 void TCPConsole::wait_next_line()
 {
@@ -64,6 +67,14 @@ void TCPConsole::wait_next_line()
         boost::bind(&TCPConsole::handle_read, this, boost::placeholders::_1, boost::placeholders::_2)
     );
 }
+
+void TCPConsole::wait_for_ack()
+{
+    set_deadline_in(m_read_timeout);
+   // m_socket.async_wait(boost::asio::ip::tcp::socket::wait_write, boost::bind(&TCPConsole::handle_tcp_ack, this, boost::placeholders::_1));
+}
+
+void TCPConsole::handle_tcp_ack(const boost::system::error_code& ec, std::size_t bytes_transferred) {}
 
 // TODO: Use std::optional here
 std::string TCPConsole::extract_next_line()
@@ -128,8 +139,7 @@ void TCPConsole::handle_write(
     else {
         if(messageType == Command) {
             wait_next_line();
-        }
-        else {
+        }else {
             transmit_next_command();
         }
     }
@@ -152,6 +162,10 @@ void TCPConsole::handle_connect(const boost::system::error_code& ec)
         BOOST_LOG_TRIVIAL(info) << boost::format("TCPConsole: connected to %1%:%2%")
             % m_host_name
             % m_port_name;
+        boost::asio::ip::tcp::no_delay option(true);
+        m_socket.set_option(option);
+        boost::asio::socket_base::send_buffer_size send_option(1025);
+        m_socket.set_option(option);
         transmit_next_command();
     }
 }
@@ -165,9 +179,9 @@ bool TCPConsole::is_deadline_over() const
     return m_deadline < std::chrono::steady_clock::now();
 }
 
-bool TCPConsole::send_and_receive(std::string message,std::string &recv_msg)
+bool TCPConsole::send_and_receive(SerialMessage message, std::string& recv_msg)
 {
-    enqueue_cmd(SerialMessage{std::move(message), Slic3r::Utils::Command});
+    enqueue_cmd(message);
     m_last_msg_ptr = &recv_msg;
     bool ret= run_queue();
     m_last_msg_ptr = nullptr;
@@ -180,13 +194,21 @@ bool TCPConsole::run_queue()
     try {
         // TODO: Add more resets and initializations after previous run (reset() method?..)
         set_deadline_in(m_connect_timeout);
-        m_is_connected = false;
         m_io_context.restart();
-        auto endpoints = m_resolver.resolve(m_host_name, m_port_name);
+        if (!m_is_connected)
+        {
+            m_is_connected = true;
+            auto endpoints = m_resolver.resolve(m_host_name, m_port_name);
+            m_socket.async_connect(endpoints->endpoint(),
+                boost::bind(&TCPConsole::handle_connect, this, boost::placeholders::_1)
+            );
+        }
+        else
+        {
+            transmit_next_command();
+        }
+        
 
-        m_socket.async_connect(endpoints->endpoint(),
-            boost::bind(&TCPConsole::handle_connect, this, boost::placeholders::_1)
-        );
 
         // Loop until we get any reasonable result. Negative result is also result.
         // TODO: Rewrite to more graceful way using deadlime_timer
@@ -203,7 +225,11 @@ bool TCPConsole::run_queue()
             m_error_code = make_error_code(boost::asio::error::timed_out);
 
         // Socket is not closed automatically by boost
-        m_socket.close();
+        if (m_auto_close_socket)
+        {
+            m_is_connected = false;
+            m_socket.close();
+        }
 
         if (m_error_code) {
             // We expect that message is logged in handler

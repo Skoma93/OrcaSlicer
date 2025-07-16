@@ -52,7 +52,7 @@ bool CraftbotPlusLink::test(wxString& msg) const
     console.set_read_timeout(std::chrono::milliseconds(2000));
 
     std::string line;
-    bool valid = console.send_and_receive("#GETSTATE", line);
+    bool valid = console.send_and_receive(Slic3r::Utils::SerialMessage("#GETSTATE", Slic3r::Utils::Command), line);
 
     if (!valid) {
         msg = wxString::FromUTF8(console.error_message().c_str());
@@ -90,6 +90,7 @@ bool CraftbotPlusLink::upload(PrintHostUpload upload_data, ProgressFn progress_f
 }
 bool CraftbotPlusLink::send_file(const PrintHostUpload& upload_data, ProgressFn progress_fn, ErrorFn error_fn, InfoFn info_fn) const
 {
+    
     // Test before send
     wxString test_msg;
     if (!test(test_msg)) {
@@ -97,33 +98,63 @@ bool CraftbotPlusLink::send_file(const PrintHostUpload& upload_data, ProgressFn 
         return false;
     }
 
-
-
     Slic3r::Utils::TCPConsole console;
     console.set_remote(m_host, m_port);
-    console.set_line_delimiter("\r\n");
+    console.set_line_delimiter("");
     console.set_command_done_string("");
     console.set_done_str_in_msg(true);
-    console.set_write_timeout(std::chrono::milliseconds(2000));
-    console.set_read_timeout(std::chrono::milliseconds(2000));
+    console.set_write_timeout(std::chrono::milliseconds(50000));
+    console.set_read_timeout(std::chrono::milliseconds(50000));
+    console.set_ack_wait(true);
+    std::ifstream file(upload_data.source_path.c_str(), std::ios::binary);
 
-    std::ifstream newfile(upload_data.source_path.c_str(), std::ios::binary);
-    if (!newfile.is_open()) {
+    if (!file ||!file.is_open()) {
         error_fn("Failed to open file.");
         return false;
     }
 
-    newfile.seekg(0, std::ios::end);
-    size_t file_size = newfile.tellg();
-    newfile.seekg(0, std::ios::beg);
+    file.seekg(0, std::ios::end);
+    size_t file_size = file.tellg();
+    file.seekg(0, std::ios::beg);
+
+    std::string header = "#UFILE&" + upload_data.upload_path.filename().string() + "," + std::to_string(file_size) + "\n";
 
     bool queue_started = false;
+    
+    std::string recv;     
+    console.set_auto_close_socket(false);
+    console.send_and_receive(Slic3r::Utils::SerialMessage(header, Slic3r::Utils::Command), recv);
+    
+    std::this_thread::sleep_for(std::chrono::milliseconds(200));
 
-    console.enqueue_cmd(Slic3r::Utils::SerialMessage("#UBLOCK&" + std::to_string(file_size), Slic3r::Utils::Command));
+    const size_t      chunk_size = 1024;             // 1 KB
+    size_t            total_sent = 0;
+    bool              cancel     = false;
+    auto              start_time = std::chrono::steady_clock::now();
+    std::string       last_chunk;
 
-    if (!queue_started) {
-        console.run_queue();
+    std::vector<char> buffer(chunk_size);
+    while (file && !cancel) {
+        file.read(buffer.data(), buffer.size());
+        std::streamsize bytes_read = file.gcount();
+        std::string     chunk(buffer.data(), static_cast<size_t>(bytes_read));
+        console.send_and_receive(Slic3r::Utils::SerialMessage(chunk, Slic3r::Utils::Data),recv);
+        std::this_thread::sleep_for(std::chrono::microseconds(15));
+        last_chunk.assign(buffer.data(), static_cast<size_t>(bytes_read));
+        total_sent += static_cast<size_t>(bytes_read);
+        auto           now         = std::chrono::steady_clock::now();
+        double         elapsed_sec = std::chrono::duration<double>(now - start_time).count();
+        double         speed       = elapsed_sec > 0.0 ? total_sent / elapsed_sec : 0.0;
+        Http::Progress progress(0, 0, file_size, total_sent, last_chunk, speed);
+        progress_fn(std::move(progress), cancel);
     }
+    if (!cancel && upload_data.post_action == PrintHostPostUploadAction::StartPrint) {
+        std::string startFileCMD = "#UPRINT&" + upload_data.upload_path.filename().stem().string() + "\n";
+        console.send_and_receive(Slic3r::Utils::SerialMessage(startFileCMD, Slic3r::Utils::Command), recv);
+    }
+    console.disconnect();
+
+    return true;
 }
 
 bool CraftbotPlusLink::start_print(wxString& msg, const std::string& filename) const

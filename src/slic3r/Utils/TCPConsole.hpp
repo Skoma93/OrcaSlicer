@@ -33,6 +33,9 @@ public:
         m_read_timeout = std::chrono::milliseconds(10000);
         m_tcp_queue_delay = std::chrono::milliseconds(0);
         m_is_done_string_in_msg = false;
+        m_auto_close_socket     = true;
+        m_is_connected          = false;
+        m_ack_wait              = false;
     }
 
     void set_done_str_in_msg(bool val) {
@@ -64,6 +67,11 @@ public:
         m_port_name = port_name;
     }
 
+    void set_auto_close_socket(bool newVal)
+    { 
+        m_auto_close_socket = newVal;
+    }
+
     bool enqueue_cmd(const SerialMessage& cmd) {
         // TODO: Add multithread protection to queue
         m_cmd_queue.push_back(cmd);
@@ -73,11 +81,23 @@ public:
     size_t get_cmd_queue_size() const {
         return static_cast<int>(m_cmd_queue.size()); 
     }
+    void   set_ack_wait(bool val)
+    { 
+        m_ack_wait = val;
+    }
 
 
     bool run_queue();
+    
     std::string error_message() const { return m_error_code.message(); }
-    bool        send_and_receive(std::string message, std::string& recv_msg);
+    bool        send_and_receive(SerialMessage message, std::string& recv_msg);
+    void disconnect()
+    {
+        if (m_is_connected) {
+            m_socket.close();
+            m_is_connected = false;
+        }
+    }
 
 private:
     void handle_connect(const boost::system::error_code& ec);
@@ -86,6 +106,8 @@ private:
 
     void transmit_next_command();
     void wait_next_line();
+    void handle_tcp_ack(const boost::system::error_code& ec, std::size_t bytes_transferred);
+    void wait_for_ack();
     std::string extract_next_line();
 
     void set_deadline_in(std::chrono::steady_clock::duration);
@@ -110,9 +132,12 @@ private:
     std::string                             m_send_buffer;
 
     bool                                    m_is_connected;
+    bool                                    m_ack_wait;
+    bool                                    m_auto_close_socket;
     boost::system::error_code               m_error_code;
     std::chrono::steady_clock::time_point   m_deadline;
     std::string*                            m_last_msg_ptr = nullptr;
+
 };
 
 } // Utils
