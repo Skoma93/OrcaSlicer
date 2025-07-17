@@ -41,6 +41,7 @@ static std::vector<std::string> s_project_options {
     "wipe_tower_rotation_angle",
     "curr_bed_type",
     "flush_multiplier",
+    "idex_print_mode",
 };
 
 //Orca: add custom as default

@@ -851,14 +851,28 @@ Sidebar::Sidebar(Plater *parent)
 
         m_idex_mode_list = new ComboBox(p->m_panel_printer_content, wxID_ANY, wxString(""), wxDefaultPosition, {-1, FromDIP(30)}, 0,
                                         nullptr, wxCB_READONLY);
-
-        m_idex_mode_list->Bind(wxEVT_COMBOBOX, [=](wxCommandEvent& evt) {
+        
+         m_idex_mode_list->Bind(wxEVT_COMBOBOX, [=](wxCommandEvent& evt) {
             int           selected_index = m_idex_mode_list->GetSelection();
-            int           new_value      = selected_index + 1;
+            int           new_value      = selected_index;
             IdexPrintMode mode           = static_cast<IdexPrintMode>(new_value);
-            wxGetApp().preset_bundle->project_config.set_key_value("idex_print_mode", new ConfigOptionEnum<IdexPrintMode>(mode));
-        });
+            DynamicPrintConfig& proj_config    = wxGetApp().preset_bundle->project_config;
 
+            IdexPrintMode old_mode = proj_config.opt_enum<IdexPrintMode>("idex_print_mode");
+            if (old_mode == mode)
+                return; // no change
+            proj_config.set_key_value("idex_print_mode", new ConfigOptionEnum<IdexPrintMode>(mode));
+            wxGetApp().plater()->update_project_dirty_from_presets();
+            // update plater with new config
+            ///on_config_change(wxGetApp().preset_bundle->full_config());
+            AppConfig* app_config = wxGetApp().app_config;
+            //app_config->set("idex_print_mode", std::to_string(int(new_bed_type)));
+           auto& full_config = wxGetApp().preset_bundle->full_config();
+            wxGetApp().mainframe->on_config_changed(&full_config);
+        });
+        
+        
+       
         const ConfigOptionDef* idex_mode_def = print_config_def.get("idex_print_mode");
         if (idex_mode_def && idex_mode_def->enum_keys_map) {
             for (auto item : idex_mode_def->enum_labels) {
@@ -866,7 +880,8 @@ Sidebar::Sidebar(Plater *parent)
             }
         }
 
-        m_idex_mode_list->Select(0);
+        IdexPrintMode idex_mode = wxGetApp().preset_bundle->project_config.opt_enum<IdexPrintMode>("idex_print_mode");
+        m_idex_mode_list->SelectAndNotify(static_cast<int>(idex_mode));
         dual_mode_sizer->Add(m_idex_mode_title, 0, wxLEFT | wxALIGN_CENTER_VERTICAL, FromDIP(SidebarProps::ContentMargin()));
         dual_mode_sizer->Add(m_idex_mode_list, 1, wxLEFT | wxEXPAND, FromDIP(SidebarProps::ElementSpacing()));
         dual_mode_sizer->AddSpacer(FromDIP(SidebarProps::ContentMargin()));
@@ -1319,6 +1334,7 @@ void Sidebar::update_all_preset_comboboxes()
         m_idex_mode_list->Show();
     }
     else{
+        m_idex_mode_list->SelectAndNotify(0);
         m_idex_mode_title->Hide();
         m_idex_mode_list->Hide();
         
@@ -1525,6 +1541,8 @@ void Sidebar::msw_rescale()
     //BBS
     m_bed_type_list->Rescale();
     m_bed_type_list->SetMinSize({-1, 3 * wxGetApp().em_unit()});
+    m_idex_mode_list->Rescale();
+    m_idex_mode_list->SetMinSize({-1, 3 * wxGetApp().em_unit()});
 #if 0
     if (p->mode_sizer)
         p->mode_sizer->msw_rescale();
@@ -1748,6 +1766,7 @@ void Sidebar::on_bed_type_change(BedType bed_type)
     if (m_bed_type_list != nullptr)
         m_bed_type_list->SetSelection(sel_idx);
 }
+
 
 std::map<int, DynamicPrintConfig> Sidebar::build_filament_ams_list(MachineObject* obj)
 {
@@ -6566,6 +6585,7 @@ void Plater::priv::on_combobox_select(wxCommandEvent &evt)
         this->on_select_preset(evt);
     }
     else {
+        //evt.GetEventObject() == m_bed_type_list
         this->on_select_bed_type(evt);
     }
 }
@@ -13202,14 +13222,17 @@ void Plater::on_config_change(const DynamicPrintConfig &config)
             p->partplate_list.invalid_all_slice_result();
         }
         //BBS: add bed_exclude_area
-        else if (opt_key == "printable_area" || opt_key == "bed_exclude_area"
+        else if (opt_key == "printable_area" || opt_key == "bed_exclude_area" 
             || opt_key == "bed_custom_texture" || opt_key == "bed_custom_model"
             || opt_key == "extruder_clearance_height_to_lid"
             || opt_key == "extruder_clearance_height_to_rod") {
             bed_shape_changed = true;
             update_scheduled = true;
-        }
-        else if (opt_key == "bed_shape" || opt_key == "bed_custom_texture" || opt_key == "bed_custom_model") {
+        } else if (opt_key == "bed_shape" ||
+                   opt_key == "is_idex_printer" || 
+                   opt_key == "idex_print_mode" ||
+                   opt_key == "bed_custom_texture" ||
+                   opt_key == "bed_custom_model") {
             bed_shape_changed = true;
             update_scheduled = true;
         }
@@ -13261,7 +13284,7 @@ void Plater::on_config_change(const DynamicPrintConfig &config)
     }
 }
 
-void Plater::set_bed_shape() const
+void Plater::set_bed_shape()
 {
     std::string texture_filename;
     auto bundle = wxGetApp().preset_bundle;
@@ -13276,36 +13299,43 @@ void Plater::set_bed_shape() const
             }
         }
     }
-    const Pointfs* exclude_area = nullptr;
+    
 
     IdexPrintMode idex_mode     = p->config->opt_enum<IdexPrintMode>("idex_print_mode");
     
    
-    switch (p->config->opt_enum<IdexPrintMode>("idex_print_mode"))
+    switch (idex_mode)
     {
-        case IdexPrintMode::Normal:
-        {
-            exclude_area = &p->config->option<ConfigOptionPoints>("bed_exclude_area")->values;
-            break;
-        }
+        
         case IdexPrintMode::Backup:
         {
-            exclude_area = &p->config->option<ConfigOptionPoints>("bed_exclude_area")->values;
+            m_excluded_area = p->config->option<ConfigOptionPoints>("bed_exclude_area_right_mode")->values;
+            Pointfs area2   = p->config->option<ConfigOptionPoints>("bed_exclude_area_left_mode")->values;
+            if (!m_excluded_area.empty()) {
+                m_excluded_area.push_back(m_excluded_area.front());
+            }
+            if (!area2.empty()) {
+                
+            m_excluded_area.insert(m_excluded_area.end(), area2.begin(), area2.end());
+              m_excluded_area.push_back(area2.front());
+            }
+            
             break;
         }
         case IdexPrintMode::Mirror:
         {
-            exclude_area = &p->config->option<ConfigOptionPoints>("bed_exclude_area_mirror_mode")->values;
+            m_excluded_area = p->config->option<ConfigOptionPoints>("bed_exclude_area_mirror_mode")->values;
             break;
         }
         case IdexPrintMode::Parallel:
         {
-            exclude_area = &p->config->option<ConfigOptionPoints>("bed_exclude_area_parallel_mode")->values;
+            m_excluded_area = p->config->option<ConfigOptionPoints>("bed_exclude_area_parallel_mode")->values;
             break;
         }
+        case IdexPrintMode::Normal:
         default:
         {
-            exclude_area = &p->config->option<ConfigOptionPoints>("bed_exclude_area")->values;
+            m_excluded_area = p->config->option<ConfigOptionPoints>("bed_exclude_area")->values;
             break;
         }
     }
@@ -13315,7 +13345,7 @@ void Plater::set_bed_shape() const
 
     set_bed_shape(p->config->option<ConfigOptionPoints>("printable_area")->values,
         //BBS: add bed exclude areas
-        *exclude_area,
+         m_excluded_area,
         p->config->option<ConfigOptionFloat>("printable_height")->value,
         p->config->option<ConfigOptionString>("bed_custom_texture")->value.empty() ? texture_filename : p->config->option<ConfigOptionString>("bed_custom_texture")->value,
         p->config->option<ConfigOptionString>("bed_custom_model")->value);
