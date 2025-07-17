@@ -838,6 +838,8 @@ void GCodeProcessor::apply_config(const DynamicPrintConfig& config)
     if (bed_exclude_area != nullptr)
         m_result.bed_exclude_area = bed_exclude_area->values;
 
+    //SKOFIXNEED
+
     const ConfigOptionString* print_settings_id = config.option<ConfigOptionString>("print_settings_id");
     if (print_settings_id != nullptr)
         m_result.settings_ids.print = print_settings_id->value;

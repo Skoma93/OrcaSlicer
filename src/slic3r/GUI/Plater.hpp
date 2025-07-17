@@ -24,6 +24,7 @@
 #include "Jobs/SendJob.hpp"
 #include "libslic3r/Model.hpp"
 #include "libslic3r/PrintBase.hpp"
+#include "libslic3r/Point.hpp"
 
 #include "libslic3r/calib.hpp"
 #include "libslic3r/CutUtils.hpp"
@@ -658,7 +659,7 @@ public:
     Mouse3DController& get_mouse3d_controller();
 
     //BBS: add bed exclude area
-	void set_bed_shape() const;
+    void set_bed_shape();
     void set_bed_shape(const Pointfs& shape, const Pointfs& exclude_area, const double printable_height, const std::string& custom_texture, const std::string& custom_model, bool force_as_custom = false) const;
 
 	const NotificationManager* get_notification_manager() const;
@@ -815,6 +816,8 @@ private:
     bool m_loading_project { false };
     std::string m_preview_only_filename;
     int m_valid_plates_count { 0 };
+    Pointfs     m_excluded_area;
+
 
     void suppress_snapshots();
     void allow_snapshots();
