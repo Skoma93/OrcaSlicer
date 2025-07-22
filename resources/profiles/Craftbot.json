@@ -1,0 +1,71 @@
+{
+    "name": "Craftbot",
+    "version":  "02.03.00.03",
+    "force_update": "0",
+    "description": "Craftbot configurations",
+    "machine_model_list": [
+        {
+            "name": "Craftbot Flow",
+            "sub_path": "machine/Craftbot Flow.json"
+        }
+    ],
+    "process_list": [
+        {
+            "name": "fdm_process_common",
+            "sub_path": "process/fdm_process_common.json"
+        },
+        {
+            "name": "fdm_process_craftbotflow_common_0_2",
+            "sub_path": "process/fdm_process_craftbotflow_common_0_2.json"
+        },
+        {
+            "name": "fdm_process_craftbotflow_common_0_25",
+            "sub_path": "process/fdm_process_craftbotflow_common_0_25.json"
+        },
+        {
+            "name": "fdm_process_craftbotflow_common",
+            "sub_path": "process/fdm_process_craftbotflow_common.json"
+        },
+        {
+            "name": "fdm_process_craftbotflow_fast_common",
+            "sub_path": "process/fdm_process_craftbotflow_fast_common.json"
+        },
+        {
+            "name": "fdm_process_craftbotflow_common_0_6",
+            "sub_path": "process/fdm_process_craftbotflow_common_0_6.json"
+        },
+        {
+            "name": "0.40mm Superdraft 0.6mm nozzle @Craftbot",
+            "sub_path": "process/0.40mm Superdraft 0.6mm nozzle @CraftbotFlow.json"
+        }
+    ],
+    "filament_list": [
+        
+    ],
+    "machine_list": [
+        {
+            "name": "fdm_machine_common",
+            "sub_path": "machine/fdm_machine_common.json"
+        },
+        {
+            "name": "fdm_marlin_common",
+            "sub_path": "machine/fdm_craftbotflow_common.json"
+        },
+        {
+            "name": "Craftbot Flow 0.2 nozzle",
+            "sub_path": "machine/Craftbot Flow 0.2 nozzle.json"
+        },
+        {
+            "name": "Craftbot Flow 0.25 nozzle",
+            "sub_path": "machine/Craftbot Flow 0.25 nozzle.json"
+        },
+        {
+            "name": "Craftbot Flow 0.4 nozzle",
+            "sub_path": "machine/Craftbot Flow 0.4 nozzle.json"
+        },
+        {
+            "name": "Craftbot Flow 0.6 nozzle",
+            "sub_path": "machine/Craftbot Flow 0.6 nozzle.json"
+        }
+    ]
+}
