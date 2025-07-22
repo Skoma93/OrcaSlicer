@@ -1,10 +1,10 @@
 {
     "type": "machine_model",
-    "name": "Craftbot Flow IDEX",
+    "name": "Craftbot Flow IDEX XL",
     "nozzle_diameter": "0.25;0.4;0.6;0.8",
     "bed_model": "Craftbot_Flow_IDEX_build_plate.stl",
     "family": "Craftbot Flow",
     "machine_tech": "FFF",
-    "model_id": "CB-Flow_IDEX",
+    "model_id": "CB_Flow_IDEX_XL",
     "default_materials": "Craftbot Generic PLA;Craftbot Generic PLA+;Craftbot Generic PLA Silk;Craftbot Generic TPU;Craftbot Generic PETG"
 }

@@ -1,0 +1,14 @@
+{
+    "type": "machine",
+    "name": "Craftbot Plus Pro 0.8 nozzle",
+    "inherits": "Craftbot Plus Pro 0.4 nozzle",
+    "from": "system",
+    "setting_id": "GM0404",
+    "instantiation": "true",
+    "printer_model": "Craftbot Plus Pro",
+    "printer_variant": "0.8",
+    "nozzle_type": "brass",
+    "retraction_length": [
+        "3"
+    ]
+}

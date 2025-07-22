@@ -1,0 +1,9 @@
+{
+    "type": "machine",
+    "name": "Craftbot Flow IDEX XL 0.8 nozzle",
+    "inherits": "Craftbot Flow IDEX 0.8 nozzle",
+    "from": "system",
+    "printer_model": "Craftbot Flow IDEX XL",
+    "setting_id": "GM0303",
+    "printable_height": "500"
+}

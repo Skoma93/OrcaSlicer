@@ -5,6 +5,6 @@
     "bed_model": "Craftbot_Flow_build_plate.stl",
     "family": "Craftbot Flow",
     "machine_tech": "FFF",
-    "model_id": "CB-Flow",
+    "model_id": "CB_Flow",
     "default_materials": "Craftbot Generic PLA;Craftbot Generic PLA+;Craftbot Generic PLA Silk;Craftbot Generic TPU;Craftbot Generic PETG"
 }
