@@ -11,6 +11,10 @@
         {
             "name": "Craftbot Flow XL",
             "sub_path": "machine/Craftbot Flow XL.json"
+        },
+        {
+            "name": "Craftbot Flow IDEX",
+            "sub_path": "machine/Craftbot Flow IDEX.json"
         }
     ],
     "process_list": [
@@ -86,6 +90,22 @@
         {
             "name": "Craftbot Flow XL 0.8 nozzle",
             "sub_path": "machine/Craftbot Flow XL 0.8 nozzle.json"
+        },
+        {
+            "name": "Craftbot Flow IDEX 0.25 nozzle",
+            "sub_path": "machine/Craftbot Flow IDEX 0.25 nozzle.json"
+        },
+        {
+            "name": "Craftbot Flow IDEX 0.4 nozzle",
+            "sub_path": "machine/Craftbot Flow IDEX 0.4 nozzle.json"
+        },
+        {
+            "name": "Craftbot Flow IDEX 0.6 nozzle",
+            "sub_path": "machine/Craftbot Flow IDEX 0.6 nozzle.json"
+        },
+        {
+            "name": "Craftbot Flow IDEX 0.8 nozzle",
+            "sub_path": "machine/Craftbot Flow IDEX 0.8 nozzle.json"
         }
         
     ]
