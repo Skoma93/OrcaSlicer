@@ -1,0 +1,14 @@
+{
+    "type": "machine",
+    "name": "Craftbot Flow IDEX 0.6 nozzle",
+    "inherits": "Craftbot Flow IDEX 0.4 nozzle",
+    "from": "system",
+    "setting_id": "GM0203",
+    "instantiation": "true",
+    "printer_model": "Craftbot Flow IDEX",
+    "printer_variant": "0.6",
+    "nozzle_type": "brass",
+    "retraction_length": [
+        "1.5"
+    ]
+}
