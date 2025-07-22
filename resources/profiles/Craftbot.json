@@ -15,6 +15,14 @@
         {
             "name": "Craftbot Flow IDEX",
             "sub_path": "machine/Craftbot Flow IDEX.json"
+        },
+        {
+            "name": "Craftbot Flow IDEX XL",
+            "sub_path": "machine/Craftbot Flow IDEX XL.json"
+        },
+        {
+            "name": "Craftbot Plus Pro",
+            "sub_path": "machine/Craftbot Plus Pro.json"
         }
     ],
     "process_list": [
@@ -58,6 +66,10 @@
         {
             "name": "fdm_craftbotflow_common",
             "sub_path": "machine/fdm_craftbotflow_common.json"
+        },
+        {
+            "name": "fdm_craftbotplus_common",
+            "sub_path": "machine/fdm_craftbotplus_common.json"
         },
         {
             "name": "Craftbot Flow 0.25 nozzle",
@@ -106,6 +118,38 @@
         {
             "name": "Craftbot Flow IDEX 0.8 nozzle",
             "sub_path": "machine/Craftbot Flow IDEX 0.8 nozzle.json"
+        },
+        {
+            "name": "Craftbot Flow IDEX XL 0.25 nozzle",
+            "sub_path": "machine/Craftbot Flow IDEX XL 0.25 nozzle.json"
+        },
+        {
+            "name": "Craftbot Flow IDEX XL 0.4 nozzle",
+            "sub_path": "machine/Craftbot Flow IDEX XL 0.4 nozzle.json"
+        },
+        {
+            "name": "Craftbot Flow IDEX XL 0.6 nozzle",
+            "sub_path": "machine/Craftbot Flow IDEX XL 0.6 nozzle.json"
+        },
+        {
+            "name": "Craftbot Flow IDEX XL 0.8 nozzle",
+            "sub_path": "machine/Craftbot Flow IDEX XL 0.8 nozzle.json"
+        },
+        {
+            "name": "Craftbot Plus Pro 0.25 nozzle",
+            "sub_path": "machine/Craftbot Plus Pro 0.25 nozzle.json"
+        },
+        {
+            "name": "Craftbot Plus Pro 0.4 nozzle",
+            "sub_path": "machine/Craftbot Plus Pro 0.4 nozzle.json"
+        },
+        {
+            "name": "Craftbot Plus Pro 0.6 nozzle",
+            "sub_path": "machine/Craftbot Plus Pro 0.6 nozzle.json"
+        },
+        {
+            "name": "Craftbot Plus Pro 0.8 nozzle",
+            "sub_path": "machine/Craftbot Plus Pro 0.8 nozzle.json"
         }
         
     ]
