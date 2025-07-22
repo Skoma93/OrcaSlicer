@@ -3,7 +3,7 @@
     "name": "Craftbot Flow 0.6 nozzle",
     "inherits": "fdm_craftbotflow_common",
     "from": "system",
-    "setting_id": "GM010",
+    "setting_id": "GM003",
     "instantiation": "true",
     "nozzle_diameter": [
         "0.6"
@@ -28,15 +28,15 @@
     "extruder_clearance_radius": "45",
     "printer_structure": "i3",
     "nozzle_type": "brass",
-    "printable_height": "250",
-    "printable_area": [
-        "0x0",
-        "235x0",
-        "235x235",
-        "0x235"
-    ],
     "retraction_length": [
         "1.5"
     ],
+    "printable_area": [
+        "0x0",
+        "300x0",
+        "300x200",
+        "0x200"
+    ],
+    "printable_height": "250",
     "upward_compatible_machine": []
 }
