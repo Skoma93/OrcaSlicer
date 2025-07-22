@@ -1,10 +1,10 @@
 {
     "type": "machine_model",
-    "name": "Craftbot Flow",
+    "name": "Craftbot Flow XL",
     "nozzle_diameter": "0.25;0.4;0.6;0.8",
     "bed_model": "Craftbot_Flow_build_plate.stl",
-    "family": "Craftbot Flow",
+    "family": "Craftbot Flow XL",
     "machine_tech": "FFF",
-    "model_id": "CB-Flow",
+    "model_id": "CB-FlowXL",
     "default_materials": "Craftbot Generic PLA;Craftbot Generic PLA+;Craftbot Generic PLA Silk;Craftbot Generic TPU;Craftbot Generic PETG"
 }

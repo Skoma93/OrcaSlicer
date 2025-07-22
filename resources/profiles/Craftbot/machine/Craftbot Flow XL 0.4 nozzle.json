@@ -1,0 +1,12 @@
+{
+    "type": "machine",
+    "name": "Craftbot Flow XL 0.4 nozzle",
+    "inherits": "Craftbot Flow 0.4 nozzle",
+    "from": "system",
+    "printer_model": "Craftbot Flow XL",
+    "default_filament_profile": [
+        "Craftbot Generic PLA+"
+    ],
+    "default_print_profile": "0.20mm Standard @CraftbotFlow",
+    "printable_height": "400"
+}

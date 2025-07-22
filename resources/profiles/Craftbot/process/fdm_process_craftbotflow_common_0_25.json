@@ -17,6 +17,7 @@
     "support_top_z_distance": "0.15",
     "support_bottom_z_distance": "0.15",
     "compatible_printers": [
-      "Craftbot Flow"
+      "Craftbot Flow",
+      "Craftbot Flow XL"
     ]
 }

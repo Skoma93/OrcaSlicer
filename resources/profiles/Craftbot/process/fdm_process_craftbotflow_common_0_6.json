@@ -14,6 +14,7 @@
     "support_line_width": "0.62",
     "bridge_flow": "0.95",
     "compatible_printers": [
-      "Craftbot Flow"
+      "Craftbot Flow",
+      "Craftbot Flow XL"
     ]
 }

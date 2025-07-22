@@ -7,6 +7,10 @@
         {
             "name": "Craftbot Flow",
             "sub_path": "machine/Craftbot Flow.json"
+        },
+        {
+            "name": "Craftbot Flow XL",
+            "sub_path": "machine/Craftbot Flow XL.json"
         }
     ],
     "process_list": [
@@ -48,12 +52,8 @@
             "sub_path": "machine/fdm_machine_common.json"
         },
         {
-            "name": "fdm_marlin_common",
+            "name": "fdm_craftbotflow_common",
             "sub_path": "machine/fdm_craftbotflow_common.json"
-        },
-        {
-            "name": "Craftbot Flow 0.2 nozzle",
-            "sub_path": "machine/Craftbot Flow 0.2 nozzle.json"
         },
         {
             "name": "Craftbot Flow 0.25 nozzle",
@@ -66,6 +66,27 @@
         {
             "name": "Craftbot Flow 0.6 nozzle",
             "sub_path": "machine/Craftbot Flow 0.6 nozzle.json"
+        },
+        {
+            "name": "Craftbot Flow 0.8 nozzle",
+            "sub_path": "machine/Craftbot Flow 0.8 nozzle.json"
+        },
+        {
+            "name": "Craftbot Flow XL 0.25 nozzle",
+            "sub_path": "machine/Craftbot Flow XL 0.25 nozzle.json"
+        },
+        {
+            "name": "Craftbot Flow XL 0.4 nozzle",
+            "sub_path": "machine/Craftbot Flow XL 0.4 nozzle.json"
+        },
+        {
+            "name": "Craftbot Flow XL 0.6 nozzle",
+            "sub_path": "machine/Craftbot Flow XL 0.6 nozzle.json"
+        },
+        {
+            "name": "Craftbot Flow XL 0.8 nozzle",
+            "sub_path": "machine/Craftbot Flow XL 0.8 nozzle.json"
         }
+        
     ]
 }

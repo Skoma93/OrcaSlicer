@@ -1,24 +1,24 @@
 {
     "type": "machine",
-    "name": "Craftbot Flow 0.25 nozzle",
+    "name": "Craftbot Flow 0.8 nozzle",
     "inherits": "fdm_craftbotflow_common",
     "from": "system",
-    "setting_id": "GM0001",
+    "setting_id": "GM0004",
     "instantiation": "true",
     "nozzle_diameter": [
-        "0.25"
+        "0.8"
     ],
     "max_layer_height": [
         "0.16"
     ],
     "printer_model": "Craftbot Flow",
-    "printer_variant": "0.25",
+    "printer_variant": "0.8",
     "auxiliary_fan": "0",
     "bed_exclude_area": [],
     "default_filament_profile": [
         "Craftbot Generic PLA+"
     ],
-    "default_print_profile": "0.10mm Standard 0.25mm nozzle @CraftbotFlow",
+    "default_print_profile": "0.10mm Standard 0.2mm nozzle @CraftbotFlow",
     "extruder_clearance_height_to_lid": "250",
     "extruder_clearance_height_to_rod": "30",
     "extruder_clearance_max_radius": "45",

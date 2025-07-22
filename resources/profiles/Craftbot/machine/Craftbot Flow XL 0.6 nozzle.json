@@ -1,24 +1,27 @@
 {
     "type": "machine",
-    "name": "Craftbot Flow 0.25 nozzle",
-    "inherits": "fdm_craftbotflow_common",
+    "name": "Craftbot Flow XL 0.6 nozzle",
+    "inherits": "Craftbot Flow 0.6 nozzle",
     "from": "system",
-    "setting_id": "GM0001",
+    "setting_id": "GM0103",
     "instantiation": "true",
     "nozzle_diameter": [
-        "0.25"
+        "0.6"
+    ],
+    "min_layer_height": [
+        "0.15"
     ],
     "max_layer_height": [
-        "0.16"
+        "0.48"
     ],
-    "printer_model": "Craftbot Flow",
-    "printer_variant": "0.25",
+    "printer_model": "Craftbot Flow XL",
+    "printer_variant": "0.6",
     "auxiliary_fan": "0",
     "bed_exclude_area": [],
     "default_filament_profile": [
         "Craftbot Generic PLA+"
     ],
-    "default_print_profile": "0.10mm Standard 0.25mm nozzle @CraftbotFlow",
+    "default_print_profile": "0.30mm Standard 0.6 nozzle @CraftbotFlow",
     "extruder_clearance_height_to_lid": "250",
     "extruder_clearance_height_to_rod": "30",
     "extruder_clearance_max_radius": "45",
@@ -26,7 +29,7 @@
     "printer_structure": "i3",
     "nozzle_type": "brass",
     "retraction_length": [
-        "0.75"
+        "1.5"
     ],
     "printable_area": [
         "0x0",
@@ -34,6 +37,6 @@
         "300x200",
         "0x200"
     ],
-    "printable_height": "250",
+    "printable_height": "400",
     "upward_compatible_machine": []
 }
