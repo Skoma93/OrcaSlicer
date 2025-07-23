@@ -1,17 +1,16 @@
 {
     "type": "machine",
-    "name": "Craftbot Plus Pro 0.4 nozzle",
+    "name": "Craftbot 3 0.4 nozzle",
     "inherits": "fdm_craftbotplus_common",
     "from": "system",
-    "setting_id": "GM0402",
+    "setting_id": "GM0602",
     "instantiation": "true",
     "nozzle_diameter": [
         "0.4"
     ],
-    "printer_model": "Craftbot Plus Pro",
+    "printer_model": "Craftbot 3",
     "printer_variant": "0.4",
     "auxiliary_fan": "0",
-    "bed_exclude_area": [],
     "default_filament_profile": [
         "Craftbot Generic PLA+"
     ],
@@ -27,31 +26,44 @@
     ],
     "printable_area": [
         "0x0",
-        "255x0",
-        "255x200",
-        "0x200"
+        "374x0",
+        "374x250",
+        "0x250"
     ],
     "bed_exclude_area": [
         "0x0",
-        "5x0",
-        "5x200",
-        "0x200"
+        "8x0",
+        "8x250",
+        "0x250"
     ],
     "bed_exclude_area_left_mode":[
-    
+        "0x0",
+        "52x0",
+        "52x250",
+        "0x250"
     ],
     "bed_exclude_area_right_mode":[
-
+        "320x0",
+        "374x0",
+        "374x250",
+        "320x250"
     ],
     "bed_exclude_area_mirror_mode":[
-
+        "168x0",
+        "374x0",
+        "374x250",
+        "168x250"
     ],
     "bed_exclude_area_parallel_mode":[
-
+        "195x0",
+        "374x0",
+        "374x250",
+        "195x250"
     ],
-    "is_idex_printer": "0",
+
+    "is_idex_printer": "1",
     "single_extruder_multi_material": "0",
-    "extruders_count": "1",
-    "printable_height": "200",
+    "extruders_count": "2",
+    "printable_height": "250",
     "upward_compatible_machine": []
 }

@@ -1,0 +1,14 @@
+{
+    "type": "machine",
+    "name": "Craftbot 3 0.6 nozzle",
+    "inherits": "Craftbot 3 0.4 nozzle",
+    "from": "system",
+    "setting_id": "GM0603",
+    "instantiation": "true",
+    "printer_model": "Craftbot 3",
+    "printer_variant": "0.6",
+    "nozzle_type": "brass",
+    "retraction_length": [
+        "2"
+    ]
+}

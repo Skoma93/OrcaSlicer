@@ -6779,7 +6779,7 @@ void PrintConfigDef::init_sla_params()
     def->mode = comAdvanced;
     def->set_default_value(new ConfigOptionBool(false));
 
-     def           = this->add("bed_exclude_area_left_mode", coPoints);
+    def           = this->add("bed_exclude_area_left_mode", coPoints);
     def->label    = L("Exclude area left mode");
     def->tooltip  = L("Unprintable area in XY plane."
                        "The area is expressed as polygon by points in following format: \"XxY, XxY, ...\"");

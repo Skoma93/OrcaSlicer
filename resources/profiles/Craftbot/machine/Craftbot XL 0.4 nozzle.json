@@ -1,14 +1,14 @@
 {
     "type": "machine",
-    "name": "Craftbot Plus Pro 0.4 nozzle",
+    "name": "Craftbot XL 0.4 nozzle",
     "inherits": "fdm_craftbotplus_common",
     "from": "system",
-    "setting_id": "GM0402",
+    "setting_id": "GM0502",
     "instantiation": "true",
     "nozzle_diameter": [
         "0.4"
     ],
-    "printer_model": "Craftbot Plus Pro",
+    "printer_model": "Craftbot XL",
     "printer_variant": "0.4",
     "auxiliary_fan": "0",
     "bed_exclude_area": [],
@@ -27,31 +27,19 @@
     ],
     "printable_area": [
         "0x0",
-        "255x0",
-        "255x200",
+        "312x0",
+        "312x200",
         "0x200"
     ],
     "bed_exclude_area": [
         "0x0",
-        "5x0",
-        "5x200",
+        "12x0",
+        "12x200",
         "0x200"
-    ],
-    "bed_exclude_area_left_mode":[
-    
-    ],
-    "bed_exclude_area_right_mode":[
-
-    ],
-    "bed_exclude_area_mirror_mode":[
-
-    ],
-    "bed_exclude_area_parallel_mode":[
-
     ],
     "is_idex_printer": "0",
     "single_extruder_multi_material": "0",
     "extruders_count": "1",
-    "printable_height": "200",
+    "printable_height": "440",
     "upward_compatible_machine": []
 }
