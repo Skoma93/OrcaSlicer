@@ -11,7 +11,6 @@
     "printer_model": "Craftbot Plus Pro",
     "printer_variant": "0.4",
     "auxiliary_fan": "0",
-    "bed_exclude_area": [],
     "default_filament_profile": [
         "Craftbot Generic PLA+"
     ],

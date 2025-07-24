@@ -36,7 +36,7 @@
         "425x10",
         "6x10",
         "6x260",
-        "0X260"
+        "0x260"
     ],
     "bed_exclude_area_left_mode":[
         "322x0",
@@ -45,10 +45,10 @@
         "322x250"
     ],
     "bed_exclude_area_right_mode":[
-        "168x0",
-        "374x0",
-        "374x250",
-        "168x250"
+        "0x0",
+        "48x0",
+        "48x260",
+        "0x260"
     ],
     "bed_exclude_area_mirror_mode":[
         "0x0",
@@ -71,7 +71,6 @@
     "single_extruder_multi_material": "0",
     "extruders_count": "2",
     "printable_height": "250",
-    "change_filament_gcode": ";CHANGE_FILAMENT\nT{next_extruder}\nG92 E0\n",
     "upward_compatible_machine": []
 
 }

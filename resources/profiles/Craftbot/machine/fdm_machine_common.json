@@ -19,31 +19,31 @@
         "4000"
     ],
     "machine_max_acceleration_extruding": [
-        "6000"
+        "4000"
     ],
-    "machine_max_acceleration_retracting": [
-        "1000"
+    "machine_max_acceleration_extruding": [
+        "4000"
     ],
     "machine_max_acceleration_x": [
-        "6000"
+        "4000"
     ],
     "machine_max_acceleration_y": [
-        "6000"
+        "4000"
     ],
     "machine_max_acceleration_z": [
-        "300"
+        "600"
     ],
     "machine_max_acceleration_travel": [
-        "6000"
+        "4000"
     ],
     "machine_max_speed_e": [
         "50"
     ],
     "machine_max_speed_x": [
-        "600"
+        "350"
     ],
     "machine_max_speed_y": [
-        "600"
+        "350"
     ],
     "machine_max_speed_z": [
         "30"
@@ -64,7 +64,7 @@
         "0"
     ],
     "machine_min_travel_rate": [
-        "0"
+        "60"
     ],
     "max_layer_height": [
         "0.6"
@@ -74,7 +74,7 @@
     ],
     "printer_settings_id": "",
     "retraction_minimum_travel": [
-        "1"
+        "0.5"
     ],
     "retract_before_wipe": [
         "0%"
@@ -86,7 +86,7 @@
         "0.5"
     ],
     "retract_length_toolchange": [
-        "2"
+        "3"
     ],
     "z_hop": [
         "0"
