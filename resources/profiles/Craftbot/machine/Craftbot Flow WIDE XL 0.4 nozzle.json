@@ -1,0 +1,21 @@
+{
+    "type": "machine",
+    "name": "Craftbot Flow WIDE XL 0.4 nozzle",
+    "inherits": "Craftbot Flow IDEX XL 0.4 nozzle",
+    "from": "system",
+    "printer_model": "Craftbot Flow WIDE XL",
+    "setting_id": "GM0702",
+    "bed_exclude_area_left_mode":[
+    ],
+    "bed_exclude_area_right_mode":[
+    ],
+    "bed_exclude_area_mirror_mode":[
+
+    ],
+    "bed_exclude_area_parallel_mode":[
+    ],
+
+    "is_idex_printer": "0",
+    "single_extruder_multi_material": "0",
+    "extruders_count": "1"
+}
