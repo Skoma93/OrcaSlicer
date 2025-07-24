@@ -1,6 +1,6 @@
 {
     "type": "process",
-    "name": "fdm_process_craftbotflow_common_0_6",
+    "name": "fdm_process_craftbotplus_common_0_6",
     "from": "system",
     "instantiation": "false",
     "inherits": "fdm_process_common",
@@ -15,8 +15,6 @@
     "bridge_flow": "0.95",
     "compatible_printers": [
       "Craftbot Flow",
-      "Craftbot Flow XL",
-      "Craftbot Flow IDEX",
-      "Craftbot Flow IDEX XL"
+      "Craftbot Flow XL"
     ]
 }
