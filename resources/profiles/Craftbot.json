@@ -212,7 +212,170 @@
         }
     ],
     "filament_list": [
-        
+        {
+            "name": "fdm_filament_common",
+            "sub_path": "filament/fdm_filament_common.json"
+        },
+        {
+            "name": "fdm_filament_abs",
+            "sub_path": "filament/fdm_filament_abs.json"
+        },
+        {
+            "name": "fdm_filament_asa",
+            "sub_path": "filament/fdm_filament_asa.json"
+        },
+        {
+            "name": "fdm_filament_pa",
+            "sub_path": "filament/fdm_filament_pa.json"
+        },
+        {
+            "name": "fdm_filament_pc",
+            "sub_path": "filament/fdm_filament_pc.json"
+        },
+        {
+            "name": "fdm_filament_pet",
+            "sub_path": "filament/fdm_filament_pet.json"
+        },
+        {
+            "name": "fdm_filament_pla",
+            "sub_path": "filament/fdm_filament_pla.json"
+        },
+        {
+            "name": "fdm_filament_pva",
+            "sub_path": "filament/fdm_filament_pva.json"
+        },
+        {
+            "name": "fdm_filament_tpu",
+            "sub_path": "filament/fdm_filament_tpu.json"
+        },
+        {
+            "name": "Craftbot Generic ABS @base",
+            "sub_path": "filament/Craftbot Generic ABS @base.json"
+        },
+        {
+            "name": "Craftbot Generic ABS 0.25 nozzle",
+            "sub_path": "filament/Craftbot Generic ABS 0.25 nozzle.json"
+        },
+        {
+            "name": "Craftbot Generic ABS",
+            "sub_path": "filament/Craftbot Generic ABS.json"
+        },
+        {
+            "name": "Craftbot Generic ASA @base",
+            "sub_path": "filament/Craftbot Generic ASA @base.json"
+        },
+        {
+            "name": "Craftbot Generic ASA 0.25 nozzle",
+            "sub_path": "filament/Craftbot Generic ASA 0.25 nozzle.json"
+        },
+        {
+            "name": "Craftbot Generic ASA",
+            "sub_path": "filament/Craftbot Generic ASA.json"
+        },
+        {
+            "name": "Craftbot Generic PA @base",
+            "sub_path": "filament/Craftbot Generic PA @base.json"
+        },
+        {
+            "name": "Craftbot Generic PA 0.25 nozzle",
+            "sub_path": "filament/Craftbot Generic PA 0.25 nozzle.json"
+        },
+        {
+            "name": "Craftbot Generic PA",
+            "sub_path": "filament/Craftbot Generic PA.json"
+        },
+        {
+            "name": "Craftbot Generic PA-CF @base",
+            "sub_path": "filament/Craftbot Generic PA-CF @base.json"
+        },
+        {
+            "name": "Craftbot Generic PA-CF",
+            "sub_path": "filament/Craftbot Generic PA-CF.json"
+        },
+        {
+            "name": "Craftbot Generic PC @base",
+            "sub_path": "filament/Craftbot Generic PC @base.json"
+        },
+        {
+            "name": "Craftbot Generic PC 0.25 nozzle",
+            "sub_path": "filament/Craftbot Generic PC 0.25 nozzle.json"
+        },
+        {
+            "name": "Craftbot Generic PC",
+            "sub_path": "filament/Craftbot Generic PC.json"
+        },
+        {
+            "name": "Craftbot Generic PETG @base",
+            "sub_path": "filament/Craftbot Generic PETG @base.json"
+        },
+        {
+            "name": "Craftbot Generic PETG 0.25 nozzle",
+            "sub_path": "filament/Craftbot Generic PETG 0.25 nozzle.json"
+        },
+        {
+            "name": "Craftbot Generic PETG",
+            "sub_path": "filament/Craftbot Generic PETG.json"
+        },
+        {
+            "name": "Craftbot Generic PETG-CF @base",
+            "sub_path": "filament/Craftbot Generic PETG-CF @base.json"
+        },
+        {
+            "name": "Craftbot Generic PETG-CF",
+            "sub_path": "filament/Craftbot Generic PETG-CF.json"
+        },
+        {
+            "name": "Craftbot Generic PLA @base",
+            "sub_path": "filament/Craftbot Generic PLA @base.json"
+        },
+        {
+            "name": "Craftbot Generic PLA 0.25 nozzle",
+            "sub_path": "filament/Craftbot Generic PLA 0.25 nozzle.json"
+        },
+        {
+            "name": "Craftbot Generic PLA",
+            "sub_path": "filament/Craftbot Generic PLA.json"
+        },
+        {
+            "name": "Craftbot Generic PLA Silk @base",
+            "sub_path": "filament/Craftbot Generic PLA Silk @base.json"
+        },
+        {
+            "name": "Craftbot Generic PLA Silk 0.25 nozzle",
+            "sub_path": "filament/Craftbot Generic PLA Silk 0.25 nozzle.json"
+        },
+        {
+            "name": "Craftbot Generic PLA Silk",
+            "sub_path": "filament/Craftbot Generic PLA Silk.json"
+        },
+        {
+            "name": "Craftbot Generic PLA+ @base",
+            "sub_path": "filament/Craftbot Generic PLA+ @base.json"
+        },
+        {
+            "name": "Craftbot Generic PLA-CF @base",
+            "sub_path": "filament/Craftbot Generic PLA-CF @base.json"
+        },
+        {
+            "name": "Craftbot Generic PLA-CF",
+            "sub_path": "filament/Craftbot Generic PLA-CF.json"
+        },
+        {
+            "name": "Craftbot Generic PVA @base",
+            "sub_path": "filament/Craftbot Generic PVA @base.json"
+        },
+        {
+            "name": "Craftbot Generic PVA",
+            "sub_path": "filament/Craftbot Generic PVA.json"
+        },
+        {
+            "name": "Craftbot Generic TPU @base",
+            "sub_path": "filament/Craftbot Generic TPU @base.json"
+        },
+        {
+            "name": "Craftbot Generic TPU",
+            "sub_path": "filament/Craftbot Generic TPU.json"
+        }
     ],
     "machine_list": [
         {

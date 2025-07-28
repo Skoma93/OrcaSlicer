@@ -1,0 +1,31 @@
+{
+    "type": "filament",
+    "name": "Craftbot Generic ABS",
+    "inherits": "Craftbot Generic ABS @base",
+    "from": "system",
+    "setting_id": "GFSB99",
+    "instantiation": "true",
+    "compatible_printers": [
+        "Craftbot Flow 0.4 nozzle",
+        "Craftbot Flow 0.6 nozzle",
+        "Craftbot Flow 0.8 nozzle",
+        "Craftbot Flow XL 0.4 nozzle",
+        "Craftbot Flow XL 0.6 nozzle",
+        "Craftbot Flow XL 0.8 nozzle",
+        "Craftbot Flow IDEX 0.4 nozzle",
+        "Craftbot Flow IDEX 0.6 nozzle",
+        "Craftbot Flow IDEX 0.8 nozzle",
+        "Craftbot Flow IDEX XL 0.4 nozzle",
+        "Craftbot Flow IDEX XL 0.6 nozzle",
+        "Craftbot Flow IDEX XL 0.8 nozzle",
+        "Craftbot Plus Pro 0.4 nozzle",
+        "Craftbot Plus Pro 0.6 nozzle",
+        "Craftbot Plus Pro 0.8 nozzle",
+        "Craftbot XL 0.4 nozzle",
+        "Craftbot XL 0.6 nozzle",
+        "Craftbot XL 0.8 nozzle",
+        "Craftbot 3 0.4 nozzle",
+        "Craftbot 3 0.6 nozzle",
+        "Craftbot 3 0.8 nozzle"
+    ]
+}
