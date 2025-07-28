@@ -14,6 +14,8 @@
     "support_line_width": "0.36",
     "bridge_flow": "0.95",
     "compatible_printers": [
-      "Craftbot Flow"
+      "Craftbot Plus Pro 0.4 nozzle",
+      "Craftbot XL 0.4 nozzle",
+      "Craftbot 3 0.4 nozzle"
     ]
 }

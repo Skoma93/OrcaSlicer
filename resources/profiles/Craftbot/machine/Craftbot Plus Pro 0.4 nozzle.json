@@ -25,16 +25,12 @@
         "1.5"
     ],
     "printable_area": [
-        "0x0",
+        "5x0",
         "255x0",
         "255x200",
-        "0x200"
+        "5x200"
     ],
     "bed_exclude_area": [
-        "0x0",
-        "5x0",
-        "5x200",
-        "0x200"
     ],
     "bed_exclude_area_left_mode":[
     

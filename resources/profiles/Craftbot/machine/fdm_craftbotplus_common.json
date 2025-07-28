@@ -5,6 +5,7 @@
     "from": "system",
     "instantiation": "false",
     "gcode_flavor": "craftbotplus",
+    "disable_m73": "1",
     "emit_machine_limits_to_gcode": "0",
     "before_layer_change_gcode": ";BEFORE_LAYER_CHANGE\nG92 E0.0\n;[layer_z]\n\n",
     "machine_start_gcode": "M104 S150 ; Set hotend temp to 150 degrees to prevent ooze\nM190 S{first_layer_bed_temperature[0]} ; set and wait for bed temp to stabilize\nM109 S{first_layer_temperature[0]} ; set final nozzle temp to stabilize\nG28 ;Home\n;LAYER_COUNT:{total_layer_count}",

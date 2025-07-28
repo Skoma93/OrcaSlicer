@@ -38,9 +38,9 @@
         }
     ],
     "process_list": [
-        {
-            "name": "fdm_process_common",
-            "sub_path": "process/fdm_process_common.json"
+        {   
+            "name":"fdm_process_common",
+            "sub_path":"process/fdm_process_common.json"
         },
         {
             "name": "fdm_process_craftbotflow_common",
@@ -51,20 +51,12 @@
             "sub_path": "process/fdm_process_craftbotflow_fast_common.json"
         },
         {
-            "name": "fdm_process_craftbotflow_common_0_2",
-            "sub_path": "process/fdm_process_craftbotflow_common_0_2.json"
-        },
-        {
             "name": "fdm_process_craftbotflow_common_0_25",
             "sub_path": "process/fdm_process_craftbotflow_common_0_25.json"
         },
         {
             "name": "fdm_process_craftbotflow_common_0_6",
             "sub_path": "process/fdm_process_craftbotflow_common_0_6.json"
-        },
-        {
-            "name": "0.05mm Optimal 0.2 nozzle @CraftbotFlow",
-            "sub_path": "process/0.05mm Optimal 0.2 nozzle @CraftbotFlow.json"
         },
         {
             "name": "0.05mm Optimal 0.25 nozzle @CraftbotFlow",
@@ -75,18 +67,149 @@
             "sub_path": "process/0.05mm Ultradetail @CraftbotFlow.json"
         },
         {
-            "name": "0.10mm Standard 0.2 nozzle @CraftbotFlow",
-            "sub_path": "process/0.10mm Standard 0.2 nozzle @CraftbotFlow.json"
-        },
-        {
             "name": "0.10mm Standard 0.25 nozzle @CraftbotFlow",
             "sub_path": "process/0.10mm Standard 0.25 nozzle @CraftbotFlow.json"
         },
         {
             "name": "0.10mm Detail @CraftbotFlow",
             "sub_path": "process/0.10mm Detail @CraftbotFlow.json"
+        },
+        {
+            "name": "0.15mm Draft 0.25 nozzle @CraftbotFlow",
+            "sub_path": "process/0.15mm Draft 0.25 nozzle @CraftbotFlow.json"
+        },
+        {
+            "name": "0.15mm Optimal @CraftbotFlow",
+            "sub_path": "process/0.15mm Optimal @CraftbotFlow.json"
+        },
+        {
+            "name": "0.15mm Fast @CraftbotFlow",
+            "sub_path": "process/0.15mm Fast @CraftbotFlow.json"
+        },
+        {
+            "name": "0.15mm Detail 0.6 nozzle @CraftbotFlow",
+            "sub_path": "process/0.15mm Detail 0.6 nozzle @CraftbotFlow.json"
+        },
+        {
+            "name": "0.20mm Standard @CraftbotFlow",
+            "sub_path": "process/0.20mm Standard @CraftbotFlow.json"
+        },
+        {
+            "name": "0.20mm Fast @CraftbotFlow",
+            "sub_path": "process/0.20mm Fast @CraftbotFlow.json"
+        },
+        {
+            "name": "0.20mm Optimal 0.6 nozzle @CraftbotFlow",
+            "sub_path": "process/0.20mm Optimal 0.6 nozzle @CraftbotFlow.json"
+        },
+        {
+            "name": "0.25mm Draft @CraftbotFlow",
+            "sub_path": "process/0.25mm Draft @CraftbotFlow.json"
+        },
+        {
+            "name": "0.25mm Fast @CraftbotFlow",
+            "sub_path": "process/0.25mm Fast @CraftbotFlow.json"
+        },
+        {
+            "name": "0.3mm Standard 0.6 nozzle @CraftbotFlow",
+            "sub_path": "process/0.30mm Standard 0.6 nozzle @CraftbotFlow.json"
+        },
+        {
+            "name": "0.30mm Superdraft @CraftbotFlow",
+            "sub_path": "process/0.30mm Superdraft @CraftbotFlow.json"
+        },
+        {
+            "name": "0.35mm Draft 0.6 nozzle @CraftbotFlow",
+            "sub_path": "process/0.35mm Draft 0.6 nozzle @CraftbotFlow.json"
+        },
+        {
+            "name": "0.40mm Superdraft 0.6 nozzle @CraftbotFlow",
+            "sub_path": "process/0.40mm Superdraft 0.6 nozzle @CraftbotFlow.json"
+        },
+        {
+            "name": "fdm_process_craftbotplus_common",
+            "sub_path": "process/fdm_process_craftbotplus_common.json"
+        },
+        {
+            "name": "fdm_process_craftbotplus_fast_common",
+            "sub_path": "process/fdm_process_craftbotplus_fast_common.json"
+        },
+        {
+            "name": "fdm_process_craftbotplus_common_0_25",
+            "sub_path": "process/fdm_process_craftbotplus_common_0_25.json"
+        },
+        {
+            "name": "fdm_process_craftbotplus_common_0_6",
+            "sub_path": "process/fdm_process_craftbotplus_common_0_6.json"
+        },
+        {
+            "name": "0.05mm Optimal 0.25 nozzle @CraftbotPlus",
+            "sub_path": "process/0.05mm Optimal 0.25 nozzle @CraftbotPlus.json"
+        },
+        {
+            "name": "0.05mm Ultradetail @CraftbotPlus",
+            "sub_path": "process/0.05mm Ultradetail @CraftbotPlus.json"
+        },
+        {
+            "name": "0.10mm Standard 0.25 nozzle @CraftbotPlus",
+            "sub_path": "process/0.10mm Standard 0.25 nozzle @CraftbotPlus.json"
+        },
+        {
+            "name": "0.10mm Detail @CraftbotPlus",
+            "sub_path": "process/0.10mm Detail @CraftbotPlus.json"
+        },
+        {
+            "name": "0.15mm Draft 0.25 nozzle @CraftbotPlus",
+            "sub_path": "process/0.15mm Draft 0.25 nozzle @CraftbotPlus.json"
+        },
+        {
+            "name": "0.15mm Optimal @CraftbotPlus",
+            "sub_path": "process/0.15mm Optimal @CraftbotPlus.json"
+        },
+        {
+            "name": "0.15mm Fast @CraftbotPlus",
+            "sub_path": "process/0.15mm Fast @CraftbotPlus.json"
+        },
+        {
+            "name": "0.15mm Detail 0.6 nozzle @CraftbotPlus",
+            "sub_path": "process/0.15mm Detail 0.6 nozzle @CraftbotPlus.json"
+        },
+        {
+            "name": "0.20mm Standard @CraftbotPlus",
+            "sub_path": "process/0.20mm Standard @CraftbotPlus.json"
+        },
+        {
+            "name": "0.20mm Fast @CraftbotPlus",
+            "sub_path": "process/0.20mm Fast @CraftbotPlus.json"
+        },
+        {
+            "name": "0.20mm Optimal 0.6 nozzle @CraftbotPlus",
+            "sub_path": "process/0.20mm Optimal 0.6 nozzle @CraftbotPlus.json"
+        },
+        {
+            "name": "0.25mm Draft @CraftbotPlus",
+            "sub_path": "process/0.25mm Draft @CraftbotPlus.json"
+        },
+        {
+            "name": "0.25mm Fast @CraftbotPlus",
+            "sub_path": "process/0.25mm Fast @CraftbotPlus.json"
+        },
+        {
+            "name": "0.3mm Standard 0.6 nozzle @CraftbotPlus",
+            "sub_path": "process/0.30mm Standard 0.6 nozzle @CraftbotPlus.json"
+        },
+        {
+            "name": "0.30mm Superdraft @CraftbotPlus",
+            "sub_path": "process/0.30mm Superdraft @CraftbotPlus.json"
+        },
+        {
+            "name": "0.35mm Draft 0.6 nozzle @CraftbotPlus",
+            "sub_path": "process/0.35mm Draft 0.6 nozzle @CraftbotPlus.json"
+        },
+        {
+            "name": "0.40mm Superdraft 0.6 nozzle @CraftbotPlus",
+            "sub_path": "process/0.40mm Superdraft 0.6 nozzle @CraftbotPlus.json"
         }
-        
     ],
     "filament_list": [
         

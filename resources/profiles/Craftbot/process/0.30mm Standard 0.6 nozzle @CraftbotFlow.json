@@ -1,9 +1,9 @@
 {
     "type": "process",
-    "setting_id": "GP0216",
-    "name": "0.30mm Standard 0.6mm nozzle @CraftbotPlus",
+    "setting_id": "GP0116",
+    "name": "0.30mm Standard 0.6 nozzle @CraftbotFlow",
     "from": "system",
-    "inherits": "fdm_process_craftbotplus_common_0_6",
+    "inherits": "fdm_process_craftbotflow_common_0_6",
     "instantiation": "true",
     "layer_height": "0.30",
     "initial_layer_print_height": "0.30",

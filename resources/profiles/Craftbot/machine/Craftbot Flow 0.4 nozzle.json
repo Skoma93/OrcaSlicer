@@ -25,18 +25,12 @@
         "1"
     ],
     "printable_area": [
-        "0x0",
-        "306x0",
+        "6x10",
+        "306x10",
         "306x210",
-        "0x210"
+        "6x210"
     ],
     "bed_exclude_area": [
-        "0x0",
-        "306x0",
-        "306x10",
-        "6x10",
-        "6x210",
-        "0x210"
     ],
     "bed_exclude_area_left_mode":[
     

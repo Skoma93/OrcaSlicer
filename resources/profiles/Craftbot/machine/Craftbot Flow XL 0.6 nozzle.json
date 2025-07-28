@@ -4,6 +4,7 @@
     "inherits": "Craftbot Flow 0.6 nozzle",
     "from": "system",
     "printer_model": "Craftbot Flow XL",
+    "instantiation": "true",
     "setting_id": "GM0103",
     "printable_height": "500"
 }

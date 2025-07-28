@@ -1,7 +1,7 @@
 {
     "type": "process",
     "setting_id": "GP018",
-    "name": "0.40mm Superdraft 0.6mm nozzle @CraftbotFlow",
+    "name": "0.40mm Superdraft 0.6 nozzle @CraftbotFlow",
     "from": "system",
     "inherits": "fdm_process_craftbotflow_common_0_6",
     "instantiation": "true",

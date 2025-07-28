@@ -5,6 +5,7 @@
     "bed_model": "Craftbot_Flow_IDEX_build_plate.stl",
     "family": "Craftbot Flow",
     "machine_tech": "FFF",
+    "instantiation": "true",
     "model_id": "CB_Flow_IDEX_XL",
     "default_materials": "Craftbot Generic PLA;Craftbot Generic PLA+;Craftbot Generic PLA Silk;Craftbot Generic TPU;Craftbot Generic PETG"
 }

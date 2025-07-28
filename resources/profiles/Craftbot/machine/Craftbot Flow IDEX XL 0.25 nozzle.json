@@ -2,6 +2,7 @@
     "type": "machine",
     "name": "Craftbot Flow IDEX XL 0.25 nozzle",
     "inherits": "Craftbot Flow IDEX 0.25 nozzle",
+    "instantiation": "true",
     "from": "system",
     "printer_model": "Craftbot Flow IDEX XL",
     "setting_id": "GM0301",

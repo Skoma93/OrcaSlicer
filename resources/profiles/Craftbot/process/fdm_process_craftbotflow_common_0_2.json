@@ -17,9 +17,9 @@
     "support_top_z_distance": "0.15",
     "support_bottom_z_distance": "0.15",
     "compatible_printers": [
-      "Craftbot Flow",
-      "Craftbot Flow XL",
-      "Craftbot Flow IDEX",
-      "Craftbot Flow IDEX XL"
+      "Craftbot Flow 0.2 nozzle",
+      "Craftbot Flow XL 0.2 nozzle",
+      "Craftbot Flow IDEX 0.2 nozzle",
+      "Craftbot Flow IDEX XL 0.2 nozzle"
     ]
 }

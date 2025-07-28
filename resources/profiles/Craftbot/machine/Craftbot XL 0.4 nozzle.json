@@ -11,7 +11,6 @@
     "printer_model": "Craftbot XL",
     "printer_variant": "0.4",
     "auxiliary_fan": "0",
-    "bed_exclude_area": [],
     "default_filament_profile": [
         "Craftbot Generic PLA+"
     ],
@@ -26,16 +25,12 @@
         "1.5"
     ],
     "printable_area": [
-        "0x0",
-        "312x0",
-        "312x200",
-        "0x200"
+        "13x0",
+        "313x0",
+        "313x200",
+        "13x200"
     ],
     "bed_exclude_area": [
-        "0x0",
-        "12x0",
-        "12x200",
-        "0x200"
     ],
     "is_idex_printer": "0",
     "single_extruder_multi_material": "0",
