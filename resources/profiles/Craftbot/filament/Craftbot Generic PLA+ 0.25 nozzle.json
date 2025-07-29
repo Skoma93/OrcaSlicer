@@ -1,0 +1,20 @@
+{
+    "type": "filament",
+    "name": "Craftbot Generic PLA+ 0.25 nozzle",
+    "inherits": "Craftbot Generic PLA+ @base",
+    "from": "system",
+    "setting_id": "GFSL95_25",
+    "instantiation": "true",
+    "filament_max_volumetric_speed": [
+        "3"
+    ],
+    "compatible_printers": [
+        "Craftbot Flow 0.25 nozzle",
+        "Craftbot Flow XL 0.25 nozzle",
+        "Craftbot Flow IDEX 0.25 nozzle",
+        "Craftbot Flow IDEX XL 0.25 nozzle",
+        "Craftbot Plus Pro 0.25 nozzle",
+        "Craftbot XL 0.25 nozzle",
+        "Craftbot 3 0.25 nozzle"
+    ]
+}

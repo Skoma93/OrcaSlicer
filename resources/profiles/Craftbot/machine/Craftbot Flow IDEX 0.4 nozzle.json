@@ -12,7 +12,7 @@
     "printer_variant": "0.4",
     "auxiliary_fan": "0",
     "default_filament_profile": [
-        "Craftbot Generic PLA+"
+        "Craftbot Generic PLA"
     ],
     "default_print_profile": "0.20mm Standard @CraftbotFlow",
     "extruder_clearance_height_to_lid": "250",

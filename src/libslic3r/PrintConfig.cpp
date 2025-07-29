@@ -467,6 +467,14 @@ static const t_config_enum_values s_keys_map_WipeTowerWallType{
 };
 CONFIG_OPTION_ENUM_DEFINE_STATIC_MAPS(WipeTowerWallType)
 
+static const t_config_enum_values s_keys_map_IdexPrintMode{
+    {"normal",      IdexPrintMode::Normal},
+    {"parallel",    IdexPrintMode::Parallel},
+    {"mirror",      IdexPrintMode::Mirror},
+    {"backup",      IdexPrintMode::Backup},
+};
+CONFIG_OPTION_ENUM_DEFINE_STATIC_MAPS(IdexPrintMode)
+
 static void assign_printer_technology_to_unknown(t_optiondef_map &options, PrinterTechnology printer_technology)
 {
     for (std::pair<const t_config_option_key, ConfigOptionDef> &kvp : options)

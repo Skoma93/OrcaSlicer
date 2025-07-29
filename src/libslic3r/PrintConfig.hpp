@@ -318,7 +318,13 @@ static std::unordered_map<std::string, NozzleType>NozzleTypeStrToEumn = {
     {"brass", NozzleType::ntBrass}
 };
 
-enum class IdexPrintMode { Normal, Parallel, Mirror, Backup };
+enum IdexPrintMode {
+    Normal,
+    Parallel,
+    Mirror,
+    Backup
+};
+
 // BBS
 enum PrinterStructure {
     psUndefine=0,
