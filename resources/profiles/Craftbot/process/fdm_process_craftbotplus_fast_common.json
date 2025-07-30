@@ -23,11 +23,11 @@
     "travel_acceleration": "4000",
     "top_surface_speed": "250",
     "top_surface_acceleration": "2500",
-    "default_jerk": "9",
-    "outer_wall_jerk": "9",
-    "inner_wall_jerk": "9",
-    "infill_jerk": "9",
-    "top_surface_jerk": "9",
-    "initial_layer_jerk": "9",
-    "travel_jerk": "10"
+    "default_jerk": "0",
+    "outer_wall_jerk": "0",
+    "inner_wall_jerk": "0",
+    "infill_jerk": "0",
+    "top_surface_jerk": "0",
+    "initial_layer_jerk": "0",
+    "travel_jerk": "0"
 }
