@@ -83,8 +83,14 @@ function HandleModelList( pVal )
 '<div class="PrinterArea">	'+
 '</div>'+
 '</div>';
-			
-			$('#Content').append(HtmlNewVendor);
+			if(strVendor === "Craftbot")
+			{
+				$('#Content').prepend(HtmlNewVendor);
+			}
+			else
+			{
+				$('#Content').append(HtmlNewVendor);
+			}
 		}
 		
 		let ModelName=OneModel['model'];

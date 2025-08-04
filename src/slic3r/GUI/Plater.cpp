@@ -990,7 +990,13 @@ Sidebar::Sidebar(Plater *parent)
             return;
 
         size_t filament_count = p->combos_filament.size() - 1;
-        if (wxGetApp().preset_bundle->is_the_only_edited_filament(filament_count) || (filament_count == 1)) {
+        IdexPrintMode idex_mode      = wxGetApp().preset_bundle->project_config.opt_enum<IdexPrintMode>("idex_print_mode");
+        if (idex_mode != IdexPrintMode::Normal)
+        {
+            filament_count = 1;
+        }
+
+        if (wxGetApp().preset_bundle->is_the_only_edited_filament(filament_count) || (filament_count == 1) ) {
             wxGetApp().get_tab(Preset::TYPE_FILAMENT)->select_preset(wxGetApp().preset_bundle->filament_presets[0], false, "", true);
         }
 

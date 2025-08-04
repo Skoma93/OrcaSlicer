@@ -1,7 +1,7 @@
 var LangText = {
   en: {
-    t1: "Welcome to Orca Slicer",
-    t2: "Orca Slicer will be setup in several steps. Let's start!",
+    t1: "Welcome to Orca for Craftbot Slicer",
+    t2: "Orca for Craftbot Slicer will be setup in several steps. Let's start!",
     t3: "User Agreement",
     t4: "Disagree",
     t5: "Agree",
