@@ -139,8 +139,8 @@ MsgUpdateConfig::MsgUpdateConfig(const std::vector<Update> &updates, bool force_
     sizer_button->Add(0, 0, 1, wxEXPAND, 5);
 
 
-	StateColor btn_bg_green(std::pair<wxColour, int>(wxColour(0, 137, 123), StateColor::Pressed),
-                            std::pair<wxColour, int>(wxColour(38, 166, 154), StateColor::Hovered), std::pair<wxColour, int>(AMS_CONTROL_BRAND_COLOUR, StateColor::Normal));
+	StateColor btn_bg_purple(std::pair<wxColour, int>(wxColour(114, 29, 111), StateColor::Pressed),
+                            std::pair<wxColour, int>(wxColour(169, 60, 166), StateColor::Hovered), std::pair<wxColour, int>(AMS_CONTROL_BRAND_COLOUR, StateColor::Normal));
 
     StateColor btn_bg_white(std::pair<wxColour, int>(wxColour(206, 206, 206), StateColor::Pressed),
                             std::pair<wxColour, int>(wxColour(238, 238, 238), StateColor::Hovered),
@@ -148,7 +148,7 @@ MsgUpdateConfig::MsgUpdateConfig(const std::vector<Update> &updates, bool force_
 
   
 	auto m_butto_ok = new Button(this, _L("OK"));
-    m_butto_ok->SetBackgroundColor(btn_bg_green);
+    m_butto_ok->SetBackgroundColor(btn_bg_purple);
     m_butto_ok->SetBorderColor(*wxWHITE);
     m_butto_ok->SetTextColor(*wxWHITE);
     m_butto_ok->SetFont(Label::Body_12);

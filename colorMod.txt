@@ -1,0 +1,15 @@
+color changes:
+Pressed (wxColour(0, 137, 123)  00897b    ->  wxColour(114, 29, 111)  #721d6f
+Hovered wxColour(38, 166, 154)  26a69a    ->  wxColour(169, 60, 166)  #a93ca6
+Normal	  009688 (wxColour(0, 150, 136)   ->  wxColour(146, 39, 143)  #92278f
+
+wxColour(0, 137, 123)  ->  wxColour(146, 39, 143)  
+wxColour(0, 150, 136)  ->> wxColour(146, 39, 143)
+wxColour(0, 151, 137)  ->  wxColour(146, 39, 143)
+52c7b8  ->  a93ca6
+E5F0EE  ->  EEDFF0
+BFE1DE  ->  DABFE1
+00675b  ->  5A1B59
+009688  ->  8c3289
+00C1AE  ->  B000B9
+ORCA color 						#009688   ->      #a93ca6;	  dark #8c3289;

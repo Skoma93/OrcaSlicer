@@ -278,8 +278,8 @@ body
 
 .MenuItem:hover
 {
-	border-color: #009688;		/*ORCA color*/
-	background-color: #E5F0EE; /*ORCA color with %25 opacity*/
+	border-color: #a93ca6;		/*ORCA color*/
+	background-color: #f2e2f2; /*ORCA color with %25 opacity*/
 }
 
 .MenuIcon

@@ -120,7 +120,7 @@ StepMeshDialog::StepMeshDialog(wxWindow* parent, Slic3r::Step& file, double line
     wxStaticText *tips = new wxStaticText(this, wxID_ANY, _L("View Wiki for more information"));
     wxFont font(10, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false);
     font.SetUnderlined(true);
-    tips->SetForegroundColour(StateColor::darkModeColorFor(wxColour(0, 151, 137)));
+    tips->SetForegroundColour(StateColor::darkModeColorFor(wxColour(146, 39, 143)));
     tips->SetFont(font);
     tips->Bind(wxEVT_LEFT_DOWN, [this](wxMouseEvent& e) {
         wxLaunchDefaultBrowser("https://github.com/SoftFever/OrcaSlicer/wiki/stl-transformation");
