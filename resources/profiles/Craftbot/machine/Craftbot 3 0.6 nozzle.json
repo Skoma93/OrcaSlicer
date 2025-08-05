@@ -5,10 +5,28 @@
     "from": "system",
     "setting_id": "GM0603",
     "instantiation": "true",
+    "is_custom_defined": "0",
     "printer_model": "Craftbot 3",
     "printer_variant": "0.6",
     "nozzle_type": "brass",
+    "nozzle_diameter": [
+        "0.6",
+        "0.6"
+    ],
     "retraction_length": [
+        "2",
         "2"
+    ],
+    "extruder_colour": [
+        "#009688",
+        "#009688"
+    ],
+    "max_layer_height": [
+        "0.42",
+        "0.42"
+    ],
+    "min_layer_height": [
+        "0.12",
+        "0.12"
     ]
 }

@@ -5,7 +5,9 @@
     "from": "system",
     "setting_id": "GM0602",
     "instantiation": "true",
+    "is_custom_defined": "0",
     "nozzle_diameter": [
+        "0.4",
         "0.4"
     ],
     "printer_model": "Craftbot 3",
@@ -22,6 +24,7 @@
     "printer_structure": "i3",
     "nozzle_type": "brass",
     "retraction_length": [
+        "1.5",
         "1.5"
     ],
     "printable_area": [
@@ -61,6 +64,49 @@
     "single_extruder_multi_material": "0",
     "extruders_count": ["2"],
     "printable_height": "250",
-    "manual_filament_change": "0",
-    "upward_compatible_machine": []
+    "upward_compatible_machine": [],
+    "extruder_offset": [
+        "0x0",
+        "0x0"
+    ],
+    "retraction_minimum_travel": [
+        "0.5",
+        "0.5"
+    ],
+    "retraction_speed": [
+        "60",
+        "60"
+    ],
+    "retract_when_changing_layer": [
+        "1",
+        "1"
+    ],
+    "retraction_distances_when_cut": [
+        "18",
+        "18"
+    ],
+    "retract_restart_extra": [
+        "0",
+        "0"
+    ],
+    "retract_restart_extra_toolchange": [
+        "0",
+        "0"
+    ],
+    "long_retractions_when_cut": [
+        "0",
+        "0"
+    ],
+    "max_layer_height": [
+        "0.28",
+        "0.28"
+    ],
+    "min_layer_height": [
+        "0.08",
+        "0.08"
+    ],
+    "extruder_colour": [
+        "#009688",
+        "#009688"
+    ]
 }

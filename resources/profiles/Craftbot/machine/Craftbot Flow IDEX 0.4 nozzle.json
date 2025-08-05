@@ -6,6 +6,7 @@
     "setting_id": "GM0202",
     "instantiation": "true",
     "nozzle_diameter": [
+        "0.4",
         "0.4"
     ],
     "printer_model": "Craftbot Flow IDEX",
@@ -59,7 +60,7 @@
 
     "is_idex_printer": "1",
     "single_extruder_multi_material": "0",
-    "extruders_count": "2",
+    "extruders_count": ["2"],
     "printable_height": "250",
     "upward_compatible_machine": []
 

@@ -6,6 +6,7 @@
     "setting_id": "GM0002",
     "instantiation": "true",
     "nozzle_diameter": [
+        "0.4",
         "0.4"
     ],
     "printer_model": "Craftbot Flow",
@@ -47,7 +48,47 @@
 
     "is_idex_printer": "0",
     "single_extruder_multi_material": "0",
-    "extruders_count": "1",
+    "extruders_count": ["1"],
     "printable_height": "250",
-    "upward_compatible_machine": []
+    "upward_compatible_machine": [],
+    "extruder_offset": [
+        "0x0",
+        "0x0"
+    ],
+    "retraction_minimum_travel": [
+        "0.5",
+        "0.5"
+    ],
+    "retraction_speed": [
+        "60",
+        "60"
+    ],
+    "retract_when_changing_layer": [
+        "1",
+        "1"
+    ],
+    "retraction_distances_when_cut": [
+        "18",
+        "18"
+    ],
+    "retract_restart_extra": [
+        "0",
+        "0"
+    ],
+    "retract_restart_extra_toolchange": [
+        "0",
+        "0"
+    ],
+    "long_retractions_when_cut": [
+        "0",
+        "0"
+    ],
+    "max_layer_height": [
+        "0.3",
+        "0.3"
+    ],
+    "min_layer_height": [
+        "0.05",
+        "0.05"
+    ]
 }
