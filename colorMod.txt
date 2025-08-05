@@ -13,4 +13,6 @@ BFE1DE  ->  DABFE1
 009688  ->  8c3289
 00C1AE  ->  B000B9
 00f0d8	->  D000F0
+4db6ac  ->> B64DB6
+02c7b3      B302C7
 ORCA color 						#009688   ->      #a93ca6;	  dark #8c3289;

@@ -170,8 +170,8 @@ body
 	font-size: 14px;
 	height: 24px;
 	line-height: 24px;
-	color: #4db6ac;
-	border: 1px solid  #009688;
+	color: #B64DB6;
+	border: 1px solid  #8c3289;
 	border-radius: 4px;
 	cursor: pointer;
 	margin-top: 5px;
@@ -180,7 +180,7 @@ body
 
 #LogoutBtn:hover
 {
-	background: #00f0d8;
+	background: #D000F0;
 	color: #fff;
 }
 
@@ -204,12 +204,12 @@ body
 
 .BtnItem:hover
 {
-	background-color: #BFE1DE; /*ORCA color with %25 opacity*/
+	background-color: #DABFE1; /*ORCA color with %25 opacity*/
 }
 
 .BtnItemSelected
 {
-	background-color: #BFE1DE; /*ORCA color with %25 opacity*/
+	background-color: #DABFE1; /*ORCA color with %25 opacity*/
 }
 
 .BtnIcon
@@ -466,7 +466,7 @@ body
 .CT_Item:hover
 {
 	cursor: pointer;
-	background-color:#009688; /*ORCA color*/
+	background-color:#8c3289; /*ORCA color*/
 	border-radius: 4px;
 	color: #fff;
 }
@@ -702,7 +702,7 @@ body
 #HotModel_RIGHT_Title:hover
 {
 	cursor: pointer;	
-	color:#009688;	
+	color:#8c3289;	
 }
 
 .HotModelPiece

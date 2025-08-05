@@ -59,7 +59,8 @@
 
     "is_idex_printer": "1",
     "single_extruder_multi_material": "0",
-    "extruders_count": "2",
+    "extruders_count": ["2"],
     "printable_height": "250",
+    "manual_filament_change": "0",
     "upward_compatible_machine": []
 }
