@@ -13,6 +13,7 @@
     "internal_solid_infill_line_width": "0.45",
     "support_line_width": "0.36",
     "bridge_flow": "0.95",
+    "host_type": "craftbotflow",
     "compatible_printers": [
       "Craftbot Flow 0.4 nozzle",
       "Craftbot Flow XL 0.4 nozzle",
