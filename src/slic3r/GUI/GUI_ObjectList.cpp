@@ -5760,6 +5760,16 @@ void ObjectList::set_extruder_for_selected_items(const int extruder)
 
         const wxString extruder_str = wxString::Format("%d", new_extruder);
         m_objects_model->SetExtruder(extruder_str, item);
+        if (type & itVolume) {
+            const int obj_idx = m_objects_model->GetObjectIdByItem(item);
+            wxGetApp().plater()->get_partplate_list().notify_instance_update(obj_idx, 0);
+        } else if (type & itObject) {
+            const int obj_idx = m_objects_model->GetObjectIdByItem(item);
+            const int inst_cnt = (*m_objects)[obj_idx]->instances.size();
+            for (int index = 0; index < inst_cnt; index ++)
+                wxGetApp().plater()->get_partplate_list().notify_instance_update(obj_idx, index);
+        }
+     
     }
 
     // update scene
