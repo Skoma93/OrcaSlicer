@@ -60,6 +60,7 @@ extern const float I3_WIPE_TOWER_DEFAULT_Y_POS; // Max y
 
 namespace Slic3r {
 
+
 class Model;
 class ModelObject;
 class ModelInstance;
@@ -71,6 +72,13 @@ class Plater;
 class GLCanvas3D;
 struct Camera;
 class PartPlateList;
+
+struct HeadExcludeModel
+{
+    GLModel model;
+    int     headNum;  //-1 all head
+};
+
 
 using GCodeResult = GCodeProcessorResult;
 
@@ -118,16 +126,16 @@ private:
     friend class PartPlateList;
 
     Pointfs m_shape;
-    Pointfs m_exclude_area;
+    Slic3r::ExcludeAreaInfo m_exclude_area_info;
     BoundingBoxf3 m_bounding_box;
     BoundingBoxf3 m_extended_bounding_box;
-    mutable std::vector<BoundingBoxf3> m_exclude_bounding_box;
+    mutable std::vector<HeadExcludeBoundingBox> m_exclude_bounding_box;
     mutable BoundingBoxf3 m_grabber_box;
     Transform3d m_grabber_trans_matrix;
     Slic3r::Geometry::Transformation position;
     std::vector<Vec3f> positions;
     PickingModel m_triangles;
-    GLModel m_exclude_triangles;
+    std::vector<HeadExcludeModel> m_exclude_models;
     GLModel m_logo_triangles;
     GLModel m_gridlines;
     GLModel m_gridlines_bolder;
@@ -163,12 +171,13 @@ private:
 
     void init();
     bool valid_instance(int obj_id, int instance_id);
+    void add_exclude_model(Pointfs points, int head_num);
     void generate_print_polygon(ExPolygon &print_polygon);
-    void generate_exclude_polygon(ExPolygon &exclude_polygon);
+    void generate_exclude_polygon(const Pointfs& excludeArea,ExPolygon &exclude_polygon);
     void generate_logo_polygon(ExPolygon &logo_polygon);
     void calc_bounding_boxes() const;
     void calc_triangles(const ExPolygon& poly);
-    void calc_exclude_triangles(const ExPolygon& poly);
+    void calc_exclude_triangles(const ExPolygon& poly, GLModel& model);
     void calc_gridlines(const ExPolygon& poly, const BoundingBox& pp_bbox);
     void calc_height_limit();
     void calc_vertex_for_number(int index, bool one_number, GLModel &buffer);
@@ -356,7 +365,7 @@ public:
 
     /*rendering related functions*/
     const Pointfs& get_shape() const { return m_shape; }
-    bool set_shape(const Pointfs& shape, const Pointfs& exclude_areas, Vec2d position, float height_to_lid, float height_to_rod);
+    bool set_shape(const Pointfs& shape, const ExcludeAreaInfo& exclude_area_info, Vec2d position, float height_to_lid, float height_to_rod);
     bool contains(const Vec3d& point) const;
     bool contains(const GLVolume& v) const;
     bool contains(const BoundingBoxf3& bb) const;
@@ -380,7 +389,7 @@ public:
         return plate_box;
     }
 
-    const std::vector<BoundingBoxf3>& get_exclude_areas() { return m_exclude_bounding_box; }
+    const std::vector<HeadExcludeBoundingBox>& get_exclude_areas() { return m_exclude_bounding_box; }
 
 
     /*status related functions*/
@@ -538,7 +547,7 @@ class PartPlateList : public ObjectBase
 
     PartPlate unprintable_plate;
     Pointfs m_shape;
-    Pointfs m_exclude_areas;
+    ExcludeAreaInfo m_exclude_area_info;
     BoundingBoxf3 m_bounding_box;
     bool m_intialized;
     std::string m_logo_texture_filename;
@@ -706,7 +715,7 @@ public:
     //compute the origin for printable plate with index i
     Vec3d get_current_plate_origin() { return compute_origin(m_current_plate, m_plate_cols); }
     Vec2d get_current_shape_position() { return compute_shape_position(m_current_plate, m_plate_cols); }
-    Pointfs get_exclude_area() { return m_exclude_areas; }
+    ExcludeAreaInfo get_exclude_area() { return m_exclude_area_info; }
 
     std::set<int> get_extruders(bool conside_custom_gcode = false) const;
 
@@ -793,7 +802,7 @@ public:
     int select_plate_by_obj(int obj_index, int instance_index);
     void calc_bounding_boxes();
     void select_plate_view();
-    bool set_shapes(const Pointfs& shape, const Pointfs& exclude_areas, const std::string& custom_texture, float height_to_lid, float height_to_rod);
+    bool set_shapes(const Pointfs& shape, const Slic3r::ExcludeAreaInfo& exclude_area_info, const std::string& custom_texture, float height_to_lid, float height_to_rod);
     void set_hover_id(int id);
     void reset_hover_id();
     bool intersects(const BoundingBoxf3 &bb);

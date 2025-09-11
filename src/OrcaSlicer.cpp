@@ -1095,7 +1095,8 @@ int CLI::run(int argc, char **argv)
     bool translate_old = false, regenerate_thumbnails = false, filament_color_changed = false, downward_check = false;
     int current_printable_width, current_printable_depth, current_printable_height, shrink_to_new_bed = 0;
     int old_printable_height = 0, old_printable_width = 0, old_printable_depth = 0;
-    Pointfs old_printable_area, old_exclude_area;
+    Pointfs old_printable_area;
+    ExcludeAreaInfo old_exclude_area;
     float old_max_radius = 0.f, old_height_to_rod = 0.f, old_height_to_lid = 0.f;
     std::vector<double> old_max_layer_height, old_min_layer_height;
     std::string outfile_dir              =  m_config.opt_string("outputdir", true);
@@ -1488,7 +1489,14 @@ int CLI::run(int argc, char **argv)
 
                     //use Pointfs insteadof Points
                     old_printable_area = config.option<ConfigOptionPoints>("printable_area", true)->values;
-                    old_exclude_area = config.option<ConfigOptionPoints>("bed_exclude_area", true)->values;
+                    old_exclude_area.common.emplace_back(config.option<ConfigOptionPoints>("bed_exclude_area", true)->values);
+                    old_exclude_area.mirror   = config.option<ConfigOptionPoints>("bed_exclude_area_mirror_mode", true)->values;
+                    old_exclude_area.parallel = config.option<ConfigOptionPoints>("bed_exclude_area_parallel_mode", true)->values;
+
+                    old_exclude_area.head_specific.emplace_back(
+                        config.option<ConfigOptionPoints>("bed_exclude_area_left_mode", true)->values);
+                    old_exclude_area.head_specific.emplace_back(
+                        config.option<ConfigOptionPoints>("bed_exclude_area_right_mode", true)->values);  
                     if (old_printable_area.size() >= 4) {
                         old_printable_width = (int)(old_printable_area[2].x() - old_printable_area[0].x());
                         old_printable_depth = (int)(old_printable_area[2].y() - old_printable_area[0].y());
@@ -3022,7 +3030,13 @@ int CLI::run(int argc, char **argv)
     Slic3r::GUI::PartPlateList partplate_list(NULL, m_models.data(), printer_technology);
     //use Pointfs insteadof Points
     Pointfs current_printable_area = m_print_config.opt<ConfigOptionPoints>("printable_area")->values;
-    Pointfs current_exclude_area = m_print_config.opt<ConfigOptionPoints>("bed_exclude_area")->values;
+    ExcludeAreaInfo current_exclude_area;
+    current_exclude_area.common.emplace_back( m_print_config.opt<ConfigOptionPoints>("bed_exclude_area")->values);
+    current_exclude_area.mirror = m_print_config.opt<ConfigOptionPoints>("bed_exclude_area_mirror_mode")->values;
+    current_exclude_area.parallel = m_print_config.opt<ConfigOptionPoints>("bed_exclude_area_parallel_mode")->values;
+    current_exclude_area.head_specific.emplace_back(m_print_config.opt<ConfigOptionPoints>("bed_exclude_area_left_mode")->values);  
+    current_exclude_area.head_specific.emplace_back(m_print_config.opt<ConfigOptionPoints>("bed_exclude_area_right_mode")->values);  
+    
     //update part plate's size
     double print_height = m_print_config.opt_float("printable_height");
     double height_to_lid = m_print_config.opt_float("extruder_clearance_height_to_lid");
@@ -3059,7 +3073,7 @@ int CLI::run(int argc, char **argv)
             shrink_to_new_bed = 1;
         }
         else {
-            if ((current_exclude_area.size() > 0)&&(current_exclude_area != old_exclude_area)) {
+            if ((current_exclude_area.is_empty() > 0) && (current_exclude_area != old_exclude_area)) {
                 BOOST_LOG_TRIVIAL(info) << boost::format("old printable size {%1%, %2%, %3%}, new printable size {%4%, %5%, %6%}, exclude_area different, need to shrink")
                    %old_printable_width %old_printable_depth %old_printable_height %current_printable_width %current_printable_depth %current_printable_height;
                 shrink_to_new_bed = 2;
@@ -3081,7 +3095,8 @@ int CLI::run(int argc, char **argv)
         else {
             partplate_list.reset_size(old_printable_width, old_printable_depth, old_printable_height, false);
         }
-        partplate_list.set_shapes(make_counter_clockwise(current_printable_area), current_exclude_area, bed_texture, height_to_lid, height_to_rod);
+        partplate_list.set_shapes(make_counter_clockwise(current_printable_area), current_exclude_area, bed_texture, height_to_lid,
+                                  height_to_rod);
         //plate_stride = partplate_list.plate_stride_x();
     }
 
@@ -3188,10 +3203,13 @@ int CLI::run(int argc, char **argv)
                 wipe_y_option = dynamic_cast<ConfigOptionFloats *>(print_config.option("wipe_tower_y"));
             }
             double exclude_width = 0.f, exclude_depth = 0.f;
+            const auto& curr_poly = current_exclude_area.common[0];
 
-            if (current_exclude_area.size() >= 4) {
-                exclude_width = current_exclude_area[2].x() - current_exclude_area[0].x();
-                exclude_depth = current_exclude_area[2].y() - current_exclude_area[0].y();
+
+
+            if (!curr_poly.empty() && curr_poly.size() >= 4) {
+                exclude_width = curr_poly[2].x() - curr_poly[0].x();
+                exclude_depth = curr_poly[2].y() - curr_poly[0].y();
             }
             for (int index = 0; index < plate_count; index ++) {
                 Slic3r::GUI::PartPlate* cur_plate = (Slic3r::GUI::PartPlate *)plate_list.get_plate(index);

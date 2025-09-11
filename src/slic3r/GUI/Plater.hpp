@@ -29,6 +29,7 @@
 #include "libslic3r/calib.hpp"
 #include "libslic3r/CutUtils.hpp"
 #include "libslic3r/FlushVolCalc.hpp"
+#include "libslic3r/ParameterUtils.hpp"
 
 #define FILAMENT_SYSTEM_COLORS_NUM      16
 
@@ -660,7 +661,7 @@ public:
 
     //BBS: add bed exclude area
     void set_bed_shape();
-    void set_bed_shape(const Pointfs& shape, const Pointfs& exclude_area, const double printable_height, const std::string& custom_texture, const std::string& custom_model, bool force_as_custom = false) const;
+    void set_bed_shape(const Pointfs& shape, const ExcludeAreaInfo& exclude_areas, const double printable_height, const std::string& custom_texture, const std::string& custom_model, bool force_as_custom = false) const;
 
 	const NotificationManager* get_notification_manager() const;
 	NotificationManager* get_notification_manager();
@@ -816,7 +817,7 @@ private:
     bool m_loading_project { false };
     std::string m_preview_only_filename;
     int m_valid_plates_count { 0 };
-    Pointfs     m_excluded_area;
+    ExcludeAreaInfo m_exclude_area_info;
 
 
     void suppress_snapshots();

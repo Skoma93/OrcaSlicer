@@ -587,7 +587,7 @@ void GCodeProcessorResult::reset() {
     lines_ends.clear();
     printable_area = Pointfs();
     //BBS: add bed exclude area
-    bed_exclude_area = Pointfs();
+    bed_exclude_area = ExcludeAreaInfo();
     //BBS: add toolpath_outside
     toolpath_outside = false;
     //BBS: add label_object_enabled
@@ -836,9 +836,31 @@ void GCodeProcessor::apply_config(const DynamicPrintConfig& config)
     //BBS: add bed_exclude_area
     const ConfigOptionPoints* bed_exclude_area = config.option<ConfigOptionPoints>("bed_exclude_area");
     if (bed_exclude_area != nullptr)
-        m_result.bed_exclude_area = bed_exclude_area->values;
+        m_result.bed_exclude_area.common.emplace_back( bed_exclude_area->values);
 
-    //SKOFIXNEED
+    const ConfigOptionPoints* bed_exclude_area_mirror_mode = config.option<ConfigOptionPoints>("bed_exclude_area_mirror_mode");
+    if (bed_exclude_area_mirror_mode != nullptr)
+        m_result.bed_exclude_area.mirror =bed_exclude_area_mirror_mode->values;
+
+    const ConfigOptionPoints* bed_exclude_area_parallel_mode = config.option<ConfigOptionPoints>("bed_exclude_area_parallel_mode");
+    if (bed_exclude_area_parallel_mode != nullptr)
+        m_result.bed_exclude_area.parallel= bed_exclude_area_parallel_mode->values;
+
+    const ConfigOptionPoints* bed_exclude_area_left_mode = config.option<ConfigOptionPoints>("bed_exclude_area_left_mode");
+    if (bed_exclude_area_left_mode != nullptr)
+    {
+        m_result.bed_exclude_area.head_specific.emplace_back(bed_exclude_area_left_mode->values);
+    } else {
+        m_result.bed_exclude_area.head_specific.emplace_back(Pointfs());
+    }
+
+    const ConfigOptionPoints* bed_exclude_area_right_mode = config.option<ConfigOptionPoints>("bed_exclude_area_right_mode");
+    if (bed_exclude_area_right_mode != nullptr)
+    {
+        m_result.bed_exclude_area.head_specific.emplace_back(bed_exclude_area_right_mode->values);
+    }
+
+
 
     const ConfigOptionString* print_settings_id = config.option<ConfigOptionString>("print_settings_id");
     if (print_settings_id != nullptr)

@@ -295,6 +295,14 @@ auto cast(const BoundingBox3Base<Tin> &b)
                                           b.max.template cast<Tout>()};
 }
 
+struct HeadExcludeBoundingBox
+{
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+    mutable BoundingBoxf3 bb;
+    int headNum{-1}; //-1 all head
+};
+
+
 } // namespace Slic3r
 
 // Serialization through the Cereal library

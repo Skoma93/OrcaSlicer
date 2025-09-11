@@ -2702,7 +2702,7 @@ struct Plater::priv
     // fills the m_bed.m_grid_lines and sets m_bed.m_origin.
     // Sets m_bed.m_polygon to limit the object placement.
     //BBS: add bed exclude area
-    void set_bed_shape(const Pointfs& shape, const Pointfs& exclude_areas, const double printable_height, const std::string& custom_texture, const std::string& custom_model, bool force_as_custom = false);
+    void set_bed_shape(const Pointfs& shape, const ExcludeAreaInfo& exclude_areas, const double printable_height, const std::string& custom_texture, const std::string& custom_model, bool force_as_custom = false);
 
     bool can_delete() const;
     bool can_delete_all() const;
@@ -8277,7 +8277,7 @@ bool Plater::priv::show_publish_dlg(bool show)
 }
 
 //BBS: add bed exclude area
-void Plater::priv::set_bed_shape(const Pointfs& shape, const Pointfs& exclude_areas, const double printable_height, const std::string& custom_texture, const std::string& custom_model, bool force_as_custom)
+void Plater::priv::set_bed_shape(const Pointfs& shape, const ExcludeAreaInfo& exclude_area_info, const double printable_height, const std::string& custom_texture, const std::string& custom_model, bool force_as_custom)
 {
     //Orca: reduce resolution for large bed printer
     BoundingBoxf bed_size = get_extents(shape);
@@ -8295,8 +8295,8 @@ void Plater::priv::set_bed_shape(const Pointfs& shape, const Pointfs& exclude_ar
     double height_to_lid = config->opt_float("extruder_clearance_height_to_lid");
     double height_to_rod = config->opt_float("extruder_clearance_height_to_rod");
 
-    Pointfs prev_exclude_areas = partplate_list.get_exclude_area();
-    new_shape |= (height_to_lid != prev_height_lid) || (height_to_rod != prev_height_rod) || (prev_exclude_areas != exclude_areas);
+    ExcludeAreaInfo prev_exclude_areas = partplate_list.get_exclude_area();
+    new_shape |= (height_to_lid != prev_height_lid) || (height_to_rod != prev_height_rod) ||  (prev_exclude_areas != exclude_area_info);
     if (!new_shape && partplate_list.get_logo_texture_filename() != custom_texture) {
         partplate_list.update_logo_texture_filename(custom_texture);
     }
@@ -8312,7 +8312,7 @@ void Plater::priv::set_bed_shape(const Pointfs& shape, const Pointfs& exclude_ar
 
         //Pointfs& exclude_areas = config->option<ConfigOptionPoints>("bed_exclude_area")->values;
         partplate_list.reset_size(max.x() - min.x() - Bed3D::Axes::DefaultTipRadius, max.y() - min.y() - Bed3D::Axes::DefaultTipRadius, z);
-        partplate_list.set_shapes(shape, exclude_areas, custom_texture, height_to_lid, height_to_rod);
+        partplate_list.set_shapes(shape, exclude_area_info, custom_texture, height_to_lid, height_to_rod);
 
         Vec2d new_shape_position = partplate_list.get_current_shape_position();
         if (shape_position != new_shape_position)
@@ -13285,6 +13285,7 @@ void Plater::on_config_change(const DynamicPrintConfig &config)
     }
 }
 
+
 void Plater::set_bed_shape()
 {
     std::string texture_filename;
@@ -13304,58 +13305,46 @@ void Plater::set_bed_shape()
 
     IdexPrintMode idex_mode     = p->config->opt_enum<IdexPrintMode>("idex_print_mode");
     
-   
-    switch (idex_mode)
-    {
-        
-        case IdexPrintMode::Backup:
-        {
-            m_excluded_area = p->config->option<ConfigOptionPoints>("bed_exclude_area_right_mode")->values;
-            Pointfs area2   = p->config->option<ConfigOptionPoints>("bed_exclude_area_left_mode")->values;
-            if (!m_excluded_area.empty()) {
-                m_excluded_area.push_back(m_excluded_area.front());
-            }
-            if (!area2.empty()) {
-                
-            m_excluded_area.insert(m_excluded_area.end(), area2.begin(), area2.end());
-              m_excluded_area.push_back(area2.front());
-            }
-            
-            break;
-        }
-        case IdexPrintMode::Mirror:
-        {
-            m_excluded_area = p->config->option<ConfigOptionPoints>("bed_exclude_area_mirror_mode")->values;
-            break;
-        }
-        case IdexPrintMode::Parallel:
-        {
-            m_excluded_area = p->config->option<ConfigOptionPoints>("bed_exclude_area_parallel_mode")->values;
-            break;
-        }
-        case IdexPrintMode::Normal:
-        default:
-        {
-            m_excluded_area = p->config->option<ConfigOptionPoints>("bed_exclude_area")->values;
-            break;
-        }
-    }
-  
+    m_exclude_area_info.clear();
+    Pointfs area_lh, area_rh, area_com, area_mir, area_par;
+    area_rh  = p->config->option<ConfigOptionPoints>("bed_exclude_area_right_mode")->values;
+    area_lh  = p->config->option<ConfigOptionPoints>("bed_exclude_area_left_mode")->values;
+    area_mir = p->config->option<ConfigOptionPoints>("bed_exclude_area_mirror_mode")->values;
+    area_par = p->config->option<ConfigOptionPoints>("bed_exclude_area_parallel_mode")->values;
+    area_com = p->config->option<ConfigOptionPoints>("bed_exclude_area")->values;
+
+
+    m_exclude_area_info.common.emplace_back(area_com);
     
 
-
+    switch (idex_mode) {
+        case IdexPrintMode::Mirror:         m_exclude_area_info.mirror=(area_mir); break;
+        case IdexPrintMode::Parallel:       m_exclude_area_info.mirror=(area_par); break;
+        case IdexPrintMode::Normal:         {
+             m_exclude_area_info.head_specific.emplace_back(area_lh);
+             m_exclude_area_info.head_specific.emplace_back(area_rh);
+             break;
+        }   
+        case IdexPrintMode::Backup: {
+            m_exclude_area_info.common.emplace_back(area_lh);
+            m_exclude_area_info.common.emplace_back(area_rh);
+            break;
+        }
+        default: break;
+    }
+    //m_exclude_area_info.clear();
     set_bed_shape(p->config->option<ConfigOptionPoints>("printable_area")->values,
         //BBS: add bed exclude areas
-         m_excluded_area,
+        m_exclude_area_info,
         p->config->option<ConfigOptionFloat>("printable_height")->value,
         p->config->option<ConfigOptionString>("bed_custom_texture")->value.empty() ? texture_filename : p->config->option<ConfigOptionString>("bed_custom_texture")->value,
         p->config->option<ConfigOptionString>("bed_custom_model")->value);
 }
 
 //BBS: add bed exclude area
-void Plater::set_bed_shape(const Pointfs& shape, const Pointfs& exclude_area, const double printable_height, const std::string& custom_texture, const std::string& custom_model, bool force_as_custom) const
+void Plater::set_bed_shape(const Pointfs& shape, const ExcludeAreaInfo& exclude_areas, const double printable_height, const std::string& custom_texture, const std::string& custom_model, bool force_as_custom) const
 {
-    p->set_bed_shape(make_counter_clockwise(shape), exclude_area, printable_height, custom_texture, custom_model, force_as_custom);
+    p->set_bed_shape(make_counter_clockwise(shape), exclude_areas, printable_height, custom_texture, custom_model, force_as_custom);
 }
 
 void Plater::force_filament_colors_update()
@@ -13779,7 +13768,7 @@ std::vector<Vec2f> Plater::get_empty_cells(const Vec2f step)
     auto& exclude_box3s = plate->get_exclude_areas();
     std::vector<BoundingBoxf> exclude_boxs;
     for (auto& box : exclude_box3s) {
-        Vec2d vmin(box.min.x(), box.min.y()), vmax(box.max.x(), box.max.y());
+        Vec2d vmin(box.bb.min.x(), box.bb.min.y()), vmax(box.bb.max.x(), box.bb.max.y());
         exclude_boxs.emplace_back(vmin, vmax);
     }
     for (float x = min_x + bbox.min.x(); x < bbox.max.x() - step(0) / 2; x += step(0))

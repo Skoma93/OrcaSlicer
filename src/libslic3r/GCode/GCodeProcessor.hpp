@@ -6,6 +6,7 @@
 #include "libslic3r/ExtrusionEntity.hpp"
 #include "libslic3r/PrintConfig.hpp"
 #include "libslic3r/CustomGCode.hpp"
+#include "libslic3r/ParameterUtils.hpp"
 
 #include <cstdint>
 #include <array>
@@ -198,7 +199,7 @@ class Print;
         std::vector<size_t> lines_ends;
         Pointfs printable_area;
         //BBS: add bed exclude area
-        Pointfs bed_exclude_area;
+        ExcludeAreaInfo bed_exclude_area;
         //BBS: add toolpath_outside
         bool toolpath_outside;
         //BBS: add object_label_enabled

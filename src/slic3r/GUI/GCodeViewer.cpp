@@ -930,7 +930,7 @@ std::vector<int> GCodeViewer::get_plater_extruder()
 
 //BBS: always load shell at preview
 void GCodeViewer::load(const GCodeProcessorResult& gcode_result, const Print& print, const BuildVolume& build_volume,
-                const std::vector<BoundingBoxf3>& exclude_bounding_box, ConfigOptionMode mode, bool only_gcode)
+                const std::vector<HeadExcludeBoundingBox>& exclude_bounding_box, ConfigOptionMode mode, bool only_gcode)
 {
     // avoid processing if called with the same gcode_result
     if (m_last_result_id == gcode_result.id) {
@@ -992,7 +992,7 @@ void GCodeViewer::load(const GCodeProcessorResult& gcode_result, const Print& pr
     if (m_only_gcode_in_preview) {
         Pointfs printable_area;
         //BBS: add bed exclude area
-        Pointfs bed_exclude_area = Pointfs();
+        ExcludeAreaInfo bed_exclude_area = ExcludeAreaInfo();
         std::string texture;
         std::string model;
 
@@ -1009,8 +1009,8 @@ void GCodeViewer::load(const GCodeProcessorResult& gcode_result, const Print& pr
             }
 
             //BBS: add bed exclude area
-            if (!gcode_result.bed_exclude_area.empty())
-                bed_exclude_area = gcode_result.bed_exclude_area;
+            if (!gcode_result.bed_exclude_area.is_empty())
+                bed_exclude_area=gcode_result.bed_exclude_area;
 
             wxGetApp().plater()->set_bed_shape(printable_area, bed_exclude_area, gcode_result.printable_height, texture, model, gcode_result.printable_area.empty());
         }
@@ -2011,7 +2011,7 @@ void GCodeViewer::export_toolpaths_to_obj(const char* filename) const
     fclose(fp);
 }
 
-void GCodeViewer::load_toolpaths(const GCodeProcessorResult& gcode_result, const BuildVolume& build_volume, const std::vector<BoundingBoxf3>& exclude_bounding_box)
+void GCodeViewer::load_toolpaths(const GCodeProcessorResult& gcode_result, const BuildVolume& build_volume, const std::vector<HeadExcludeBoundingBox>& exclude_bounding_box)
 {
     // max index buffer size, in bytes
     static const size_t IBUFFER_THRESHOLD_BYTES = 64 * 1024 * 1024;
@@ -2349,7 +2349,8 @@ void GCodeViewer::load_toolpaths(const GCodeProcessorResult& gcode_result, const
     wxBusyCursor busy;
 
     //BBS: use convex_hull for toolpath outside check
-    Points pts;
+    std::vector<Points> pts;
+    pts.resize(m_extruders_count);
 
     // extract approximate paths bounding box from result
     //BBS: add only gcode mode
@@ -2363,7 +2364,7 @@ void GCodeViewer::load_toolpaths(const GCodeProcessorResult& gcode_result, const
             if (move.type == EMoveType::Extrude && move.extrusion_role != erCustom && move.width != 0.0f && move.height != 0.0f) {
                 m_paths_bounding_box.merge(move.position.cast<double>());
                 //BBS: use convex_hull for toolpath outside check
-                pts.emplace_back(Point(scale_(move.position.x()), scale_(move.position.y())));
+                pts[move.extruder_id].emplace_back(Point(scale_(move.position.x()), scale_(move.position.y())));
             }
         //}
     }
@@ -2383,7 +2384,8 @@ void GCodeViewer::load_toolpaths(const GCodeProcessorResult& gcode_result, const
                 for (int i = 0; i < move.interpolation_points.size(); i++) {
                     m_paths_bounding_box.merge(move.interpolation_points[i].cast<double>());
                     //BBS: use convex_hull for toolpath outside check
-                    pts.emplace_back(Point(scale_(move.interpolation_points[i].x()), scale_(move.interpolation_points[i].y())));
+                    pts[move.extruder_id].emplace_back(
+                        Point(scale_(move.interpolation_points[i].x()), scale_(move.interpolation_points[i].y())));
                 }
         //}
     }
@@ -2405,17 +2407,28 @@ void GCodeViewer::load_toolpaths(const GCodeProcessorResult& gcode_result, const
             //const std::vector<BoundingBoxf3>& exclude_bounding_box = plate->get_exclude_areas();
             if (exclude_bounding_box.size() > 0)
             {
-                int index;
-                Slic3r::Polygon convex_hull_2d = Slic3r::Geometry::convex_hull(std::move(pts));
-                for (index = 0; index < exclude_bounding_box.size(); index ++)
+
+                for (int head_id = 0; head_id < m_extruders_count; head_id++)
                 {
-                    Slic3r::Polygon p = exclude_bounding_box[index].polygon(true);  // instance convex hull is scaled, so we need to scale here
-                    if (intersection({ p }, { convex_hull_2d }).empty() == false)
+                    int index;
+                    Slic3r::Polygon convex_hull_2d = Slic3r::Geometry::convex_hull(std::move(pts[head_id]));
+                    
+                    for (index = 0; index < exclude_bounding_box.size(); index ++)
                     {
-                        m_contained_in_bed = false;
-                        break;
+                        if (exclude_bounding_box[index].headNum==-1 || exclude_bounding_box[index].headNum == head_id)
+                        {
+                            Slic3r::Polygon p = exclude_bounding_box[index].bb.polygon(true);  // instance convex hull is scaled, so we need to scale here
+                            if (intersection({ p }, { convex_hull_2d }).empty() == false)
+                            {
+                                m_contained_in_bed = false;
+                                break;
+                            }
+
+                        }
                     }
+
                 }
+
             }
         }
         (const_cast<GCodeProcessorResult&>(gcode_result)).toolpath_outside = !m_contained_in_bed;

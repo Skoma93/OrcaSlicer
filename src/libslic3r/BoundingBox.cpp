@@ -285,3 +285,4 @@ BoundingBoxf3 BoundingBoxf3::transformed(const Transform3d& matrix) const
 }
 
 }
+

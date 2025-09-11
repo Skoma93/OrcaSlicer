@@ -2888,7 +2888,7 @@ void GLCanvas3D::load_gcode_preview(const GCodeProcessorResult& gcode_result, co
 {
     PartPlateList& partplate_list = wxGetApp().plater()->get_partplate_list();
     PartPlate* plate = partplate_list.get_curr_plate();
-    const std::vector<BoundingBoxf3>& exclude_bounding_box = plate->get_exclude_areas();
+    const std::vector<HeadExcludeBoundingBox>& exclude_bounding_box = plate->get_exclude_areas();
 
     //BBS: init is called in GLCanvas3D.render()
     //when load gcode directly, it is too late
