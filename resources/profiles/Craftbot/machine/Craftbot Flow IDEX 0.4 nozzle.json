@@ -28,34 +28,34 @@
     "printable_area": [
         "18x16",
         "443x16",
-        "443x266",
-        "18x266"
+        "443x270",
+        "18x270"
     ],
     "bed_exclude_area": [
     ],
     "bed_exclude_area_left_mode":[
         "395x16",
         "443x16",
-        "443x266",
-        "395x266"
+        "443x270",
+        "395x270"
     ],
     "bed_exclude_area_right_mode":[
         "18x16",
-        "66x16",
-        "66x266",
-        "18x266"
+        "55x16",
+        "55x270",
+        "18x270"
     ],
     "bed_exclude_area_mirror_mode":[
-        "168x16",
+        "175x16",
         "443x16",
-        "443x266",
-        "168x266"
+        "443x270",
+        "175x270"
     ],
     "bed_exclude_area_parallel_mode":[
         "195x16",
         "443x16",
-        "443x266",
-        "195x266"
+        "443x270",
+        "195x270"
     ],
 
     "is_idex_printer": "1",

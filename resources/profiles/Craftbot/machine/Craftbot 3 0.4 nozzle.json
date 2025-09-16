@@ -35,13 +35,13 @@
     ],
     "bed_exclude_area": [
     ],
-    "bed_exclude_area_left_mode":[
+    "bed_exclude_area_right_mode":[
         "0x0",
         "52x0",
         "52x250",
         "0x250"
     ],
-    "bed_exclude_area_right_mode":[
+    "bed_exclude_area_left_mode":[
         "330x0",
         "382x0",
         "382x250",

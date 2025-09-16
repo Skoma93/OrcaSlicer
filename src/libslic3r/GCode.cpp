@@ -2365,6 +2365,8 @@ void GCode::_do_export(Print& print, GCodeOutputStream &file, ThumbnailsGenerato
             this->placeholder_parser().set("scan_first_layer", new ConfigOptionBool(false));
         }
     }
+    file.write(m_writer.set_idex_print_mode(m_config.idex_print_mode));
+
     std::string machine_start_gcode = this->placeholder_parser_process("machine_start_gcode", print.config().machine_start_gcode.value, initial_extruder_id);
     if (print.config().gcode_flavor != gcfKlipper) {
         // Set bed temperature if the start G-code does not contain any bed temp control G-codes.
@@ -2383,7 +2385,6 @@ void GCode::_do_export(Print& print, GCodeOutputStream &file, ThumbnailsGenerato
     // Write the custom start G-code
     file.writeln(machine_start_gcode);
 
-    file.write(m_writer.set_idex_print_mode(m_config.idex_print_mode));
     //BBS: gcode writer doesn't know where the real position of extruder is after inserting custom gcode
     m_writer.set_current_position_clear(false);
     m_start_gcode_filament = GCodeProcessor::get_gcode_last_filament(machine_start_gcode);
