@@ -3893,6 +3893,20 @@ std::string GUI_App::handle_web_request(std::string cmd)
                 CallAfter([this] {
                         get_login_info();
                     });
+            } 
+            else if (command_str.compare("open_external_browser") == 0) {
+                std::string raw_url;
+                if (root.get_child_optional("data") != boost::none) {
+                    pt::ptree                    data_node = root.get_child("data");
+                    boost::optional<std::string> url_opt      = data_node.get_optional<std::string>("url");
+                    if (url_opt.has_value()) {
+                        const std::string& url = *url_opt;
+                        if (boost::starts_with(url, "http://") || boost::starts_with(url, "https://")) {
+                            wxLaunchDefaultApplication(url);
+                        }
+                    }
+                }
+
             }
             else if (command_str.compare("homepage_login_or_register") == 0) {
                 CallAfter([this] {

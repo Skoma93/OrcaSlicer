@@ -17,8 +17,12 @@
 <script type="text/javascript" src="../data/text.js"></script>		
 	
 <script type="text/javascript" src="js/home.js"></script>
+<script type="text/javascript" src="js/craft.js"></script>
 </head>
-<body class="ZScrol" onLoad="OnInit()">
+<body style="margin-top: 3rem;" class="ZScrol" onLoad="OnInit()">
+
+<div id="craftHeader" style="cursor: pointer; text-decoration: none; position: absolute; top: 0; left: 0; width: 100%; padding: 1em; background: purple; display: none; z-index: 999; color: white; font-weight: bold; text-align: center; justify-content: center; align-items: center;"></div>
+
 <div id="LeftBoard" style="display: none;">
 	<div id="LoginArea">
 	<div id="Login1">
@@ -72,6 +76,18 @@
 			<div>
 				<div class="trans TextS1" tid="t33">open project</div>
 				<div class="MenuDesc">3mf</div>
+			</div>
+		</div>
+		<div class="MenuItem" onClick="OpenExternalURL('https://help.craftbot.com/category/orcaslicer/')">
+			<div class="MenuIcon"><img src="img/craftbot-logo.svg"></div>
+			<div>
+				<div class="trans TextS1" tid="open_ext_btn">Support</div>
+			</div>
+		</div>
+		<div class="MenuItem" onClick="OpenExternalURL('https://shop.craftbot.com/')">
+			<div class="MenuIcon"><img src="img/craftbot-logo.svg"></div>
+			<div>
+				<div class="trans TextS1" tid="open_ext_btn">Shop</div>
 			</div>
 		</div>		
 	</div>
@@ -176,6 +192,35 @@
 
 </div>	
 </body>
+<script>
+  function OpenExternalURL(url) {
+    const msgObj = { command: 'open_external_browser', data: { url } };
+    const payload = JSON.stringify(msgObj);
+
+    try {
+      // wxWebView (Edge/IE backend)
+      if (window.external && typeof window.external.invoke === 'function') {
+        window.external.invoke(payload);
+        return;
+      }
+      // WebView2 (Chromium)
+      if (window.chrome && window.chrome.webview && typeof window.chrome.webview.postMessage === 'function') {
+        window.chrome.webview.postMessage(payload);
+        return;
+      }
+      // WebKit (macOS)
+      if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.wx) {
+        window.webkit.messageHandlers.wx.postMessage(msgObj);
+        return;
+      }
+    } catch (e) {
+      console.error('OpenExternalURL bridge error:', e);
+    }
+
+    window.open(url, '_blank');
+  }
+</script>
+
 <script type="text/javascript">
 	//HandleStudio(TestData);
     document.onkeydown = function (event) {
@@ -208,16 +253,3 @@
 
 </script>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-

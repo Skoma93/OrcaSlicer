@@ -8,6 +8,9 @@
     "printer_model": "Craftbot Flow",
     "printer_variant": "0.6",
     "nozzle_type": "brass",
+    "nozzle_diameter": [
+        "0.6"
+    ],
     "retraction_length": [
         "1.5"
     ]

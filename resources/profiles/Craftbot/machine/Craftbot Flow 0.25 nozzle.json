@@ -6,8 +6,11 @@
     "setting_id": "GM0001",
     "instantiation": "true",
     "printer_model": "Craftbot Flow",
-    "printer_variant": "0.8",
+    "printer_variant": "0.25",
     "nozzle_type": "brass",
+    "nozzle_diameter": [
+        "0.25"
+    ],
     "retraction_length": [
         "0.75"
     ]

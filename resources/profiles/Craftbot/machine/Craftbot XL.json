@@ -2,6 +2,7 @@
     "type": "machine_model",
     "name": "Craftbot XL",
     "nozzle_diameter": "0.25;0.4;0.6;0.8",
+    "bed_model": "Craftbot_XL_build_plate.stl",
     "family": "Craftbot Original",
     "machine_tech": "FFF",
     "model_id": "CB_XL",
