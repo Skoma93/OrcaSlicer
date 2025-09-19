@@ -9,6 +9,9 @@
     "printer_variant": "0.6",
     "nozzle_type": "brass",
     "retraction_length": [
-        "1.5"
+        "1.2"
+    ],
+    "nozzle_diameter": [
+        "0.6"
     ]
 }

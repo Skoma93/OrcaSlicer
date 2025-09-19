@@ -10,5 +10,8 @@
     "nozzle_type": "brass",
     "retraction_length": [
         "1.5"
+    ],
+    "nozzle_diameter": [
+        "0.6"
     ]
 }

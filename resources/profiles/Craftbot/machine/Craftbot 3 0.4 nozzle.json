@@ -24,8 +24,8 @@
     "printer_structure": "i3",
     "nozzle_type": "brass",
     "retraction_length": [
-        "1.5",
-        "1.5"
+        "0.75",
+        "1.75"
     ],
     "printable_area": [
         "8x0",
