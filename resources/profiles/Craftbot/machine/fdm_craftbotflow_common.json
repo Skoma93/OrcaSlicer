@@ -10,7 +10,7 @@
     "emit_machine_limits_to_gcode": "0",
     "before_layer_change_gcode": ";BEFORE_LAYER_CHANGE\nG92 E0.0\n;[layer_z]\n\n",
     "machine_start_gcode": ";Print Mode:{idex_print_mode}\n{if is_idex_printer}\nM425 S1 ; Wiper Strip enabled\nM430 Z0 F600 ; Head change ZHop settings\nM431 E4 F3000 ; Head change Exit Retract settings\nM432 E0 F3000 ; Head change Enter Retract settings\nM433 E4 F3000 ; Head change Enter Prime settings\n{endif}\nM104 S{first_layer_temperature[0]} ; Set hotend temp (no wait)\n{if idex_print_mode != \"normal\" && idex_print_mode != \"backup\"}\nM104 T1 S{first_layer_temperature[0]} ; Set hotend temp (no wait)\n{endif}\nG28 ;Home\nM190 S60 ; set bed temp (wait)\nM109 S{first_layer_temperature[0]} ; set final nozzle temp\n{if idex_print_mode != \"normal\" && idex_print_mode != \"backup\"}\nM109 T1 S{first_layer_temperature[0]} ; set final nozzle temp\n{endif}\n;LAYER_COUNT:{total_layer_count}",
-    "machine_end_gcode": "M104 S0\nM140 S0\nM107 S0\n;Retract the filament\nG92 E1\nG1 E-1 F300\n{if idex_print_mode != \"normal\" && idex_print_mode != \"backup\"}\nM104 T1 S0\n{endif}",
+    "machine_end_gcode": "M104 S0\nM140 S0\nM107\n;Retract the filament\nG92 E1\nG1 E-1 F300\n{if idex_print_mode != \"normal\" && idex_print_mode != \"backup\"}\nM104 T1 S0\n{endif}",
     "change_filament_gcode": ";CHANGE_FILAMENT\nM107\nG92 E0\nT{next_extruder}\nG92 E0",
     "machine_pause_gcode": "G197",
     "wipe": [
