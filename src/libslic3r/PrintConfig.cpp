@@ -8574,17 +8574,30 @@ Points get_bed_shape(const SLAPrinterConfig &cfg) { return to_points(make_counte
 
 Polygons get_bed_excluded_area(const PrintConfig& cfg)
 {
-    const Pointfs exclude_area_points = cfg.bed_exclude_area.values;
+    const Pointfs exclude_area_points          = cfg.bed_exclude_area.values;
+    const Pointfs exclude_area_mirror_points   = cfg.bed_exclude_area_mirror_mode.values;
+    const Pointfs exclude_area_parallel_points = cfg.bed_exclude_area_parallel_mode.values;
+    const Pointfs exclude_area_left_points     = cfg.bed_exclude_area_left_mode.values;
+    const Pointfs exclude_area_right_points    = cfg.bed_exclude_area_right_mode.values;
 
-    Polygon exclude_poly;
-    for (int i = 0; i < exclude_area_points.size(); i++) {
-        auto pt = exclude_area_points[i];
-        exclude_poly.points.emplace_back(scale_(pt.x()), scale_(pt.y()));
-    }
+    auto make_polygon = [&](const Pointfs& input_points) -> Polygon {
+        Polygon poly;
+        poly.points.reserve(input_points.size());
+        for (const auto& pt : input_points) {
+            poly.points.emplace_back(scale_(pt.x()), scale_(pt.y()));
+        }
+        poly.make_counter_clockwise();
+        return poly;
+    };
 
-    exclude_poly.make_counter_clockwise();
-
-    return {exclude_poly};
+    const IdexPrintMode mode = cfg.idex_print_mode.value;
+    switch (mode) {
+    case IdexPrintMode::Mirror: return {make_polygon(exclude_area_points), make_polygon(exclude_area_mirror_points)};
+    case IdexPrintMode::Parallel: return {make_polygon(exclude_area_points), make_polygon(exclude_area_parallel_points)};
+    case IdexPrintMode::Backup:
+    case IdexPrintMode::Normal:
+    default: return {make_polygon(exclude_area_points), make_polygon(exclude_area_left_points), make_polygon(exclude_area_right_points)};
+    };
 }
 
 Polygon get_bed_shape_with_excluded_area(const PrintConfig& cfg)
