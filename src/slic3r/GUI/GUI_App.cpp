@@ -4420,9 +4420,12 @@ void GUI_App::check_new_version_sf(bool show_tips, int by_user)
 
             // at least two number, use '.' as separator. can be followed by -Az23 for prereleased and +Az42 for
             // metadata
-            std::regex matcher("[0-9]+\\.[0-9]+(\\.[0-9]+)*(-[A-Za-z0-9]+)?(\\+[A-Za-z0-9]+)?");
+            std::regex matcher("^[0-9]+\\.[0-9]+(\\.[0-9]+)?"            // major.minor(.patch)
+                               "(-[0-9A-Za-z-]+(\\.[0-9A-Za-z-]+)*)?"    // -prerelease(.subparts)
+                               "(\\+[0-9A-Za-z-]+(\\.[0-9A-Za-z-]+)*)?$" // +build(.subparts)
+            );
 
-            Semver           current_version = get_version(SoftFever_VERSION, matcher);
+            Semver current_version = get_version(Skoma_VERSION, matcher);
             Semver best_pre(1, 0, 0);
             Semver best_release(1, 0, 0);
             std::string best_pre_url;
