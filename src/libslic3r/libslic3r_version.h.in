@@ -5,6 +5,14 @@
 #define SLIC3R_APP_KEY "@SLIC3R_APP_KEY@"
 #define SLIC3R_VERSION "@SLIC3R_VERSION@"
 #define SoftFever_VERSION "@SoftFever_VERSION@"
+
+//CUSTOM Version
+#define Skoma_SUFFIX "@Skoma_SUFFIX@"
+#undef SoftFever_VERSION
+#define SoftFever_VERSION SoftFever_VERSION_ORIG Skoma_SUFFIX
+#undef Skoma_SUFFIX
+#undef SoftFever_VERSION_ORIG
+
 #ifndef GIT_COMMIT_HASH
     #define GIT_COMMIT_HASH "0000000" // 0000000 means uninitialized
 #endif

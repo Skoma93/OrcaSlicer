@@ -4425,7 +4425,7 @@ void GUI_App::check_new_version_sf(bool show_tips, int by_user)
                                "(\\+[0-9A-Za-z-]+(\\.[0-9A-Za-z-]+)*)?$" // +build(.subparts)
             );
 
-            Semver current_version = get_version(Skoma_VERSION, matcher);
+            Semver current_version = get_version(SoftFever_VERSION, matcher);
             Semver best_pre(1, 0, 0);
             Semver best_release(1, 0, 0);
             std::string best_pre_url;
@@ -4650,7 +4650,7 @@ std::string GUI_App::format_display_version()
 {
     if (!version_display.empty()) return version_display;
 
-    version_display = Skoma_VERSION;
+    version_display = SoftFever_VERSION;
     return version_display;
 }
 
