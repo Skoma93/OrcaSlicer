@@ -867,7 +867,7 @@ Sidebar::Sidebar(Plater *parent)
             ///on_config_change(wxGetApp().preset_bundle->full_config());
             AppConfig* app_config = wxGetApp().app_config;
             //app_config->set("idex_print_mode", std::to_string(int(new_bed_type)));
-           auto& full_config = wxGetApp().preset_bundle->full_config();
+            auto full_config = wxGetApp().preset_bundle->full_config();
             wxGetApp().mainframe->on_config_changed(&full_config);
         });
         
@@ -13308,7 +13308,7 @@ void Plater::on_config_change(const DynamicPrintConfig &config)
             update_scheduled = true;
         }
     }
-
+    
     if (bed_shape_changed)
         set_bed_shape();
 
