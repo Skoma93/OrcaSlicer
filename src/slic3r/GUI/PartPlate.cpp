@@ -2669,6 +2669,9 @@ void PartPlate::generate_exclude_polygon(const Pointfs& excludeArea,ExPolygon& e
 
 void PartPlate::add_exclude_model(Pointfs points, int head_num)
 {
+    if (points.empty())
+        return;
+
     ExPolygon        ex_poly;
     HeadExcludeModel model;
     model.headNum = head_num;
@@ -2736,14 +2739,14 @@ bool PartPlate::set_shape(
         m_exclude_models.clear();
 
         for (int i = 0; i < m_exclude_area_info.common.size(); i++) {
-            add_exclude_model(exclude_area_info.common[i], -1);
+            add_exclude_model(m_exclude_area_info.common[i], -1);
         }
 
         add_exclude_model(m_exclude_area_info.mirror, -1);
         add_exclude_model(m_exclude_area_info.parallel, -1);
         for (int i = 0; i < m_exclude_area_info.head_specific.size();i++)
 		{
-            add_exclude_model(exclude_area_info.head_specific[i], i);
+            add_exclude_model(m_exclude_area_info.head_specific[i], i);
 		}
 
 		const BoundingBox& pp_bbox = poly.contour.bounding_box();

@@ -13260,6 +13260,8 @@ void Plater::on_config_change(const DynamicPrintConfig &config)
         }
         //BBS: add bed_exclude_area
         else if (opt_key == "printable_area" || opt_key == "bed_exclude_area" 
+            || opt_key == "bed_exclude_area_left_mode" || opt_key == "bed_exclude_area_right_mode" 
+            || opt_key == "bed_exclude_area_mirror_mode" ||  opt_key == "bed_exclude_area_parallel_mode"
             || opt_key == "bed_custom_texture" || opt_key == "bed_custom_model"
             || opt_key == "extruder_clearance_height_to_lid"
             || opt_key == "extruder_clearance_height_to_rod") {
