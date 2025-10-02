@@ -1,7 +1,7 @@
 {
     "name": "Craftbot",
-    "version":  "02.03.00.03",
-    "force_update": "0",
+    "version":  "02.03.01.00",
+    "force_update": "1",
     "description": "Craftbot configurations",
     "machine_model_list": [
         {
