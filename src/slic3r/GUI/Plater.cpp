@@ -862,11 +862,21 @@ Sidebar::Sidebar(Plater *parent)
             if (old_mode == mode)
                 return; // no change
             proj_config.set_key_value("idex_print_mode", new ConfigOptionEnum<IdexPrintMode>(mode));
+            if (mode == IdexPrintMode::Normal){
+                wxColour    new_col   = Plater::get_next_color_for_filament();
+                std::string new_color = new_col.GetAsString(wxC2S_HTML_SYNTAX).ToStdString();
+                wxGetApp().preset_bundle->set_num_filaments(2, new_color);
+                on_filaments_change(2);
+            } else {
+                wxGetApp().plater()->select_all();
+                wxGetApp().obj_list()->set_extruder_for_selected_items(1);
+                wxGetApp().plater()->deselect_all();
+                wxGetApp().preset_bundle->set_num_filaments(1);
+                on_filaments_change(1);
+            }
+            //Update
             wxGetApp().plater()->update_project_dirty_from_presets();
-            // update plater with new config
-            ///on_config_change(wxGetApp().preset_bundle->full_config());
             AppConfig* app_config = wxGetApp().app_config;
-            //app_config->set("idex_print_mode", std::to_string(int(new_bed_type)));
             auto full_config = wxGetApp().preset_bundle->full_config();
             wxGetApp().mainframe->on_config_changed(&full_config);
         });
@@ -969,8 +979,15 @@ Sidebar::Sidebar(Plater *parent)
         // Orca: limit filament choices to MAXIMUM_EXTRUDER_NUMBER
         if (p->combos_filament.size() >= MAXIMUM_EXTRUDER_NUMBER)
             return;
-
+        DynamicPrintConfig& proj_config = wxGetApp().preset_bundle->project_config;
+        IdexPrintMode mode = proj_config.opt_enum<IdexPrintMode>("idex_print_mode");
+        
         int filament_count = p->combos_filament.size() + 1;
+        if (mode == IdexPrintMode::Mirror || mode == IdexPrintMode::Parallel) {
+            if (p->combos_filament.size() >= 1) {
+                return;
+            }
+        }
         wxColour new_col = Plater::get_next_color_for_filament();
         std::string new_color = new_col.GetAsString(wxC2S_HTML_SYNTAX).ToStdString();
         wxGetApp().preset_bundle->set_num_filaments(filament_count, new_color);
@@ -3858,6 +3875,11 @@ std::vector<size_t> Plater::priv::load_files(const std::vector<fs::path>& input_
                             }
                         }
                         int size = extruderIds.size() == 0 ? 0 : *(extruderIds.rbegin());
+                        DynamicPrintConfig& proj_config = wxGetApp().preset_bundle->project_config;
+                        IdexPrintMode       mode        = proj_config.opt_enum<IdexPrintMode>("idex_print_mode");
+                        if (mode == IdexPrintMode::Mirror || mode == IdexPrintMode::Parallel) {
+                            size = 1;
+                        }
 
                         int filament_size = sidebar->combos_filament().size();
                         while (filament_size < MAXIMUM_EXTRUDER_NUMBER && filament_size < size) {
