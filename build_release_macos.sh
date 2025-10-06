@@ -175,7 +175,7 @@ function build_slicer() {
                     -DBBL_RELEASE_TO_PUBLIC=1 \
                     -DORCA_TOOLS=ON \
                     -DCMAKE_PREFIX_PATH="$DEPS/usr/local" \
-                    -DCMAKE_INSTALL_PREFIX="$PWD/OrcaSlicer" \
+                    -DCMAKE_INSTALL_PREFIX="$PWD/OrcaSlicerForCraftbot" \
                     -DCMAKE_BUILD_TYPE="$BUILD_CONFIG" \
                     -DCMAKE_MACOSX_RPATH=ON \
                     -DCMAKE_INSTALL_RPATH="${DEPS}/usr/local" \
@@ -195,18 +195,18 @@ function build_slicer() {
         echo "Fix macOS app package..."
         (
             cd "$PROJECT_BUILD_DIR"
-            mkdir -p OrcaSlicer
-            cd OrcaSlicer
+            mkdir -p OrcaSlicerForCraftbot
+            cd OrcaSlicerForCraftbot
             # remove previously built app
-            rm -rf ./OrcaSlicer.app
+            rm -rf ./OrcaSlicerForCraftbot.app
             # fully copy newly built app
-            cp -pR "../src$BUILD_DIR_CONFIG_SUBDIR/OrcaSlicer.app" ./OrcaSlicer.app
+            cp -pR "../src$BUILD_DIR_CONFIG_SUBDIR/OrcaSlicerForCraftbot.app" ./OrcaSlicerForCraftbot.app
             # fix resources
-            resources_path=$(readlink ./OrcaSlicer.app/Contents/Resources)
-            rm ./OrcaSlicer.app/Contents/Resources
-            cp -R "$resources_path" ./OrcaSlicer.app/Contents/Resources
+            resources_path=$(readlink ./OrcaSlicerForCraftbot.app/Contents/Resources)
+            rm ./OrcaSlicerForCraftbot.app/Contents/Resources
+            cp -R "$resources_path" ./OrcaSlicerForCraftbot.app/Contents/Resources
             # delete .DS_Store file
-            find ./OrcaSlicer.app/ -name '.DS_Store' -delete
+            find ./OrcaSlicerForCraftbot.app/ -name '.DS_Store' -delete
             
             # Copy OrcaSlicer_profile_validator.app if it exists
             if [ -f "../src$BUILD_DIR_CONFIG_SUBDIR/OrcaSlicer_profile_validator.app/Contents/MacOS/OrcaSlicer_profile_validator" ]; then
@@ -241,37 +241,37 @@ function build_universal() {
     # Create universal binary
     echo "Creating universal binary..."
     # PROJECT_BUILD_DIR="$PROJECT_DIR/build_Universal"
-    mkdir -p "$PROJECT_BUILD_DIR/OrcaSlicer"
-    UNIVERSAL_APP="$PROJECT_BUILD_DIR/OrcaSlicer/OrcaSlicer.app"
+    mkdir -p "$PROJECT_BUILD_DIR/OrcaSlicerForCraftbot"
+    UNIVERSAL_APP="$PROJECT_BUILD_DIR/OrcaSlicerForCraftbot/OrcaSlicerForCraftbot.app"
     rm -rf "$UNIVERSAL_APP"
-    cp -R "$PROJECT_DIR/build/arm64/OrcaSlicer/OrcaSlicer.app" "$UNIVERSAL_APP"
+    cp -R "$PROJECT_DIR/build/arm64/OrcaSlicerForCraftbot/OrcaSlicerForCraftbot.app" "$UNIVERSAL_APP"
     
     # Get the binary path inside the .app bundle
-    BINARY_PATH="Contents/MacOS/OrcaSlicer"
+    BINARY_PATH="Contents/MacOS/OrcaSlicerForCraftbot"
     
     # Create universal binary using lipo
     lipo -create \
-        "$PROJECT_DIR/build/x86_64/OrcaSlicer/OrcaSlicer.app/$BINARY_PATH" \
-        "$PROJECT_DIR/build/arm64/OrcaSlicer/OrcaSlicer.app/$BINARY_PATH" \
+        "$PROJECT_DIR/build/x86_64/OrcaSlicerForCraftbot/OrcaSlicerForCraftbot.app/$BINARY_PATH" \
+        "$PROJECT_DIR/build/arm64/OrcaSlicerForCraftbot/OrcaSlOrcaSlicerForCraftboticer.app/$BINARY_PATH" \
         -output "$UNIVERSAL_APP/$BINARY_PATH"
         
     echo "Universal binary created at $UNIVERSAL_APP"
     
     # Create universal binary for profile validator if it exists
-    if [ -f "$PROJECT_DIR/build/arm64/OrcaSlicer/OrcaSlicer_profile_validator.app/Contents/MacOS/OrcaSlicer_profile_validator" ] && \
-       [ -f "$PROJECT_DIR/build/x86_64/OrcaSlicer/OrcaSlicer_profile_validator.app/Contents/MacOS/OrcaSlicer_profile_validator" ]; then
+    if [ -f "$PROJECT_DIR/build/arm64/OrcaSlicerForCraftbot/OrcaSlicer_profile_validator.app/Contents/MacOS/OrcaSlicer_profile_validator" ] && \
+       [ -f "$PROJECT_DIR/build/x86_64/OrcaSlicerForCraftbot/OrcaSlicer_profile_validator.app/Contents/MacOS/OrcaSlicer_profile_validator" ]; then
         echo "Creating universal binary for OrcaSlicer_profile_validator..."
-        UNIVERSAL_VALIDATOR_APP="$PROJECT_BUILD_DIR/OrcaSlicer/OrcaSlicer_profile_validator.app"
+        UNIVERSAL_VALIDATOR_APP="$PROJECT_BUILD_DIR/OrcaSlicerForCraftbot/OrcaSlicer_profile_validator.app"
         rm -rf "$UNIVERSAL_VALIDATOR_APP"
-        cp -R "$PROJECT_DIR/build/arm64/OrcaSlicer/OrcaSlicer_profile_validator.app" "$UNIVERSAL_VALIDATOR_APP"
+        cp -R "$PROJECT_DIR/build/arm64/OrcaSlicerForCraftbot/OrcaSlicer_profile_validator.app" "$UNIVERSAL_VALIDATOR_APP"
         
         # Get the binary path inside the profile validator .app bundle
         VALIDATOR_BINARY_PATH="Contents/MacOS/OrcaSlicer_profile_validator"
         
         # Create universal binary using lipo
         lipo -create \
-            "$PROJECT_DIR/build/x86_64/OrcaSlicer/OrcaSlicer_profile_validator.app/$VALIDATOR_BINARY_PATH" \
-            "$PROJECT_DIR/build/arm64/OrcaSlicer/OrcaSlicer_profile_validator.app/$VALIDATOR_BINARY_PATH" \
+            "$PROJECT_DIR/build/x86_64/OrcaSlicerForCraftbot/OrcaSlicer_profile_validator.app/$VALIDATOR_BINARY_PATH" \
+            "$PROJECT_DIR/build/arm64/OrcaSlicerForCraftbot/OrcaSlicer_profile_validator.app/$VALIDATOR_BINARY_PATH" \
             -output "$UNIVERSAL_VALIDATOR_APP/$VALIDATOR_BINARY_PATH"
             
         echo "Universal binary for OrcaSlicer_profile_validator created at $UNIVERSAL_VALIDATOR_APP"
