@@ -6,12 +6,18 @@
     "setting_id": "GM0401",
     "instantiation": "true",
     "printer_model": "Craftbot Plus Pro",
-    "printer_variant": "0.8",
+    "printer_variant": "0.25",
     "nozzle_type": "brass",
     "retraction_length": [
         "0.7"
     ],
     "nozzle_diameter": [
         "0.25"
+    ],
+    "max_layer_height": [
+        "0.14"
+    ],
+    "min_layer_height": [
+        "0.08"
     ]
 }

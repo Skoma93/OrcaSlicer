@@ -9,6 +9,14 @@
         "0.4",
         "0.4"
     ],
+    "max_layer_height": [
+        "0.30",
+        "0.30"
+    ],
+    "min_layer_height": [
+        "0.08",
+        "0.08"
+    ],
     "printer_model": "Craftbot Flow IDEX",
     "printer_variant": "0.4",
     "auxiliary_fan": "0",

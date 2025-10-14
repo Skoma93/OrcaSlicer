@@ -3,7 +3,7 @@
     "name": "fdm_process_craftbotflow_common_0_6",
     "from": "system",
     "instantiation": "false",
-    "inherits": "fdm_process_common",
+    "inherits": "fdm_process_craftbotflow_common",
     "line_width": "0.62",
     "initial_layer_line_width": "0.62",
     "outer_wall_line_width": "0.62",
@@ -13,6 +13,9 @@
     "internal_solid_infill_line_width": "0.62",
     "support_line_width": "0.62",
     "bridge_flow": "0.95",
+    "support_threshold_angle": "40",
+    "support_top_z_distance": "0.15",
+    "support_bottom_z_distance": "0.15",
     "compatible_printers": [
       "Craftbot Flow 0.6 nozzle",
       "Craftbot Flow XL 0.6 nozzle",

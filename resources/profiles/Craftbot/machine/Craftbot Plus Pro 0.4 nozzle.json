@@ -30,6 +30,12 @@
         "255x200",
         "5x200"
     ],
+    "max_layer_height": [
+        "0.3"
+    ],
+    "min_layer_height": [
+        "0.05"
+    ],
     "bed_exclude_area": [
     ],
     "bed_exclude_area_left_mode":[

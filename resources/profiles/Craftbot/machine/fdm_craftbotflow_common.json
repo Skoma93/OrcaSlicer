@@ -9,10 +9,22 @@
     "is_custom_defined": "0",
     "emit_machine_limits_to_gcode": "0",
     "before_layer_change_gcode": ";BEFORE_LAYER_CHANGE\nG92 E0.0\n;[layer_z]\n\n",
-    "machine_start_gcode": ";Print Mode:{idex_print_mode}\n;LAYER_COUNT:{total_layer_count}\n{if is_idex_printer}\nM425 S1 ; Wiper Strip enabled\nM430 Z0 F600 ; Head change ZHop settings\nM431 E4 F3000 ; Head change Exit Retract settings\nM432 E0 F3000 ; Head change Enter Retract settings\nM433 E4 F3000 ; Head change Enter Prime settings\n{if idex_print_mode == \"normal\" || idex_print_mode == \"backup\"}\nM104 T{current_extruder} S{first_layer_temperature[0]} ; Set hotend temp (no wait)\nG28 ;Home\nG1 Y155 F3000;\nM190 S60 ; set bed temp (wait)\nM109 T{current_extruder} S{first_layer_temperature[0]} ; set final nozzle temp\nG1 E10 F100\n{else}\nM104 T0 S{first_layer_temperature[0]} ; Set hotend temp (no wait)\nM104 T1 S{first_layer_temperature[0]} ; Set hotend temp (no wait)\nG28 ;Home\nG1 Y155 F3000;\nM190 S60 ; set bed temp (wait)\nM109 T0 S{first_layer_temperature[0]} ; set final nozzle temp\nM109 T1 S{first_layer_temperature[0]} ; set final nozzle temp\nG1 E10 F100\n{endif}\n{else}\nM104 S{first_layer_temperature[0]} ; Set hotend temp (no wait)\nG28 ;Home\nM190 S60 ; set bed temp (wait)\nM109 T{current_extruder} S{first_layer_temperature[0]} ; set final nozzle temp\nG1 E10 F100\n{endif}",
-    "machine_end_gcode": "M104 S0\nM140 S0\nM107\n;Retract the filament\nG92 E1\nG1 E-1 F300\n{if idex_print_mode != \"normal\" && idex_print_mode != \"backup\"}\nM104 T1 S0\n{endif}",
+    "machine_start_gcode": ";Print Mode:{idex_print_mode}\n;LAYER_COUNT:{total_layer_count}\n{if is_idex_printer}\nM425 S1 ; Wiper Strip enabled\nM430 Z0 F600 ; Head change ZHop settings\nM431 E4 F3000 ; Head change Exit Retract settings\nM432 E0 F3000 ; Head change Enter Retract settings\nM433 E4 F3000 ; Head change Enter Prime settings\n{if idex_print_mode == \"normal\" || idex_print_mode == \"backup\"}\nM104 T{current_extruder} S{first_layer_temperature[0]} ; Set hotend temp (no wait)\nG28 ;Home\nG1 Y155 F3000;\nM190 S[bed_temperature_initial_layer_single] ; set bed temp (wait)\nM109 T{current_extruder} S{first_layer_temperature[0]} ; set final nozzle temp\nG1 E10 F100\n{else}\nM104 T0 S{first_layer_temperature[0]} ; Set hotend temp (no wait)\nM104 T1 S{first_layer_temperature[0]} ; Set hotend temp (no wait)\nG28 ;Home\nG1 Y155 F3000;\nM190 S[bed_temperature_initial_layer_single] ; set bed temp (wait)\nM109 T0 S{first_layer_temperature[0]} ; set final nozzle temp\nM109 T1 S{first_layer_temperature[0]} ; set final nozzle temp\nG1 E10 F100\n{endif}\n{else}\nM104 S{first_layer_temperature[0]} ; Set hotend temp (no wait)\nG28 ;Home\nM190 S[bed_temperature_initial_layer_single] ; set bed temp (wait)\nM109 T{current_extruder} S{first_layer_temperature[0]} ; set final nozzle temp\nG1 E10 F100\n{endif}",
+    "machine_end_gcode": "G92 E1\nG1 E-1 F300\n{if max_layer_z < max_print_height}\nG1 Z{z_offset+min(max_layer_z+2, max_print_height)} F600 ; Move print head up\n{endif}\nG1 X0 Y{print_bed_max[1]-5} F{travel_speed*60}\n{if max_layer_z < max_print_height-10}\nG1 Z{z_offset+min(max_layer_z+70, max_print_height-10)} F600 ; Move print head further up\n{endif}\nM140 S0\nM104 S0\n{if is_idex_printer}\nM104 T0 S0\nM104 T1 S0\n{endif}\nM107\nM84",
     "change_filament_gcode": ";CHANGE_FILAMENT\nM107\nG92 E0\nT{next_extruder}\nM109 S{temperature[current_extruder]}\nG92 E0",
     "machine_pause_gcode": "G197",
+    "machine_max_acceleration_x": [
+        "3000",
+        "3000"
+    ],
+    "machine_max_acceleration_y": [
+        "3000",
+        "3000"
+    ],
+    "machine_max_acceleration_z": [
+        "600",
+        "600"
+    ],
     "wipe": [
         "1"
     ],

@@ -5,7 +5,7 @@
     "from": "system",
     "printer_model": "Craftbot Flow WIDE XL",
     "instantiation": "true",
-    "setting_id": "GM0703",
+    "setting_id": "GM0704",
     "bed_exclude_area_left_mode":[
     ],
     "bed_exclude_area_right_mode":[

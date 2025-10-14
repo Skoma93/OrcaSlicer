@@ -3,7 +3,7 @@
     "name": "fdm_process_craftbotplus_common_0_25",
     "from": "system",
     "instantiation": "false",
-    "inherits": "fdm_process_common",
+    "inherits": "fdm_process_craftbotplus_common",
     "line_width": "0.27",
     "initial_layer_line_width": "0.28",
     "outer_wall_line_width": "0.27",
@@ -18,7 +18,6 @@
     "support_bottom_z_distance": "0.15",
     "compatible_printers": [
       "Craftbot Plus Pro 0.25 nozzle",
-      "Craftbot XL 0.25 nozzle",
-      "Craftbot 3 0.25 nozzle"
+      "Craftbot XL 0.25 nozzle"
     ]
 }
