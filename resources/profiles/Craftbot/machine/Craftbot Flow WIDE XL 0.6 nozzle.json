@@ -1,22 +1,27 @@
 {
     "type": "machine",
     "name": "Craftbot Flow WIDE XL 0.6 nozzle",
-    "inherits": "Craftbot Flow IDEX XL 0.6 nozzle",
+    "inherits": "Craftbot Flow WIDE XL 0.4 nozzle",
     "from": "system",
-    "printer_model": "Craftbot Flow WIDE XL",
-    "instantiation": "true",
     "setting_id": "GM0703",
-    "bed_exclude_area_left_mode":[
+    "instantiation": "true",
+    "printer_model": "Craftbot Flow WIDE XL",
+    "printer_variant": "0.6",
+    "nozzle_type": "brass",
+    "nozzle_diameter": [
+        "0.6",
+        "0.6"
     ],
-    "bed_exclude_area_right_mode":[
+    "retraction_length": [
+        "1.5",
+        "1.5"
     ],
-    "bed_exclude_area_mirror_mode":[
-
+    "max_layer_height": [
+        "0.42",
+        "0.42"
     ],
-    "bed_exclude_area_parallel_mode":[
-    ],
-
-    "is_idex_printer": "0",
-    "single_extruder_multi_material": "0",
-    "extruders_count": ["1"]
+    "min_layer_height": [
+        "0.12",
+        "0.12"
+    ]
 }

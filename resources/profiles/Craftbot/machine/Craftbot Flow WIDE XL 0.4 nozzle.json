@@ -1,22 +1,63 @@
 {
     "type": "machine",
     "name": "Craftbot Flow WIDE XL 0.4 nozzle",
-    "inherits": "Craftbot Flow IDEX XL 0.4 nozzle",
+    "inherits": "fdm_craftbotflow_common",
     "from": "system",
-    "printer_model": "Craftbot Flow WIDE XL",
-    "instantiation": "true",
     "setting_id": "GM0702",
+    "instantiation": "true",
+    "nozzle_diameter": [
+        "0.4",
+        "0.4"
+    ],
+    "max_layer_height": [
+        "0.30",
+        "0.30"
+    ],
+    "min_layer_height": [
+        "0.08",
+        "0.08"
+    ],
+    "printer_model": "Craftbot Flow WIDE XL",
+    "printer_variant": "0.4",
+    "auxiliary_fan": "0",
+    "default_filament_profile": [
+        "Craftbot Generic PLA"
+    ],
+    "default_print_profile": "0.20mm Standard @CraftbotFlow",
+    "extruder_clearance_height_to_lid": "250",
+    "extruder_clearance_height_to_rod": "30",
+    "extruder_clearance_max_radius": "45",
+    "extruder_clearance_radius": "45",
+    "printer_structure": "i3",
+    "nozzle_type": "brass",
+    "retraction_length": [
+        "0.75",
+        "0.75"
+    ],
+    "printable_area": [
+        "18x16",
+        "443x16",
+        "443x270",
+        "18x270"
+    ],
+    "bed_exclude_area": [
+    ],
     "bed_exclude_area_left_mode":[
+
     ],
     "bed_exclude_area_right_mode":[
+
     ],
     "bed_exclude_area_mirror_mode":[
 
     ],
     "bed_exclude_area_parallel_mode":[
+
     ],
 
     "is_idex_printer": "0",
     "single_extruder_multi_material": "0",
-    "extruders_count": ["1"]
+    "extruders_count": ["1"],
+    "printable_height": "500"
+
 }

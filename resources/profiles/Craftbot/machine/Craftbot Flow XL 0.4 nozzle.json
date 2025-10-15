@@ -1,10 +1,83 @@
 {
     "type": "machine",
     "name": "Craftbot Flow XL 0.4 nozzle",
-    "inherits": "Craftbot Flow 0.4 nozzle",
+    "inherits": "fdm_craftbotflow_common",
     "from": "system",
-    "printer_model": "Craftbot Flow XL",
-    "instantiation": "true",
     "setting_id": "GM0102",
-    "printable_height": "500"
+    "instantiation": "true",
+    "nozzle_diameter": [
+        "0.4"
+    ],
+    "printer_model": "Craftbot Flow XL",
+    "printer_variant": "0.4",
+    "auxiliary_fan": "0",
+    "default_filament_profile": [
+        "Craftbot Generic PLA"
+    ],
+    "default_print_profile": "0.20mm Standard @CraftbotFlow",
+    "extruder_clearance_height_to_lid": "250",
+    "extruder_clearance_height_to_rod": "30",
+    "extruder_clearance_max_radius": "45",
+    "extruder_clearance_radius": "45",
+    "printer_structure": "i3",
+    "nozzle_type": "brass",
+    "retraction_length": [
+        "0.75"
+    ],
+    "printable_area": [
+        "6x10",
+        "306x10",
+        "306x210",
+        "6x210"
+    ],
+    "bed_exclude_area": [
+    ],
+    "bed_exclude_area_left_mode":[
+    
+    ],
+    "bed_exclude_area_right_mode":[
+
+    ],
+    "bed_exclude_area_mirror_mode":[
+
+    ],
+    "bed_exclude_area_parallel_mode":[
+
+    ],
+
+    "is_idex_printer": "0",
+    "single_extruder_multi_material": "0",
+    "extruders_count": ["1"],
+    "printable_height": "500",
+    "upward_compatible_machine": [],
+    "extruder_offset": [
+        "0x0"
+    ],
+    "retraction_minimum_travel": [
+        "0.5"
+    ],
+    "retraction_speed": [
+        "60"
+    ],
+    "retract_when_changing_layer": [
+        "1"
+    ],
+    "retraction_distances_when_cut": [
+        "18"
+    ],
+    "retract_restart_extra": [
+        "0"
+    ],
+    "retract_restart_extra_toolchange": [
+        "0"
+    ],
+    "long_retractions_when_cut": [
+        "0"
+    ],
+    "max_layer_height": [
+        "0.3"
+    ],
+    "min_layer_height": [
+        "0.05"
+    ]
 }

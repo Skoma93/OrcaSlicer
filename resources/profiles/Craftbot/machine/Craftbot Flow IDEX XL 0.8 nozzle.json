@@ -1,10 +1,27 @@
 {
     "type": "machine",
     "name": "Craftbot Flow IDEX XL 0.8 nozzle",
-    "inherits": "Craftbot Flow IDEX 0.8 nozzle",
-    "instantiation": "true",
+    "inherits": "Craftbot Flow IDEX XL 0.4 nozzle",
     "from": "system",
+    "setting_id": "GM0304",
+    "instantiation": "true",
     "printer_model": "Craftbot Flow IDEX XL",
-    "setting_id": "GM0303",
-    "printable_height": "500"
+    "printer_variant": "0.8",
+    "nozzle_type": "brass",
+    "nozzle_diameter": [
+        "0.8",
+        "0.8"
+    ],
+    "retraction_length": [
+        "2",
+        "2"
+    ],
+    "max_layer_height": [
+        "0.56",
+        "0.56"
+    ],
+    "min_layer_height": [
+        "0.16",
+        "0.16"
+    ]
 }

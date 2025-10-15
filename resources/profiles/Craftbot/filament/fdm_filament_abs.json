@@ -26,16 +26,16 @@
         "280"
     ],
     "nozzle_temperature_initial_layer": [
-        "240"
+        "250"
     ],
     "nozzle_temperature": [
-        "240"
+        "250"
     ],
     "hot_plate_temp_initial_layer": [
-        "100"
+        "110"
     ],
     "hot_plate_temp": [
-        "100"
+        "110"
     ],
     "filament_max_volumetric_speed": [
         "12"

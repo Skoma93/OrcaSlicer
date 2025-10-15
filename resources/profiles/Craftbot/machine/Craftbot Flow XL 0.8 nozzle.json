@@ -1,10 +1,23 @@
 {
     "type": "machine",
     "name": "Craftbot Flow XL 0.8 nozzle",
-    "inherits": "Craftbot Flow 0.8 nozzle",
+    "inherits": "Craftbot Flow XL 0.4 nozzle",
     "from": "system",
-    "printer_model": "Craftbot Flow XL",
-    "instantiation": "true",
     "setting_id": "GM0104",
-    "printable_height": "500"
+    "instantiation": "true",
+    "printer_model": "Craftbot Flow XL",
+    "printer_variant": "0.8",
+    "nozzle_type": "brass",
+    "nozzle_diameter": [
+        "0.8"
+    ],
+    "retraction_length": [
+        "2"
+    ],
+    "max_layer_height": [
+        "0.56"
+    ],
+    "min_layer_height": [
+        "0.16"
+    ]
 }
