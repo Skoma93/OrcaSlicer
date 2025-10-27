@@ -198,7 +198,7 @@ if [[ -n "${BUILD_DEPS}" ]] ; then
 fi
 
 if [[ -n "${BUILD_ORCA}" ]] ; then
-    echo "Configuring OrcaSlicer..."
+    echo "Configuring OrcaSlicerForCraftbot..."
     if [[ -n "${CLEAN_BUILD}" ]] ; then
         rm -fr build
     fi
@@ -215,7 +215,7 @@ if [[ -n "${BUILD_ORCA}" ]] ; then
         BUILD_ARGS="${BUILD_ARGS} -DBUILD_TESTS=ON"
     fi
 
-    echo "Configuring OrcaSlicer..."
+    echo "Configuring OrcaSlicerForCraftbot..."
     cmake -S . -B build ${CMAKE_C_CXX_COMPILER_CLANG} ${CMAKE_LLD_LINKER_ARGS} -G "Ninja Multi-Config" \
 -DSLIC3R_PCH=${SLIC3R_PRECOMPILED_HEADERS} \
 -DCMAKE_PREFIX_PATH=${SCRIPT_PATH}/deps/build/destdir/usr/local \
@@ -226,17 +226,17 @@ ${BUILD_ARGS}
     echo "${CMAKE_CMD}"
     ${CMAKE_CMD}
     echo "done"
-    echo "Building OrcaSlicer ..."
+    echo "Building OrcaSlicerForCraftbot ..."
     if [[ -n "${BUILD_DEBUG}" ]] ; then
-        cmake --build build --config Debug --target OrcaSlicer
+        cmake --build build --config Debug --target OrcaSlicerForCraftbot
     else
-        cmake --build build --config Release --target OrcaSlicer
+        cmake --build build --config Release --target OrcaSlicerForCraftbot
     fi
-    echo "Building OrcaSlicer_profile_validator .."
+    echo "Building OrcaSlicerForCraftbot_profile_validator .."
     if [[ -n "${BUILD_DEBUG}" ]] ; then
-        cmake --build build --config Debug --target OrcaSlicer_profile_validator
+        cmake --build build --config Debug --target OrcaSlicerForCraftbot_profile_validator
     else
-        cmake --build build --config Release --target OrcaSlicer_profile_validator
+        cmake --build build --config Release --target OrcaSlicerForCraftbot_profile_validator
     fi
     ./scripts/run_gettext.sh
     echo "done"

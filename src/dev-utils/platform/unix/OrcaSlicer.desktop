@@ -1,5 +1,5 @@
 [Desktop Entry]
-Name=OrcaSlicer
+Name=OrcaSlicerForCraftbot
 GenericName=3D Printing Software
 Icon=OrcaSlicer
 Exec=orca-slicer %U
