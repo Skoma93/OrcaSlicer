@@ -83,9 +83,9 @@ std::string GCodeWriter::preamble()
         FLAVOR_IS(gcfTeacup)        ||
         FLAVOR_IS(gcfRepetier)      ||
         FLAVOR_IS(gcfSmoothie)      ||
-        FLAVOR_IS(gcfKlipper))      ||
+        FLAVOR_IS(gcfKlipper)       ||
         FLAVOR_IS(gcfCraftbotPlus)  ||
-        FLAVOR_IS(gcfCraftbotFlow)  ||
+        FLAVOR_IS(gcfCraftbotFlow))
     {
         if (this->config.use_relative_e_distances) {
             gcode << "M83 ; use relative distances for extrusion\n";
