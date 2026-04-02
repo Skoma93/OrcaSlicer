@@ -12,17 +12,17 @@
 
 /*/// COLORS ///*/
 :root { 
-	--main-color			: #009688;
-	--main-color-hover		: #26A69A;
-	--main-color-fixed		: #009688;
+	--main-color			: #7D0096;
+	--main-color-hover		: #9126A6;
+	--main-color-fixed		: #7D0096;
 	--bg-color				: #FFFFFF;
 	--bg-color-secondary	: #F4F4F4;
 	--bg-color-alt			: #F0F0F0;
 	--fg-color-text			: #262E30;
 	--fg-color-label		: #363636;
 	--fg-color-disabled		: #ACACAC;
-	--focus-bg-item			: #BFE1DE;
-	--focus-bg-box			: #E5F0EE;
+	--focus-bg-item			: #DBBFE1;
+	--focus-bg-box			: #EEE5F0;
 	--border-color			: #DBDBDB;
 	--icon-color			: #7C8282;
 	--button-fg-light		: #FEFEFE;
@@ -36,9 +36,9 @@
   
 @media (prefers-color-scheme: dark) { 
 :root {
-	--main-color			: #00675B;
-	--main-color-hover		: #008172;
-	--main-color-fixed		: #009688;
+	--main-color			: #560067;
+	--main-color-hover		: #6B0081;
+	--main-color-fixed		: #7D0096;
 	--bg-color				: #2D2D31;
 	--bg-color-secondary	: #36363B;
 	--bg-color-alt			: #242428;

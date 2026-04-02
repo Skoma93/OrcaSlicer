@@ -169,7 +169,7 @@
 }
 
 .viewer-navbar {
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.502);
   overflow: hidden;
 }
 
@@ -222,7 +222,7 @@
 }
 
 .viewer-player {
-  background-color: #000;
+  background-color: #000000;
   bottom: 0;
   cursor: none;
   display: none;
@@ -246,7 +246,7 @@
 }
 
 .viewer-toolbar > ul > li {
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.502);
   border-radius: 50%;
   cursor: pointer;
   float: left;
@@ -294,7 +294,7 @@
 .viewer-tooltip {
   background-color: rgba(0, 0, 0, 0.8);
   border-radius: 10px;
-  color: #fff;
+  color: #FFFFFF;
   display: none;
   font-size: 12px;
   height: 20px;
@@ -309,7 +309,7 @@
 }
 
 .viewer-title {
-  color: #ccc;
+  color: #CCCCCC;
   display: inline-block;
   font-size: 12px;
   line-height: 1;
@@ -328,7 +328,7 @@
 }
 
 .viewer-button {
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.502);
   border-radius: 50%;
   cursor: pointer;
   height: 80px;
@@ -369,7 +369,7 @@
 }
 
 .viewer-backdrop {
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.502);
 }
 
 .viewer-invisible {
@@ -422,8 +422,8 @@
 .viewer-loading::after {
   -webkit-animation: viewer-spinner 1s linear infinite;
   animation: viewer-spinner 1s linear infinite;
-  border: 4px solid rgba(255, 255, 255, 0.1);
-  border-left-color: rgba(255, 255, 255, 0.5);
+  border: 4px solid rgba(255, 255, 255, 0.102);
+  border-left-color: rgba(255, 255, 255, 0.502);
   border-radius: 50%;
   content: '';
   display: inline-block;
