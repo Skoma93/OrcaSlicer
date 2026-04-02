@@ -25,14 +25,14 @@ html, body {
 
 .ZScrol::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
     border-radius: 6px;
-    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
-	box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+    -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+	box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
     background-color: #AAAAAA;
 }
 
 .ZScrol::-webkit-scrollbar-track {/*滚动条里面轨道*/
-        -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
-	    box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+        -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+	    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
         border-radius: 10px;
         background: #EDEDED;
 }
@@ -47,7 +47,7 @@ html, body {
 .LinkBtn
 {
 	font-size:12px;
-	color: #00ffea;	
+	color: #D400FF;	
 	cursor: pointer;
 }
 
@@ -118,7 +118,7 @@ body
 
 #DownloadBtn
 {
-	color:#00ffd9;
+	color:#D400FF;
 }
 
 
@@ -179,12 +179,12 @@ body
 
 .BtnItem:hover
 {
-	background-color: #BFE1DE; /*ORCA color with %25 opacity*/
+	background-color: #DBBFE1; /*ORCA color with %25 opacity*/
 }
 
 .BtnItemSelected
 {
-	background-color: #BFE1DE; /*ORCA color with %25 opacity*/
+	background-color: #DBBFE1; /*ORCA color with %25 opacity*/
 }
 
 .BtnIcon
@@ -253,8 +253,8 @@ body
 
 .MenuItem:hover
 {
-	border-color: #009688;		/*ORCA color*/
-	background-color: #E5F0EE; /*ORCA color with %25 opacity*/
+	border-color: #7D0096;		/*ORCA color*/
+	background-color: #EEE5F0; /*ORCA color with %25 opacity*/
 }
 
 .MenuIcon
@@ -413,7 +413,7 @@ body
     top: 100px;
 	border-radius: 5px;
 	color: #323A3D;
-	background-color: #fff;
+	background-color: #FFFFFF;
     display: none;
 	z-index: 1;
 }
@@ -429,9 +429,9 @@ body
 .CT_Item:hover
 {
 	cursor: pointer;
-	background-color:#009688; /*ORCA color*/
+	background-color:#7D0096; /*ORCA color*/
 	border-radius: 4px;
-	color: #fff;
+	color: #FFFFFF;
 }
 
 
@@ -665,7 +665,7 @@ body
 #HotModel_RIGHT_Title:hover
 {
 	cursor: pointer;	
-	color:#009688;	
+	color:#7D0096;	
 }
 
 .HotModelPiece
@@ -675,7 +675,7 @@ body
 	flex-direction: column;
 	cursor: pointer;
 	border: 1px solid #EEEEEE;
-	box-shadow: 0px 2px 12px rgba(0, 0, 0, 0.04);
+	box-shadow: 0px 2px 12px rgba(0, 0, 0, 0.039);
     border-radius: 8px;
 }
 
@@ -712,7 +712,7 @@ body
 	width: 40px!important;
 	height: 40px!important;
 	border-radius: 20px!important;
-	background: rgba(244, 244, 244, 0.88);
+	background: rgba(244, 244, 244, 0.878);
 }
 
 .swiper-button-next
@@ -720,12 +720,12 @@ body
 	width: 40px!important;
 	height: 40px!important;
 	border-radius: 20px!important;
-	background: rgba(244, 244, 244, 0.88);
+	background: rgba(244, 244, 244, 0.878);
 }
 
 .swiper
 {
-    --swiper-theme-color: #ff6600;/* 设置Swiper风格 */
+    --swiper-theme-color: #FF6600;/* 设置Swiper风格 */
     --swiper-navigation-color: #676767;/* 单独设置按钮颜色 */
     --swiper-navigation-size: 12px;/* 设置按钮大小 */
 }

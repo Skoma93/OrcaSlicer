@@ -41,7 +41,7 @@
 
 #NoticeMask
 {
-	background-color: #000;
+	background-color: #000000;
 	position: absolute;
 	top: 0px;
 	left: 0px;
@@ -70,7 +70,7 @@
 	background-color: var(--main-color);
 	height: 40px;
 	line-height: 40px;
-	color: #fff;
+	color: #FFFFFF;
 	text-align: center;
 }
 
@@ -130,7 +130,7 @@
 	height: 100%;
 	display: flex;
 	align-items: center;
-	color: #000;
+	color: #000000;
 }
 
 #CustomFilamentsArea

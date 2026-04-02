@@ -1,13 +1,13 @@
 *
 {
-	color: #efeff0;
+	color: #EFEFF0;
 	border-color: #B9B9BC;
 }
 
 body
 {
 	background-color:#2D2D31; /* ORCA match background color */
-	color: #efeff0;
+	color: #EFEFF0;
 }
 
 .ZScrol::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
@@ -20,7 +20,7 @@ body
 
 #Title div
 {
-	color: #009688;
+	color: #7D0096;
 }
 
 .search>input[type=text]{
@@ -34,7 +34,7 @@ input[type=checkbox]{
 }
 
 input[type=checkbox]:checked{
-	background-color:#009688;
+	background-color:#7D0096;
 }
 
 /*-------Text------*/
@@ -64,8 +64,8 @@ input[type=checkbox]:checked{
 
 .RegionSelected:hover
 {
-	background-color:#009688;
-	color: #fff;	
+	background-color:#7D0096;
+	color: #FFFFFF;	
 }
 
 /*----Menu----*/

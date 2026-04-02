@@ -333,7 +333,7 @@ AboutDialog::AboutDialog()
               (boost::format(
               "<html>"
               "<body>"
-              "<p style=\"text-align:left\"><a style=\"color:#009789\" href=\"https://www.orcaslicer.com\">https://www.orcaslicer.com</ a></p>"
+              "<p style=\"text-align:left\"><a style=\"color:#7E0097\" href=\"https://www.orcaslicer.com\">https://www.orcaslicer.com</ a></p>"
               "</body>"
               "</html>")
             ).str());

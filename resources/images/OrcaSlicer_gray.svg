@@ -48,13 +48,13 @@
   </defs>
   <sodipodi:namedview
      id="namedview4"
-     pagecolor="#ffffff"
+     pagecolor="#FFFFFF"
      bordercolor="#000000"
      borderopacity="0.25"
      inkscape:showpageshadow="2"
      inkscape:pageopacity="0.0"
      inkscape:pagecheckerboard="0"
-     inkscape:deskcolor="#d1d1d1"
+     inkscape:deskcolor="#D1D1D1"
      showgrid="false"
      inkscape:zoom="0.35355339"
      inkscape:cx="695.79307"
@@ -107,7 +107,7 @@
            transform="translate(479.0017,536.9419)">
           <path
              d="m 0,0 -419.273,-421.59 c 0.298,-0.298 0.606,-0.587 0.906,-0.884 146.894,74.925 348.023,206.579 486.003,316.297 C 52.756,-65.97 29.506,-29.859 0,0"
-             style="fill:#009789;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             style="fill:#7E0097;fill-opacity:1;fill-rule:nonzero;stroke:none"
              id="path24" />
         </g>
         <g
@@ -131,7 +131,7 @@
            transform="translate(446.5563,646.8041)">
           <path
              d="m 0,0 c 10.875,-19.229 -10.891,-52.305 -48.616,-73.879 -37.725,-21.573 -77.124,-23.474 -88,-4.245 -10.875,19.229 10.891,52.305 48.617,73.879 C -50.274,17.328 -10.875,19.229 0,0"
-             style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             style="fill:#FFFFFF;fill-opacity:1;fill-rule:nonzero;stroke:none"
              id="path36" />
         </g>
       </g>

@@ -507,7 +507,7 @@ void SearchItem::OnPaint(wxPaintEvent &event)
 
 void SearchItem::on_mouse_enter(wxMouseEvent &evt)
 {
-    SetBackgroundColour(StateColor::darkModeColorFor(wxColour("#BFE1DE"))); // ORCA color with %25 opacity
+    SetBackgroundColour(StateColor::darkModeColorFor(wxColour("#DBBFE1"))); // ORCA color with %25 opacity
     Refresh();
 }
 
@@ -519,7 +519,7 @@ void SearchItem::on_mouse_leave(wxMouseEvent &evt)
 
 void SearchItem::on_mouse_left_down(wxMouseEvent &evt)
 {
-    SetBackgroundColour(StateColor::darkModeColorFor(wxColour("#BFE1DE"))); // ORCA color with %25 opacity
+    SetBackgroundColour(StateColor::darkModeColorFor(wxColour("#DBBFE1"))); // ORCA color with %25 opacity
     Refresh();
 }
 

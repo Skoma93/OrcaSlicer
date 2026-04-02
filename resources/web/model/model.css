@@ -54,14 +54,14 @@ body
 
 .ZScrol::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
     border-radius: 6px;
-    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
-	box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+    -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+	box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
     background-color: #AAAAAA;
 }
 
 .ZScrol::-webkit-scrollbar-track {/*滚动条里面轨道*/
-        -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
-	    box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+        -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+	    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
         border-radius: 10px;
         background: #EDEDED;
 }
@@ -143,8 +143,8 @@ body
 /*---Swiper---*/
 .swiper
 {
-    --swiper-theme-color: #ff6600;/* 设置Swiper风格 */
-    --swiper-navigation-color: #009688;/* 单独设置按钮颜色 */
+    --swiper-theme-color: #FF6600;/* 设置Swiper风格 */
+    --swiper-navigation-color: #7D0096;/* 单独设置按钮颜色 */
     --swiper-navigation-size: 30px;/* 设置按钮大小 */
 }
 
@@ -185,12 +185,12 @@ body
 
 .ProcessBarSelected
 {
-	border-left-color:#009688;
+	border-left-color:#7D0096;
 }
 
 .ProcessBarSelected span
 {
-	color:#009688;
+	color:#7D0096;
 }
 
 #Info_ProcessBar.ProcessBarSelected img
@@ -374,7 +374,7 @@ body
 
 .viewer-button
 {
-	background-color: rgba(255,0,0,.5)!important;
+	background-color: rgba(255, 0, 0, 0.502)!important;
 }
 
 #AddModelInfoBtn

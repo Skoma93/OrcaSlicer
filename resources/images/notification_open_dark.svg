@@ -22,8 +22,8 @@
 <g
    id="open"
    transform="matrix(4.05,0,0,4.05,15.4645,15.277381)"
-   style="fill:#323a3e;fill-opacity:1"><circle
-     style="fill:#3e3e45;fill-opacity:1;stroke-width:0.969441"
+   style="fill:#323A3E;fill-opacity:1"><circle
+     style="fill:#3E3E45;fill-opacity:1;stroke-width:0.969441"
      id="path1"
      cx="50"
      cy="50"
@@ -36,5 +36,5 @@
        style="fill:#818183;fill-opacity:1" /><path
        id="path4"
        d="m 5.7406172,6 c -0.55,0 -1.14,0.43 -1.32,0.95 l -2.3699999,7.1 c -0.17,0.52 0.14,0.95 0.69,0.95 h 9.9999897 c 0.55,0 1.14,-0.43 1.32,-0.95 l 2.37,-7.1 c 0.17,-0.52 -0.14,-0.95 -0.69,-0.95 z"
-       fill="#323a3e"
+       fill="#323A3E"
        style="fill:#818183;fill-opacity:1" /></g></g></svg>

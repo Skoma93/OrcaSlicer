@@ -1,5 +1,5 @@
 body {
-    background-color:#4c4c54;
+    background-color:#4C4C54;
     font-family: Arial, sans-serif;
     display: flex;
     justify-content: center;
@@ -13,13 +13,13 @@ body {
     padding: 30px;
     border-radius: 10px;
     background-color: #272727;
-    box-shadow: 0 4px 6px rgba(39, 39, 39, 0.1);
+    box-shadow: 0 4px 6px rgba(39, 39, 39, 0.102);
 }
 
 h1 {
-    color: #ffffff;
+    color: #FFFFFF;
 }
 
 p {
-    color: #ffffff;
+    color: #FFFFFF;
 }

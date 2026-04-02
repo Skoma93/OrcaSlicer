@@ -2204,7 +2204,7 @@ void AmsReplaceMaterialDialog::create()
 
     identical_filament = new Label(this, _L("Identical filament: same brand, type and color."));
     identical_filament->SetFont(Label::Body_13);
-    identical_filament->SetForegroundColour(StateColor::darkModeColorFor(wxColour("#009688")));
+    identical_filament->SetForegroundColour(StateColor::darkModeColorFor(wxColour("#7D0096")));
 
     m_scrollview_groups = new wxScrolledWindow(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxHSCROLL | wxVSCROLL);
     m_scrollview_groups->SetScrollRate(5, 5);
@@ -2233,7 +2233,7 @@ void AmsReplaceMaterialDialog::create()
         std::pair<wxColour, int>(wxColour(38, 46, 48), StateColor::Enabled));
 
 
-    StateColor btn_bg_green(std::pair<wxColour, int>(wxColour(0, 137, 123), StateColor::Pressed), std::pair<wxColour, int>(wxColour(0, 150, 136), StateColor::Normal));
+    StateColor btn_bg_green(std::pair<wxColour, int>(wxColour(114, 0, 137), StateColor::Pressed), std::pair<wxColour, int>(wxColour(125, 0, 150), StateColor::Normal));
     m_button_sizer->Add( 0, 0, 1, wxEXPAND, 0 );
 
     m_main_sizer->Add(0,0,0, wxTOP, FromDIP(12));

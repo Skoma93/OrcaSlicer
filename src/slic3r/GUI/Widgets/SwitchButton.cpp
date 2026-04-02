@@ -21,7 +21,7 @@ SwitchButton::SwitchButton(wxWindow* parent, wxWindowID id)
 	, m_off(this, "toggle_off", 16)
     , text_color(std::pair{0xfffffe, (int) StateColor::Checked}, std::pair{0x6B6B6B, (int) StateColor::Normal})
 	, track_color(0xD9D9D9)
-    , thumb_color(std::pair{0x009688, (int) StateColor::Checked}, std::pair{0xD9D9D9, (int) StateColor::Normal})
+    , thumb_color(std::pair{0x7D0096, (int) StateColor::Checked}, std::pair{0xD9D9D9, (int) StateColor::Normal})
 {
 	SetBackgroundColour(StaticBox::GetParentBackgroundColor(parent));
 	Bind(wxEVT_TOGGLEBUTTON, [this](auto& e) { update(); e.Skip(); });
@@ -286,7 +286,7 @@ void SwitchBoard::doRender(wxDC &dc)
 
 	/*left*/
     if (switch_left) {
-        is_enable ? dc.SetBrush(wxBrush(wxColour(0, 150, 136))) : dc.SetBrush(disable_color);
+        is_enable ? dc.SetBrush(wxBrush(wxColour(125, 0, 150))) : dc.SetBrush(disable_color);
         dc.DrawRoundedRectangle(0, 0, GetSize().x / 2, GetSize().y, 8);
 	}
 
@@ -304,7 +304,7 @@ void SwitchBoard::doRender(wxDC &dc)
 
 	/*right*/
     if (switch_right) {
-        if (is_enable) {dc.SetBrush(wxBrush(wxColour(0, 150, 136)));
+        if (is_enable) {dc.SetBrush(wxBrush(wxColour(125, 0, 150)));
         } else {dc.SetBrush(disable_color);}
         dc.DrawRoundedRectangle(GetSize().x / 2, 0, GetSize().x / 2, GetSize().y, 8);
 	}

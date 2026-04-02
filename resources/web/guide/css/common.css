@@ -23,7 +23,7 @@ body
 	border: 0;
 	margin: 0;	
 	overflow: hidden;
-	background-color: #fff;
+	background-color: #FFFFFF;
 	font-size: 14px;
 	line-height: 22px;
 }
@@ -41,14 +41,14 @@ body
 
 .ZScrol::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
     border-radius: 6px;
-    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
-	box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+    -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+	box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
     background-color: #AAAAAA;
 }
 
 .ZScrol::-webkit-scrollbar-track {/*滚动条里面轨道*/
-        -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
-	    box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+        -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+	    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
         border-radius: 10px;
         background: #EDEDED;
 }
@@ -74,7 +74,7 @@ body
 {
 	font-size:28px;
 	line-height: 28px;
-	color: #009688;
+	color: #7D0096;
 	padding: 0px 10mm;
 }
 
@@ -115,7 +115,7 @@ body
 /*---HyperLink---*/
 .HyperLink
 {
-	color: #009688;
+	color: #7D0096;
 	text-decoration: underline;
     font-weight: 700;
 	cursor: pointer;
@@ -159,8 +159,8 @@ input[type="checkbox"]::before {
 }
 
 input[type="checkbox"]:checked {
-	border-color:#009688;
-	background-color:#009688;
+	border-color:#7D0096;
+	background-color:#7D0096;
 }
 
 input[type="checkbox"]:checked::before {

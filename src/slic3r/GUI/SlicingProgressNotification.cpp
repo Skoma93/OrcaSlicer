@@ -329,7 +329,7 @@ void Slic3r::GUI::NotificationManager::SlicingProgressNotification::render_text(
 		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(.0f, .0f, .0f, .0f));
 		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(.0f, .0f, .0f, .0f));
 		push_style_color(ImGuiCol_Text, ImVec4(1.f, 1.f, 1.f, 1.f), m_state == EState::FadingOut, m_current_fade_opacity);
-		push_style_color(ImGuiCol_TextSelectedBg, ImVec4(0, .75f, .75f, 1.f), m_state == EState::FadingOut, m_current_fade_opacity);
+		push_style_color(ImGuiCol_TextSelectedBg, ImVec4(159.0f, 0.0f, 191.0f, 255.0f), m_state == EState::FadingOut, m_current_fade_opacity);
 		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(.0f, .0f, .0f, .0f));
 
 		ImGui::SetCursorScreenPos(pos);
@@ -370,7 +370,7 @@ void Slic3r::GUI::NotificationManager::SlicingProgressNotification::render_bar(c
 
 	ImGuiWrapper& imgui = *wxGetApp().imgui();
 
-	ImColor progress_color = ImColor(0, 150, 136, (int)(255 * m_current_fade_opacity));
+	ImColor progress_color = ImColor(125, 0, 150, (int)(255 * m_current_fade_opacity));
 	ImColor bg_color = ImColor(217, 217, 217, (int)(255 * m_current_fade_opacity));
 
 	ImVec2 lineStart = pos;
@@ -441,7 +441,7 @@ void Slic3r::GUI::NotificationManager::SlicingProgressNotification::render_cance
 		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(.0f, .0f, .0f, .0f));
 		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(.0f, .0f, .0f, .0f));
 		push_style_color(ImGuiCol_Text, ImVec4(1.f, 1.f, 1.f, 1.f), m_state == EState::FadingOut, m_current_fade_opacity);
-		push_style_color(ImGuiCol_TextSelectedBg, ImVec4(0, .75f, .75f, 1.f), m_state == EState::FadingOut, m_current_fade_opacity);
+		push_style_color(ImGuiCol_TextSelectedBg, ImVec4(159.0f, 0.0f, 191.0f, 255.0f), m_state == EState::FadingOut, m_current_fade_opacity);
 		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(.0f, .0f, .0f, .0f));
 
 		ImVec2 button_size = size;
@@ -470,7 +470,7 @@ void NotificationManager::SlicingProgressNotification::render_close_button(const
 		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(.0f, .0f, .0f, .0f));
 		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(.0f, .0f, .0f, .0f));
 		push_style_color(ImGuiCol_Text, ImVec4(1.f, 1.f, 1.f, 1.f), m_state == EState::FadingOut, m_current_fade_opacity);
-		push_style_color(ImGuiCol_TextSelectedBg, ImVec4(0, .75f, .75f, 1.f), m_state == EState::FadingOut, m_current_fade_opacity);
+		push_style_color(ImGuiCol_TextSelectedBg, ImVec4(159.0f, 0.0f, 191.0f, 255.0f), m_state == EState::FadingOut, m_current_fade_opacity);
 		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(.0f, .0f, .0f, .0f));
 
 		ImVec2 button_size = size;

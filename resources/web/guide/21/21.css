@@ -7,7 +7,7 @@
 .BlockBanner
 {
 	padding: 0px;
-	border-bottom:#009688 1px solid;
+	border-bottom:#7D0096 1px solid;
 	width: 100%;
 	display: flex;
 	justify-content:space-between;
@@ -28,11 +28,11 @@
 .BlockBanner  a
 {
 	display: inline-block;
-	background-color:#009688;
+	background-color:#7D0096;
 	line-height: 40px;
 	height: 40px;
 	padding: 0px 24px;
-	color: #fff;
+	color: #FFFFFF;
 }
 
 .PrinterArea
@@ -102,7 +102,7 @@ img.ModelThumbnail
 /*-----Notice-----*/
 #NoticeMask
 {
-	background-color: #000;
+	background-color: #000000;
 	position: absolute;
 	top: 0px;
 	left: 0px;
@@ -128,10 +128,10 @@ img.ModelThumbnail
 
 #NoticeBar
 {
-	background-color:#00f0d8;
+	background-color:#C800F0;
 	height: 40px;
 	line-height: 40px;
-	color: #fff;
+	color: #FFFFFF;
 	text-align: center;
 }
 
@@ -164,7 +164,7 @@ img.ModelThumbnail
 	line-height: 20px; /* ORCA center text vertically */
 	border-radius: 5px 5px 5px 5px;
 	outline: none;
-	color: #9DBFAF;
+	color: #B99DBF;
 }
 @media (prefers-color-scheme: dark) {  /* ORCA Searchbox > add dark mode support */
 	.searchTerm {border: 1px solid #4A4A51;}
@@ -172,7 +172,7 @@ img.ModelThumbnail
 
 .searchTerm:focus{
 	color: #363636;       /* ORCA Searchbox > use normal text color */
-	border-color:#009688; /* ORCA Searchbox > highlight border color when focused. like on normal UI */
+	border-color:#7D0096; /* ORCA Searchbox > highlight border color when focused. like on normal UI */
 }
 @media (prefers-color-scheme: dark) {  /* ORCA Searchbox > add dark mode support */
 	.searchTerm:focus{color: #FFFFFF}
