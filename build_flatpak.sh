@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# OrcaSlicer Flatpak Build Script
-# This script builds and packages OrcaSlicer as a Flatpak package locally
+# OrcaSlicerForCraftbot Flatpak Build Script
+# This script builds and packages OrcaSlicerForCraftbot as a Flatpak package locally
 # Based on the GitHub Actions workflow in .github/workflows/build_all.yml
 
 set -e
@@ -30,7 +30,7 @@ CACHE_DIR=".flatpak-builder"
 show_help() {
     echo "Usage: $0 [OPTIONS]"
     echo ""
-    echo "Build OrcaSlicer as a Flatpak package"
+    echo "Build OrcaSlicerForCraftbot as a Flatpak package"
     echo ""
     echo "Options:"
     echo "  -a, --arch ARCH        Target architecture (x86_64, aarch64) [default: $ARCH]"
@@ -120,7 +120,7 @@ if ! [[ "$JOBS" =~ ^[1-9][0-9]*$ ]]; then
     exit 1
 fi
 
-echo -e "${BLUE}OrcaSlicer Flatpak Build Script${NC}"
+echo -e "${BLUE}OrcaSlicerForCraftbot Flatpak Build Script${NC}"
 echo -e "${BLUE}================================${NC}"
 echo -e "Architecture: ${GREEN}$ARCH${NC}"
 echo -e "Build directory: ${GREEN}$BUILD_DIR${NC}"
@@ -255,8 +255,8 @@ mkdir -p "$BUILD_DIR"
 rm -rf "$BUILD_DIR/build-dir"
 
 # Check if flatpak manifest exists
-if [[ ! -f "./scripts/flatpak/com.orcaslicer.OrcaSlicer.yml" ]]; then
-    echo -e "${RED}Error: Flatpak manifest not found at scripts/flatpak/com.orcaslicer.OrcaSlicer.yml${NC}"
+if [[ ! -f "./scripts/flatpak/com.skoma93.OrcaSlicerForCraftbot.yml" ]]; then
+    echo -e "${RED}Error: Flatpak manifest not found at scripts/flatpak/com.skoma93.OrcaSlicerForCraftbot.yml${NC}"
     exit 1
 fi
 
@@ -265,7 +265,7 @@ echo -e "${YELLOW}Building Flatpak package...${NC}"
 echo -e "This may take a while (30+ minutes depending on your system)..."
 echo ""
 
-BUNDLE_NAME="OrcaSlicer-Linux-flatpak_${VER}_${ARCH}.flatpak"
+BUNDLE_NAME="OrcaSlicerForCraftbot-Linux-flatpak_${VER}_${ARCH}.flatpak"
 
 # Remove any existing bundle
 rm -f "$BUNDLE_NAME"
@@ -316,11 +316,11 @@ if [[ "$DISABLE_ROFILES_FUSE" == true ]]; then
 fi
 
 # Use a temp manifest with no-debuginfo if requested
-MANIFEST="scripts/flatpak/com.orcaslicer.OrcaSlicer.yml"
+MANIFEST="scripts/flatpak/com.skoma93.OrcaSlicerForCraftbot.yml"
 if [[ "$NO_DEBUGINFO" == true ]]; then
-    MANIFEST="scripts/flatpak/com.orcaslicer.OrcaSlicer.no-debug.yml"
+    MANIFEST="scripts/flatpak/com.skoma93.OrcaSlicerForCraftbot.no-debug.yml"
     sed '/^build-options:/a\  no-debuginfo: true\n  strip: true' \
-        scripts/flatpak/com.orcaslicer.OrcaSlicer.yml > "$MANIFEST"
+        scripts/flatpak/com.skoma93.OrcaSlicerForCraftbot.yml > "$MANIFEST"
     echo -e "${YELLOW}Debug info disabled (using temp manifest)${NC}"
 fi
 
@@ -330,19 +330,19 @@ if ! flatpak-builder \
     "$MANIFEST"; then
     echo -e "${RED}Error: flatpak-builder failed${NC}"
     echo -e "${YELLOW}Check the build log above for details${NC}"
-    rm -f "scripts/flatpak/com.orcaslicer.OrcaSlicer.no-debug.yml"
+    rm -f "scripts/flatpak/com.skoma93.OrcaSlicerForCraftbot.no-debug.yml"
     exit 1
 fi
 
 # Clean up temp manifest
-rm -f "scripts/flatpak/com.orcaslicer.OrcaSlicer.no-debug.yml"
+rm -f "scripts/flatpak/com.skoma93.OrcaSlicerForCraftbot.no-debug.yml"
 
 # Create bundle
 echo -e "${YELLOW}Creating Flatpak bundle...${NC}"
 if ! flatpak build-bundle \
     "$BUILD_DIR/repo" \
     "$BUNDLE_NAME" \
-    com.orcaslicer.OrcaSlicer \
+    com.skoma93.OrcaSlicerForCraftbot \
     --arch="$ARCH"; then
     echo -e "${RED}Error: Failed to create Flatpak bundle${NC}"
     exit 1
@@ -360,11 +360,11 @@ echo ""
 echo -e "${BLUE}To install the Flatpak:${NC}"
 echo -e "flatpak install --user $BUNDLE_NAME"
 echo ""
-echo -e "${BLUE}To run OrcaSlicer:${NC}"
-echo -e "flatpak run com.orcaslicer.OrcaSlicer"
+echo -e "${BLUE}To run OrcaSlicerForCraftbot:${NC}"
+echo -e "flatpak run com.skoma93.OrcaSlicerForCraftbot"
 echo ""
 echo -e "${BLUE}To uninstall:${NC}"
-echo -e "flatpak uninstall --user com.orcaslicer.OrcaSlicer"
+echo -e "flatpak uninstall --user com.skoma93.OrcaSlicerForCraftbot"
 echo ""
 if [[ "$FORCE_CLEAN" != true ]]; then
     echo -e "${BLUE}Cache Management:${NC}"

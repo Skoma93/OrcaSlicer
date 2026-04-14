@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 from __future__ import annotations
 
 import csv
@@ -105,7 +104,7 @@ def read_text_safely(path: Path) -> str | None:
 
 
 def build_pattern(source_colors: list[str], ignore_case: bool) -> re.Pattern[str]:
-    escaped = sorted((re.escape(x) for x in source_colors), key=len, reverse=True)
+    escaped = sorted((re.escape(value) for value in source_colors), key=len, reverse=True)
     flags = re.MULTILINE
     if ignore_case:
         flags |= re.IGNORECASE
@@ -135,11 +134,11 @@ def scan_source_colors(root: Path, ignore_case: bool, scan_all_files: bool):
                         "match": match.group(0),
                         "file": str(file_path),
                         "line": line_number,
-                        "line_text": line.strip(),
+                        "line_text": line.rstrip(),
                     }
                 )
 
-    hits.sort(key=lambda x: (str(x["match"]).lower(), str(x["file"]).lower(), int(x["line"])))
+    hits.sort(key=lambda item: (str(item["match"]).lower(), str(item["file"]).lower(), int(item["line"])))
     return total_files, hits
 
 
@@ -153,8 +152,10 @@ def write_csv(csv_path: Path, hits: list[dict[str, object]]) -> None:
 class App(tk.Tk):
     def __init__(self) -> None:
         super().__init__()
+
         self.title("Source Color Finder")
-        self.geometry("1200x700")
+        self.geometry("1400x800")
+        self.minsize(1000, 600)
 
         self.root_path_var = tk.StringVar()
         self.csv_path_var = tk.StringVar(value="source_color_hits.csv")
@@ -162,6 +163,9 @@ class App(tk.Tk):
         self.scan_all_files_var = tk.BooleanVar(value=False)
         self.write_csv_var = tk.BooleanVar(value=True)
         self.status_var = tk.StringVar(value="Ready.")
+
+        self.tree: ttk.Treeview
+        self.summary_label: ttk.Label
 
         self._build_ui()
 
@@ -173,20 +177,37 @@ class App(tk.Tk):
         controls_frame.pack(fill=tk.X, pady=(0, 10))
 
         ttk.Label(controls_frame, text="Root folder:").grid(row=0, column=0, sticky="w")
-        ttk.Entry(controls_frame, textvariable=self.root_path_var, width=90).grid(row=0, column=1, sticky="ew", padx=5)
-        ttk.Button(controls_frame, text="Browse...", command=self.browse_root_folder).grid(row=0, column=2, sticky="ew")
+        ttk.Entry(controls_frame, textvariable=self.root_path_var, width=100).grid(
+            row=0, column=1, sticky="ew", padx=5
+        )
+        ttk.Button(controls_frame, text="Browse...", command=self.browse_root_folder).grid(
+            row=0, column=2, sticky="ew"
+        )
 
         ttk.Label(controls_frame, text="CSV output:").grid(row=1, column=0, sticky="w", pady=(6, 0))
-        ttk.Entry(controls_frame, textvariable=self.csv_path_var, width=90).grid(row=1, column=1, sticky="ew", padx=5, pady=(6, 0))
-        ttk.Button(controls_frame, text="Browse...", command=self.browse_csv_file).grid(row=1, column=2, sticky="ew", pady=(6, 0))
+        ttk.Entry(controls_frame, textvariable=self.csv_path_var, width=100).grid(
+            row=1, column=1, sticky="ew", padx=5, pady=(6, 0)
+        )
+        ttk.Button(controls_frame, text="Browse...", command=self.browse_csv_file).grid(
+            row=1, column=2, sticky="ew", pady=(6, 0)
+        )
 
         options_frame = ttk.Frame(controls_frame)
         options_frame.grid(row=2, column=0, columnspan=3, sticky="w", pady=(10, 0))
 
-        ttk.Checkbutton(options_frame, text="Ignore case", variable=self.ignore_case_var).pack(side=tk.LEFT, padx=(0, 15))
-        ttk.Checkbutton(options_frame, text="Scan all readable files", variable=self.scan_all_files_var).pack(side=tk.LEFT, padx=(0, 15))
-        ttk.Checkbutton(options_frame, text="Write CSV", variable=self.write_csv_var).pack(side=tk.LEFT, padx=(0, 15))
+        ttk.Checkbutton(options_frame, text="Ignore case", variable=self.ignore_case_var).pack(
+            side=tk.LEFT, padx=(0, 15)
+        )
+        ttk.Checkbutton(options_frame, text="Scan all readable files", variable=self.scan_all_files_var).pack(
+            side=tk.LEFT, padx=(0, 15)
+        )
+        ttk.Checkbutton(options_frame, text="Write CSV", variable=self.write_csv_var).pack(
+            side=tk.LEFT, padx=(0, 15)
+        )
         ttk.Button(options_frame, text="Scan", command=self.run_scan).pack(side=tk.LEFT, padx=(10, 0))
+        ttk.Button(options_frame, text="Copy selected row", command=self.copy_selected_row).pack(
+            side=tk.LEFT, padx=(10, 0)
+        )
 
         controls_frame.columnconfigure(1, weight=1)
 
@@ -196,25 +217,32 @@ class App(tk.Tk):
         self.summary_label = ttk.Label(summary_frame, text="No scan yet.")
         self.summary_label.pack(anchor="w")
 
+        tree_frame = ttk.Frame(main_frame)
+        tree_frame.pack(fill=tk.BOTH, expand=True)
+
         columns = ("match", "file", "line", "line_text")
-        self.tree = ttk.Treeview(main_frame, columns=columns, show="headings")
+        self.tree = ttk.Treeview(tree_frame, columns=columns, show="headings")
+
         self.tree.heading("match", text="Match")
         self.tree.heading("file", text="File")
         self.tree.heading("line", text="Line")
         self.tree.heading("line_text", text="Line text")
 
-        self.tree.column("match", width=220, anchor="w")
-        self.tree.column("file", width=420, anchor="w")
-        self.tree.column("line", width=70, anchor="center")
+        self.tree.column("match", width=260, anchor="w")
+        self.tree.column("file", width=500, anchor="w")
+        self.tree.column("line", width=80, anchor="center")
         self.tree.column("line_text", width=900, anchor="w")
 
-        y_scroll = ttk.Scrollbar(main_frame, orient=tk.VERTICAL, command=self.tree.yview)
-        x_scroll = ttk.Scrollbar(main_frame, orient=tk.HORIZONTAL, command=self.tree.xview)
+        y_scroll = ttk.Scrollbar(tree_frame, orient=tk.VERTICAL, command=self.tree.yview)
+        x_scroll = ttk.Scrollbar(tree_frame, orient=tk.HORIZONTAL, command=self.tree.xview)
         self.tree.configure(yscrollcommand=y_scroll.set, xscrollcommand=x_scroll.set)
 
-        self.tree.pack(fill=tk.BOTH, expand=True, side=tk.LEFT)
-        y_scroll.pack(fill=tk.Y, side=tk.RIGHT)
-        x_scroll.pack(fill=tk.X, side=tk.BOTTOM)
+        self.tree.grid(row=0, column=0, sticky="nsew")
+        y_scroll.grid(row=0, column=1, sticky="ns")
+        x_scroll.grid(row=1, column=0, sticky="ew")
+
+        tree_frame.rowconfigure(0, weight=1)
+        tree_frame.columnconfigure(0, weight=1)
 
         status_bar = ttk.Label(self, textvariable=self.status_var, anchor="w", relief=tk.SUNKEN)
         status_bar.pack(fill=tk.X, side=tk.BOTTOM)
@@ -236,6 +264,23 @@ class App(tk.Tk):
     def clear_results(self) -> None:
         for item in self.tree.get_children():
             self.tree.delete(item)
+
+    def copy_selected_row(self) -> None:
+        selected = self.tree.selection()
+        if not selected:
+            messagebox.showinfo("No selection", "Select a row first.")
+            return
+
+        values = self.tree.item(selected[0], "values")
+        if not values:
+            return
+
+        text = f"match={values[0]}\nfile={values[1]}\nline={values[2]}\ntext={values[3]}"
+        self.clipboard_clear()
+        self.clipboard_append(text)
+        self.update()
+
+        self.status_var.set("Selected row copied to clipboard.")
 
     def run_scan(self) -> None:
         root_text = self.root_path_var.get().strip()
@@ -289,12 +334,14 @@ class App(tk.Tk):
                     write_csv(Path(csv_text), hits)
                 except Exception as exc:
                     messagebox.showerror("CSV write failed", str(exc))
-                    self.status_var.set("Scan completed, CSV write failed.")
+                    self.status_var.set("Scan completed, but CSV write failed.")
                     return
 
         self.status_var.set("Scan completed.")
 
+    def run(self) -> None:
+        self.mainloop()
+
 
 if __name__ == "__main__":
-    app = App()
-    app.mainloop()
+    App().run()

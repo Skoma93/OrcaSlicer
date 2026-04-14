@@ -1,4 +1,4 @@
-@REM OrcaSlicer build script for Windows with VS auto-detect
+@REM OrcaSlicerForCraftbot build script for Windows with VS auto-detect
 @echo off
 set WP=%CD%
 set _START_TIME=%TIME%
@@ -71,9 +71,9 @@ if "%1"=="pack" (
     setlocal ENABLEDELAYEDEXPANSION 
     cd %WP%/deps/build
     for /f "tokens=2-4 delims=/ " %%a in ('date /t') do set build_date=%%c%%b%%a
-    echo packing deps: OrcaSlicer_dep_win64_!build_date!_vs!VS_VERSION!.zip
+    echo packing deps: OrcaSlicerForCraftbot_dep_win64_!build_date!_vs!VS_VERSION!.zip
 
-    %WP%/tools/7z.exe a OrcaSlicer_dep_win64_!build_date!_vs!VS_VERSION!.zip OrcaSlicer_dep
+    %WP%/tools/7z.exe a OrcaSlicerForCraftbot_dep_win64_!build_date!_vs!VS_VERSION!.zip OrcaSlicerForCraftbot_dep
     goto :done
 )
 
@@ -124,7 +124,7 @@ if "%USE_NINJA%"=="1" (
 if "%1"=="deps" goto :done
 
 :slicer
-echo "building Orca Slicer..."
+echo "building Orca Slicer For Craftbot..."
 cd %WP%
 mkdir %build_dir%
 cd %build_dir%

@@ -219,7 +219,7 @@ if [[ -n "${BUILD_DEPS}" ]] ; then
 fi
 
 if [[ -n "${BUILD_ORCA}" ]] || [[ -n "${BUILD_TESTS}" ]] ; then
-    echo "Configuring OrcaSlicer..."
+    echo "Configuring OrcaSlicerForCraftbot..."
     if [[ -n "${CLEAN_BUILD}" ]] ; then
         print_and_run rm -fr $BUILD_DIR
     fi
@@ -241,10 +241,10 @@ if [[ -n "${BUILD_ORCA}" ]] || [[ -n "${BUILD_TESTS}" ]] ; then
 "${BUILD_ARGS[@]}"
     echo "done"
     if [[ -n "${BUILD_ORCA}" ]]; then
-	echo "Building OrcaSlicer ..."
-	print_and_run cmake --build $BUILD_DIR --config "${BUILD_CONFIG}" --target OrcaSlicer
-	echo "Building OrcaSlicer_profile_validator .."
-	print_and_run cmake --build $BUILD_DIR --config "${BUILD_CONFIG}" --target OrcaSlicer_profile_validator
+	echo "Building OrcaSlicerForCraftbot ..."
+	print_and_run cmake --build $BUILD_DIR --config "${BUILD_CONFIG}" --target OrcaSlicerForCraftbot
+	echo "Building OrcaSlicerForCraftbot_profile_validator .."
+	print_and_run cmake --build $BUILD_DIR --config "${BUILD_CONFIG}" --target OrcaSlicerForCraftbot_profile_validator
 	./scripts/run_gettext.sh
     fi
     if [[ -n "${BUILD_TESTS}" ]] ; then
