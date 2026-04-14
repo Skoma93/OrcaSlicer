@@ -148,7 +148,7 @@ function build_deps() {
 
             PROJECT_BUILD_DIR="$PROJECT_DIR/build/$_ARCH"
             DEPS_BUILD_DIR="$DEPS_DIR/build/$_ARCH"
-            DEPS="$DEPS_BUILD_DIR/OrcaSlicer_dep"
+            DEPS="$DEPS_BUILD_DIR/OrcaSlicerForCraftbot_dep"
 
             echo "Building deps..."
             (
@@ -175,7 +175,7 @@ function pack_deps() {
     (
         set -x
         cd "$DEPS_DIR"
-        tar -zcvf "OrcaSlicer_dep_mac_${ARCH}_$(date +"%Y%m%d").tar.gz" "build"
+        tar -zcvf "OrcaSlicerForCraftbot_dep_mac_${ARCH}_$(date +"%Y%m%d").tar.gz" "build"
     )
 }
 
@@ -187,7 +187,7 @@ function build_slicer() {
 
             PROJECT_BUILD_DIR="$PROJECT_DIR/build/$_ARCH"
             DEPS_BUILD_DIR="$DEPS_DIR/build/$_ARCH"
-            DEPS="$DEPS_BUILD_DIR/OrcaSlicer_dep"
+            DEPS="$DEPS_BUILD_DIR/OrcaSlicerForCraftbot_dep"
 
             echo "Building slicer for $_ARCH..."
             (
@@ -227,26 +227,26 @@ function build_slicer() {
         echo "Fix macOS app package..."
         (
             cd "$PROJECT_BUILD_DIR"
-            mkdir -p OrcaSlicer
-            cd OrcaSlicer
+            mkdir -p OrcaSlicerForCraftbot
+            cd OrcaSlicerForCraftbot
             # remove previously built app
-            rm -rf ./OrcaSlicer.app
+            rm -rf ./OrcaSlicerForCraftbot.app
             # fully copy newly built app
-            cp -pR "../src$BUILD_DIR_CONFIG_SUBDIR/OrcaSlicer.app" ./OrcaSlicer.app
+            cp -pR "../src$BUILD_DIR_CONFIG_SUBDIR/OrcaSlicerForCraftbot.app" ./OrcaSlicerForCraftbot.app
             # fix resources
-            resources_path=$(readlink ./OrcaSlicer.app/Contents/Resources)
-            rm ./OrcaSlicer.app/Contents/Resources
-            cp -R "$resources_path" ./OrcaSlicer.app/Contents/Resources
+            resources_path=$(readlink ./OrcaSlicerForCraftbot.app/Contents/Resources)
+            rm ./OrcaSlicerForCraftbot.app/Contents/Resources
+            cp -R "$resources_path" ./OrcaSlicerForCraftbot.app/Contents/Resources
             # delete .DS_Store file
-            find ./OrcaSlicer.app/ -name '.DS_Store' -delete
+            find ./OrcaSlicerForCraftbot.app/ -name '.DS_Store' -delete
             
-            # Copy OrcaSlicer_profile_validator.app if it exists
-            if [ -f "../src$BUILD_DIR_CONFIG_SUBDIR/OrcaSlicer_profile_validator.app/Contents/MacOS/OrcaSlicer_profile_validator" ]; then
-                echo "Copying OrcaSlicer_profile_validator.app..."
-                rm -rf ./OrcaSlicer_profile_validator.app
-                cp -pR "../src$BUILD_DIR_CONFIG_SUBDIR/OrcaSlicer_profile_validator.app" ./OrcaSlicer_profile_validator.app
+            # Copy OrcaSlicerForCraftbot_profile_validator.app if it exists
+            if [ -f "../src$BUILD_DIR_CONFIG_SUBDIR/OrcaSlicerForCraftbot_profile_validator.app/Contents/MacOS/OrcaSlicerForCraftbot_profile_validator" ]; then
+                echo "Copying OrcaSlicerForCraftbot_profile_validator.app..."
+                rm -rf ./OrcaSlicerForCraftbot_profile_validator.app
+                cp -pR "../src$BUILD_DIR_CONFIG_SUBDIR/OrcaSlicerForCraftbot_profile_validator.app" ./OrcaSlicerForCraftbot_profile_validator.app
                 # delete .DS_Store file
-                find ./OrcaSlicer_profile_validator.app/ -name '.DS_Store' -delete
+                find ./OrcaSlicerForCraftbot_profile_validator.app/ -name '.DS_Store' -delete
             fi
         )
 
@@ -259,7 +259,7 @@ function build_slicer() {
         #     ver=${ver}_dev
         # fi
 
-        # zip -FSr OrcaSlicer${ver}_Mac_${_ARCH}.zip OrcaSlicer.app
+        # zip -FSr OrcaSlicerForCraftbot${ver}_Mac_${_ARCH}.zip OrcaSlicerForCraftbot.app
 
     fi
     done
@@ -291,28 +291,28 @@ function build_universal() {
     echo "Building universal binary..."
 
     PROJECT_BUILD_DIR="$PROJECT_DIR/build/$ARCH"
-    ARM64_APP="$PROJECT_DIR/build/arm64/OrcaSlicer/OrcaSlicer.app"
-    X86_64_APP="$PROJECT_DIR/build/x86_64/OrcaSlicer/OrcaSlicer.app"
+    ARM64_APP="$PROJECT_DIR/build/arm64/OrcaSlicerForCraftbot/OrcaSlicerForCraftbot.app"
+    X86_64_APP="$PROJECT_DIR/build/x86_64/OrcaSlicerForCraftbot/OrcaSlicerForCraftbot.app"
 
-    mkdir -p "$PROJECT_BUILD_DIR/OrcaSlicer"
-    UNIVERSAL_APP="$PROJECT_BUILD_DIR/OrcaSlicer/OrcaSlicer.app"
+    mkdir -p "$PROJECT_BUILD_DIR/OrcaSlicerForCraftbot"
+    UNIVERSAL_APP="$PROJECT_BUILD_DIR/OrcaSlicerForCraftbot/OrcaSlicerForCraftbot.app"
     rm -rf "$UNIVERSAL_APP"
     cp -R "$ARM64_APP" "$UNIVERSAL_APP"
 
-    echo "Creating universal binaries for OrcaSlicer.app..."
+    echo "Creating universal binaries for OrcaSlicerForCraftbot.app..."
     lipo_dir "$UNIVERSAL_APP" "$X86_64_APP"
-    echo "Universal OrcaSlicer.app created at $UNIVERSAL_APP"
+    echo "Universal OrcaSlicerForCraftbot.app created at $UNIVERSAL_APP"
 
     # Create universal binary for profile validator if it exists
-    ARM64_VALIDATOR="$PROJECT_DIR/build/arm64/OrcaSlicer/OrcaSlicer_profile_validator.app"
-    X86_64_VALIDATOR="$PROJECT_DIR/build/x86_64/OrcaSlicer/OrcaSlicer_profile_validator.app"
+    ARM64_VALIDATOR="$PROJECT_DIR/build/arm64/OrcaSlicerForCraftbot/OrcaSlicerForCraftbot_profile_validator.app"
+    X86_64_VALIDATOR="$PROJECT_DIR/build/x86_64/OrcaSlicerForCraftbot/OrcaSlicerForCraftbot_profile_validator.app"
     if [ -d "$ARM64_VALIDATOR" ] && [ -d "$X86_64_VALIDATOR" ]; then
-        echo "Creating universal binaries for OrcaSlicer_profile_validator.app..."
-        UNIVERSAL_VALIDATOR_APP="$PROJECT_BUILD_DIR/OrcaSlicer/OrcaSlicer_profile_validator.app"
+        echo "Creating universal binaries for OrcaSlicerForCraftbot_profile_validator.app..."
+        UNIVERSAL_VALIDATOR_APP="$PROJECT_BUILD_DIR/OrcaSlicerForCraftbot/OrcaSlicerForCraftbot_profile_validator.app"
         rm -rf "$UNIVERSAL_VALIDATOR_APP"
         cp -R "$ARM64_VALIDATOR" "$UNIVERSAL_VALIDATOR_APP"
         lipo_dir "$UNIVERSAL_VALIDATOR_APP" "$X86_64_VALIDATOR"
-        echo "Universal OrcaSlicer_profile_validator.app created at $UNIVERSAL_VALIDATOR_APP"
+        echo "Universal OrcaSlicerForCraftbot_profile_validator.app created at $UNIVERSAL_VALIDATOR_APP"
     fi
 }
 
