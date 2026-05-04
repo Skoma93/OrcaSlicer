@@ -66,6 +66,7 @@ wxDECLARE_EVENT(EVT_VOLUME_DETACHED, VolumeDetachedEvent);
 #endif /* _WIN32 */
 
 wxTopLevelWindow* find_toplevel_parent(wxWindow *window);
+wxString format_nozzle_diameter(float diameter);
 
 void on_window_geometry(wxTopLevelWindow *tlw, std::function<void()> callback);
 
@@ -458,6 +459,10 @@ int get_dpi_for_window(const wxWindow *window);
 #ifdef __WXOSX__
 void dataview_remove_insets(wxDataViewCtrl* dv);
 void staticbox_remove_margin(wxStaticBox* sb);
+#endif
+
+#ifdef __WXGTK3__
+void RemoveButtonBorder(wxWindow* win);
 #endif
 
 #if defined(__WXOSX__) || defined(__linux__)
