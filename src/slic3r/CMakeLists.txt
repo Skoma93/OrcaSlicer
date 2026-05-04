@@ -649,6 +649,11 @@ set(SLIC3R_GUI_SOURCES
     Utils/WxFontUtils.hpp
     Utils/FileTransferUtils.cpp
     Utils/FileTransferUtils.hpp
+    Utils/CraftbotPlusLink.cpp
+    Utils/CraftbotPlusLink.hpp
+    Utils/CraftbotFlowLink.cpp
+    Utils/CraftbotFlowLink.hpp
+
 )
 
 add_subdirectory(GUI/DeviceCore)
