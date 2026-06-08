@@ -752,7 +752,24 @@ void PhysicalPrinterDialog::update(bool printer_change)
                 m_optgroup->hide_field("printhost_apikey");
             } 
         }
-        
+
+        if (opt->value == htCraftbotFlow) {
+            m_optgroup->hide_field("print_host_webui");
+            m_optgroup->hide_field("printhost_apikey");
+            m_optgroup->disable_field("printhost_cafile");
+            m_optgroup->disable_field("printhost_ssl_ignore_revoke");
+            m_optgroup->hide_field("printhost_authorization_type");
+        } else if (opt->value == htCraftbotPlus) {
+            m_optgroup->disable_field("printhost_ssl_ignore_revoke");
+            m_optgroup->hide_field("printhost_authorization_type");
+            m_optgroup->hide_field("print_host_webui");
+            m_optgroup->hide_field("printhost_cafile");
+            m_optgroup->hide_field("printhost_apikey");
+            m_optgroup->hide_field("printhost_user");
+            m_optgroup->hide_field("printhost_password");
+        }    
+    
+
         if (opt->value == htFlashforge) {
             m_optgroup->show_field("printhost_apikey");
             m_optgroup->show_field("flashforge_serial_number");
