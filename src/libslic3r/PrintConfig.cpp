@@ -4532,6 +4532,8 @@ void PrintConfigDef::init_fff_params()
     def->tooltip = L("Orca Slicer can upload G-code files to a printer host. This field must contain "
                    "the kind of the host.");
     def->enum_keys_map = &ConfigOptionEnum<PrintHostType>::get_enum_values();
+    def->enum_values.push_back("craftbotplus");
+    def->enum_values.push_back("craftbotflow");
     def->enum_values.push_back("prusalink");
     def->enum_values.push_back("prusaconnect");
     def->enum_values.push_back("octoprint");
@@ -4546,6 +4548,8 @@ void PrintConfigDef::init_fff_params()
     def->enum_values.push_back("flashforge");
     def->enum_values.push_back("simplyprint");
     def->enum_values.push_back("elegoolink");
+    def->enum_labels.push_back("CraftbotPlus");
+    def->enum_labels.push_back("CraftbotFlow");
     def->enum_labels.push_back("PrusaLink");
     def->enum_labels.push_back("PrusaConnect");
     def->enum_labels.push_back("Octo/Klipper");
