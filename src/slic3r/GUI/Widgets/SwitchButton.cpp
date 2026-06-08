@@ -32,7 +32,7 @@ SwitchButton::SwitchButton(wxWindow* parent, wxWindowID id)
 	SetBackgroundColour(StaticBox::GetParentBackgroundColor(parent));
 	Bind(wxEVT_TOGGLEBUTTON, [this](auto& e) { update(); e.Skip(); });
 	SetFont(Label::Body_12);
-
+ 
 #ifdef __WXGTK3__
     Slic3r::GUI::RemoveButtonBorder(this);
 #endif
@@ -293,11 +293,11 @@ void ModeSwitchButton::doRender(wxDC& dc)
     const wxColour track_fill = disabled ? wxColour(0xD0, 0xD0, 0xD4) :
                                m_pressed ? wxColour(0x5A, 0x5D, 0x64) : wxColour(0x66, 0x69, 0x70);
     const wxColour track_border = disabled ? wxColour(0xDD, 0xDD, 0xE0) :
-                                 focused ? wxColour("#009688") :
+                                 focused ? wxColour("#7D0096") :
                                  hovered ? wxColour(0x7A, 0x7D, 0x84) : wxColour(0x75, 0x78, 0x7F);
     const wxColour active_fill = disabled ? wxColour(0x9E, 0xBE, 0xB9) :
-                                m_pressed ? wxColour(0x00877B) : wxColour("#009688");
-    const wxColour active_dot = disabled ? wxColour(0xEC, 0xF4, 0xF2) : wxColour(0xB7, 0xEB, 0xE3);
+                                m_pressed ? wxColour(0x700087) : wxColour("#7D0096");
+    const wxColour active_dot   = disabled ? wxColour(0xF3, 0xEC, 0xF4) : wxColour(0xE2, 0xB7, 0xEB);
     const wxColour inactive_dot = disabled ? wxColour(0xF2, 0xF2, 0xF4) : wxColour(0xB5, 0xB7, 0xBD);
     const wxColour thumb_fill = disabled ? wxColour(0xFA, 0xFA, 0xFA) : *wxWHITE;
     const wxColour thumb_border = disabled ? wxColour(0xE7, 0xE7, 0xEA) : wxColour(0xDD, 0xDF, 0xE3);
