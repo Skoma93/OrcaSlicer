@@ -494,6 +494,11 @@ struct Sidebar::priv
     wxStaticBitmap *image_printer_bed = nullptr;
     ComboBox *      combo_printer_bed = nullptr;
 
+    // IDEX mode
+    StaticBox* panel_idex_mode   = nullptr;
+    Label* label_idex_mode_title = nullptr;
+    ComboBox* combo_idex_mode    = nullptr;
+
     ImageDPIFrame *big_bed_image_popup = nullptr;
     // Printer - sync
     //Button *btn_sync_printer;
@@ -613,6 +618,11 @@ void Sidebar::priv::layout_printer(bool isBBL, bool isDual)
         vsizer_printer->AddSpacer(FromDIP(SidebarProps::ContentMarginV()));
         vsizer_printer->Add(hsizer_printer, 0, wxEXPAND | wxLEFT | wxRIGHT, FromDIP(SidebarProps::ContentMargin()));
 
+        // IDEX mode
+        if (panel_idex_mode) {
+            vsizer_printer->Add(panel_idex_mode, 0, wxEXPAND | wxLEFT | wxRIGHT | wxTOP, FromDIP(SidebarProps::ContentMargin()));
+        }
+
         // Printer - extruder
 
         // double
@@ -643,13 +653,28 @@ void Sidebar::priv::layout_printer(bool isBBL, bool isDual)
     // Orca: we use preset_bundle.is_bbl_vendor() instead of isBBL to determine if the plate type combo box should be shown
     // ref: https://github.com/OrcaSlicer/OrcaSlicer/pull/11610#discussion_r2607411847
     panel_printer_bed->Show(preset_bundle.is_bbl_vendor() || cfg.opt_bool("support_multi_bed_types"));
-
     extruder_dual_sizer->Show(isDual);
 
     // NEEDFIX requires AMS check or any type of ???
     // Single nozzle & non ams
     panel_nozzle_dia->Show(!isDual && preset_bundle.get_printer_extruder_count() < 2);
     extruder_single_sizer->Show(false);
+
+    // IDEX mode visibility + value sync
+    // IDEX mode visibility + value sync
+    if (panel_idex_mode && combo_idex_mode) {
+        bool show_idex_mode = false;
+
+        if (cfg.option("is_idex_printer"))
+            show_idex_mode = cfg.opt_bool("is_idex_printer");
+
+        panel_idex_mode->Show(show_idex_mode);
+
+        if (show_idex_mode && cfg.option("idex_print_mode")) {
+            const IdexPrintMode mode = cfg.opt_enum<IdexPrintMode>("idex_print_mode");
+            combo_idex_mode->SetSelection(static_cast<int>(mode));
+        }
+    }
 }
 
 void Sidebar::priv::flush_printer_sync(bool restart)
@@ -1992,6 +2017,59 @@ Sidebar::Sidebar(Plater *parent)
         BedType bed_type = (BedType)bed_type_value;
         project_config.set_key_value("curr_bed_type", new ConfigOptionEnum<BedType>(bed_type));
 
+
+        // IDEX mode selection
+        p->panel_idex_mode = new StaticBox(p->m_panel_printer_content);
+        p->panel_idex_mode->SetCornerRadius(FromDIP(PRINTER_PANEL_RADIUS));
+        p->panel_idex_mode->SetBorderColor(panel_color.bd_normal);
+        p->panel_idex_mode->SetMinSize(FromDIP(wxSize(-1, 34)));
+        p->panel_idex_mode->Hide();
+
+        p->label_idex_mode_title = new Label(p->panel_idex_mode, _L("IDEX mode"), LB_PROPAGATE_MOUSE_EVENT);
+        p->label_idex_mode_title->SetFont(Label::Body_10);
+
+        p->combo_idex_mode = new ComboBox(p->panel_idex_mode, wxID_ANY, wxString(""), wxDefaultPosition, wxDefaultSize, 0, nullptr,
+                                          wxCB_READONLY);
+
+        p->combo_idex_mode->SetBorderWidth(0);
+        p->combo_idex_mode->GetDropDown().SetUseContentWidth(true);
+
+        p->combo_idex_mode->Append(_L("Normal"));
+        p->combo_idex_mode->Append(_L("Parallel"));
+        p->combo_idex_mode->Append(_L("Mirror"));
+        p->combo_idex_mode->Append(_L("Backup"));
+        p->combo_idex_mode->SetSelection(0);
+
+        p->combo_idex_mode->Bind(wxEVT_COMBOBOX, [this](wxCommandEvent& e) {
+            const int selection = e.GetSelection();
+
+            if (selection < 0 || selection > 3) {
+                e.Skip();
+                return;
+            }
+
+            const IdexPrintMode mode = static_cast<IdexPrintMode>(selection);
+
+            DynamicPrintConfig& project_config = wxGetApp().preset_bundle->project_config;
+
+            project_config.set_key_value("idex_print_mode", new ConfigOptionEnum<IdexPrintMode>(mode));
+
+            wxGetApp().plater()->update_project_dirty_from_presets();
+
+            auto full_config = wxGetApp().preset_bundle->full_config();
+            wxGetApp().mainframe->on_config_changed(&full_config);
+
+            e.Skip();
+        });
+
+        auto* idex_mode_sizer = new wxBoxSizer(wxHORIZONTAL);
+
+        idex_mode_sizer->Add(p->label_idex_mode_title, 0, wxALIGN_CENTER_VERTICAL | wxLEFT | wxRIGHT, FromDIP(8));
+
+        idex_mode_sizer->Add(p->combo_idex_mode, 1, wxALIGN_CENTER_VERTICAL | wxRIGHT, FromDIP(8));
+
+        p->panel_idex_mode->SetSizer(idex_mode_sizer);
+
         /* ORCA THIS PART MOVED TO TITLEBAR
         // Sync printer information
         btn_sync = new Button(p->m_panel_printer_content, _L("Sync info"), "printer_sync", 0, 32);
@@ -2607,7 +2685,8 @@ void Sidebar::update_presets(Preset::Type preset_type)
         Preset& printer_preset = wxGetApp().preset_bundle->printers.get_edited_preset();
 
         bool isBBL = preset_bundle.is_bbl_vendor();
-
+        bool isCU  = preset_bundle.is_cu_vendor();
+ 
         if (auto printer_structure_opt = printer_preset.config.option<ConfigOptionEnum<PrinterStructure>>("printer_structure")) {
             wxGetApp().plater()->get_current_canvas3D()->get_arrange_settings().align_to_y_axis = (printer_structure_opt->value == PrinterStructure::psI3);
         }
@@ -2618,7 +2697,7 @@ void Sidebar::update_presets(Preset::Type preset_type)
         auto* nozzle_diameter = dynamic_cast<const ConfigOptionFloats*>(printer_preset.config.option("nozzle_diameter"));
 
         bool is_dual_extruder = nozzle_diameter->size() == 2;
-        p->layout_printer(preset_bundle.use_bbl_network(), isBBL && is_dual_extruder);
+        p->layout_printer(preset_bundle.use_bbl_network(), (isBBL || isCU ) && is_dual_extruder);
         auto diameters = wxGetApp().preset_bundle->printers.diameters_of_selected_printer();
         auto diameter = printer_preset.config.opt_string("printer_variant");
         auto update_extruder_diameter = [&diameters, &diameter, &nozzle_diameter](int extruder_index,ExtruderGroup & extruder) {
@@ -16628,8 +16707,10 @@ void Plater::on_config_change(const DynamicPrintConfig &config)
             || opt_key == "extruder_clearance_height_to_rod") {
             bed_shape_changed = true;
             update_scheduled = true;
-        }
-        else if (opt_key == "bed_shape" || opt_key == "bed_custom_texture" || opt_key == "bed_custom_model") {
+        } else if (opt_key == "bed_shape" || opt_key == "bed_custom_texture" || opt_key == "bed_custom_model" ||
+                   opt_key == "is_idex_printer" || opt_key == "idex_print_mode" || opt_key == "bed_exclude_area_mirror_mode" ||
+                   opt_key == "bed_exclude_area_parallel_mode"
+            ) {
             bed_shape_changed = true;
             update_scheduled = true;
         }

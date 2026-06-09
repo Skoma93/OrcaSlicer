@@ -980,7 +980,11 @@ void Tab::init_options_list()
 
     for (const std::string& opt_key : m_config->keys())
     {
-        if (opt_key == "printable_area" || opt_key == "bed_exclude_area" || opt_key == "compatible_prints" || opt_key == "compatible_printers" || opt_key == "thumbnails" || opt_key == "wrapping_exclude_area") {
+        if (opt_key == "printable_area" ||
+            opt_key == "bed_exclude_area" ||
+            opt_key == "bed_exclude_area_mirror_mode" ||
+            opt_key == "bed_exclude_area_parallel_mode" ||
+            opt_key == "compatible_prints" || opt_key == "compatible_printers" || opt_key == "thumbnails" || opt_key == "wrapping_exclude_area") {
             m_options_list.emplace(opt_key, m_opt_status_value);
             continue;
         }
@@ -4459,10 +4463,21 @@ void TabPrinter::build_fff()
         create_line_with_widget(optgroup.get(), "printable_area", "custom-svg-and-png-bed-textures_124612", [this](wxWindow* parent) {
            return 	create_bed_shape_widget(parent);
         });
+        optgroup->append_single_option_line("is_idex_printer");
         optgroup->append_single_option_line("parallel_printheads_count");
         Option option = optgroup->get_option("bed_exclude_area");
         option.opt.full_width = true;
         optgroup->append_single_option_line(option, "printer_basic_information_printable_space#excluded-bed-area");
+
+        Option option2         = optgroup->get_option("bed_exclude_area_mirror_mode");
+        option2.opt.full_width = true;
+        optgroup->append_single_option_line(option2, "#excluded-bed-area-mirror-mode");
+
+        Option option3         = optgroup->get_option("bed_exclude_area_parallel_mode");
+        option3.opt.full_width = true;
+        optgroup->append_single_option_line(option3, "#excluded-bed-area-parallel-mode");
+
+
         // optgroup->append_single_option_line("printable_area");
         optgroup->append_single_option_line("printable_height", "printer_basic_information_printable_space#printable-height");
         optgroup->append_single_option_line("support_multi_bed_types","printer_basic_information_printable_space#support-multi-bed-types");

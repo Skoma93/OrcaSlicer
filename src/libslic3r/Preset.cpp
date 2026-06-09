@@ -1269,6 +1269,7 @@ static std::vector<std::string> s_Preset_print_options{
     "zaa_dont_alternate_fill_direction",
     "zaa_min_z",
     "ironing_expansion",
+    "idex_print_mode",
 };
 
 static std::vector<std::string> s_Preset_filament_options {/*"filament_colour", */ "default_filament_colour", "required_nozzle_HRC", "filament_diameter", "pellet_flow_coefficient", "volumetric_speed_coefficients", "filament_type",
@@ -1347,7 +1348,9 @@ static std::vector<std::string> s_Preset_printer_options {
     "cooling_tube_length", "high_current_on_filament_swap", "parking_pos_retraction", "extra_loading_move", "wipe_tower_type", "purge_in_prime_tower", "enable_filament_ramming", "tool_change_on_wipe_tower",
     "z_offset",
     "disable_m73", "preferred_orientation", "emit_machine_limits_to_gcode", "pellet_modded_printer", "support_multi_bed_types", "default_bed_type", "bed_mesh_min","bed_mesh_max","bed_mesh_probe_distance", "adaptive_bed_mesh_margin", "enable_long_retraction_when_cut","long_retractions_when_cut","retraction_distances_when_cut",
-    "bed_temperature_formula", "nozzle_flush_dataset"
+    "bed_temperature_formula", "nozzle_flush_dataset",
+    "bed_exclude_area_mirror_mode", "bed_exclude_area_parallel_mode", "is_idex_printer"
+                                                        
     };
 
 static std::vector<std::string> s_Preset_sla_print_options {
@@ -3352,7 +3355,14 @@ inline t_config_option_keys deep_diff(const ConfigBase &config_this, const Confi
         if (this_opt != nullptr && other_opt != nullptr && *this_opt != *other_opt)
         {
             //BBS: add bed_exclude_area
-            if (opt_key == "printable_area" || opt_key == "bed_exclude_area" || opt_key == "compatible_prints" || opt_key == "compatible_printers" || opt_key == "thumbnails" ||  opt_key == "wrapping_exclude_area") {
+            if (opt_key == "printable_area" ||
+                opt_key == "bed_exclude_area" ||
+                opt_key == "bed_exclude_area_mirror_mode" ||
+                opt_key == "bed_exclude_area_parallel_mode" ||
+                opt_key == "compatible_prints" ||
+                opt_key == "compatible_printers" ||
+                opt_key == "thumbnails" ||
+                opt_key == "wrapping_exclude_area") {
                 // Scalar variable, or a vector variable, which is independent from number of extruders,
                 // thus the vector is presented to the user as a single input.
                 diff.emplace_back(opt_key);

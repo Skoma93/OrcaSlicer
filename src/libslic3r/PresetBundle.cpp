@@ -631,6 +631,9 @@ VendorType PresetBundle::get_current_vendor_type()
         if(vendor_name.compare("BBL") == 0)
             t = VendorType::Marlin_BBL;
         
+        if (vendor_name.compare("Craftbot") == 0)
+            t = VendorType::Craftbot;
+
         if(vendor_name.compare("Qidi") == 0)
             t = VendorType::Klipper_Qidi;
     }
