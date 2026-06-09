@@ -565,6 +565,14 @@ static const t_config_enum_values s_keys_map_WipeTowerWallType{
 };
 CONFIG_OPTION_ENUM_DEFINE_STATIC_MAPS(WipeTowerWallType)
 
+static const t_config_enum_values s_keys_map_IdexPrintMode{
+    {"normal",  IdexPrintMode::Normal},
+    {"parallel",IdexPrintMode::Parallel},
+    {"mirror",  IdexPrintMode::Mirror},
+    {"backup",  IdexPrintMode::Backup},
+};
+CONFIG_OPTION_ENUM_DEFINE_STATIC_MAPS(IdexPrintMode)
+
 static const t_config_enum_values s_keys_map_ExtruderType = {
     { "Direct Drive",   etDirectDrive },
     { "Bowden",        etBowden }
@@ -736,6 +744,41 @@ void PrintConfigDef::init_common_params()
     def->mode = comAdvanced;
     def->gui_type = ConfigOptionDef::GUIType::one_string;
     def->set_default_value(new ConfigOptionString());
+
+    def = this->add("idex_print_mode", coEnum);
+    def->enum_keys_map = &ConfigOptionEnum<IdexPrintMode>::get_enum_values();
+    def->enum_values.push_back("normal");
+    def->enum_values.push_back("parallel");
+    def->enum_values.push_back("mirror");
+    def->enum_values.push_back("backup");
+    def->enum_labels.push_back(L("Normal"));
+    def->enum_labels.push_back(L("Parallel"));
+    def->enum_labels.push_back(L("Mirror"));
+    def->enum_labels.push_back(L("Backup"));
+    def->mode = comSimple;
+    def->set_default_value(new ConfigOptionEnum<IdexPrintMode>(IdexPrintMode::Mirror));
+
+    def          = this->add("is_idex_printer", coBool);
+    def->label   = L("IDEX printer");
+    def->tooltip = L("Independent dual extruder printer.");
+    def->mode    = comAdvanced;
+    def->set_default_value(new ConfigOptionBool(false));
+
+    def           = this->add("bed_exclude_area_mirror_mode", coPoints);
+    def->label    = L("Exclude area mirror mode");
+    def->tooltip  = L("Unprintable area in XY plane."
+                       "The area is expressed as polygon by points in following format: \"XxY, XxY, ...\"");
+    def->mode     = comAdvanced;
+    def->gui_type = ConfigOptionDef::GUIType::one_string;
+    def->set_default_value(new ConfigOptionPoints{Vec2d(0, 0)});
+
+    def          = this->add("bed_exclude_area_parallel_mode", coPoints);
+    def->label   = L("Exclude area parallel mode");
+    def->tooltip = L("Unprintable area in XY plane."
+                     "The area is expressed as polygon by points in following format: \"XxY, XxY, ...\"");
+    def->mode     = comAdvanced;
+    def->gui_type = ConfigOptionDef::GUIType::one_string;
+    def->set_default_value(new ConfigOptionPoints{Vec2d(0, 0)});
 
     def = this->add("elefant_foot_compensation", coFloat);
     def->label = L("Elephant foot compensation");
