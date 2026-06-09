@@ -1,0 +1,156 @@
+{
+    "type": "machine",
+    "name": "Craftbot 3 0.4 nozzle",
+    "inherits": "fdm_craftbotplus_common",
+    "from": "system",
+    "setting_id": "GM0602",
+    "instantiation": "true",
+    "is_custom_defined": "0",
+    "nozzle_diameter": [
+        "0.4",
+        "0.4"
+    ],
+    "printer_model": "Craftbot 3",
+    "printer_variant": "0.4",
+    "auxiliary_fan": "0",
+    "default_filament_profile": [
+        "Craftbot Generic PLA"
+    ],
+    "default_print_profile": "0.20mm Standard @CraftbotPlus",
+    "extruder_clearance_height_to_lid": "250",
+    "extruder_clearance_height_to_rod": "30",
+    "extruder_clearance_max_radius": "45",
+    "extruder_clearance_radius": "45",
+    "printer_structure": "i3",
+    "nozzle_type": "brass",
+    "retraction_length": [
+        "0.75",
+        "1.75"
+    ],
+    "printable_area": [
+        "8x0",
+        "382x0",
+        "382x250",
+        "8x250"
+    ],
+    "bed_exclude_area": [
+    ],
+    "bed_exclude_area_right_mode":[
+        "0x0",
+        "52x0",
+        "52x250",
+        "0x250"
+    ],
+    "bed_exclude_area_left_mode":[
+        "330x0",
+        "382x0",
+        "382x250",
+        "330x250"
+    ],
+    "bed_exclude_area_mirror_mode":[
+        "168x0",
+        "380x0",
+        "380x250",
+        "168x250"
+    ],
+    "bed_exclude_area_parallel_mode":[
+        "195x0",
+        "382x0",
+        "382x250",
+        "195x250"
+    ],
+
+    "is_idex_printer": "1",
+    "single_extruder_multi_material": "0",
+    "extruders_count": ["2"],
+    "printable_height": "250",
+    "upward_compatible_machine": [],
+    "extruder_offset": [
+        "0x0",
+        "0x0"
+    ],
+    "retraction_minimum_travel": [
+        "0.5",
+        "0.5"
+    ],
+    "retraction_speed": [
+        "60",
+        "60"
+    ],
+    "retract_when_changing_layer": [
+        "1",
+        "1"
+    ],
+    "retraction_distances_when_cut": [
+        "18",
+        "18"
+    ],
+    "retract_restart_extra": [
+        "0",
+        "0"
+    ],
+    "retract_restart_extra_toolchange": [
+        "0",
+        "0"
+    ],
+    "long_retractions_when_cut": [
+        "0",
+        "0"
+    ],
+    "max_layer_height": [
+        "0.30",
+        "0.30"
+    ],
+    "min_layer_height": [
+        "0.08",
+        "0.08"
+    ],
+    "extruder_colour": [
+        "#009688",
+        "#009688"
+    ],
+    "deretraction_speed": [
+        "60",
+        "60"
+    ],
+    "retract_before_wipe": [
+        "0%",
+        "0%"
+    ],
+    "retract_length_toolchange": [
+        "3",
+        "3"
+    ],
+    "retract_lift_above": [
+        "0",
+        "0"
+    ],
+    "retract_lift_below": [
+        "0",
+        "0"
+    ],
+    "retract_lift_enforce": [
+        "All Surfaces",
+        "All Surfaces"
+    ],
+    "travel_slope": [
+        "3",
+        "3"
+    ],
+    "wipe": [
+        "0",
+        "0"
+    ],
+    "wipe_distance": [
+        "1",
+        "1"
+    ],
+    "z_hop": [
+        "0",
+        "0"
+    ],
+    "z_hop_types": [
+        "Slope Lift",
+        "Slope Lift"
+    ]
+}

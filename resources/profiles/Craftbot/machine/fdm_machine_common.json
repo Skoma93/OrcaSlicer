@@ -1,0 +1,102 @@
+{
+    "type": "machine",
+    "name": "fdm_machine_common",
+    "from": "system",
+    "instantiation": "false",
+    "support_chamber_temp_control": "0",
+    "printer_technology": "FFF",
+    "deretraction_speed": [
+        "60"
+    ],
+    "extruder_offset": [
+        "0x0"
+    ],
+    "silent_mode": "0",
+    "machine_max_acceleration_e": [
+        "4000"
+    ],
+    "machine_max_acceleration_extruding": [
+        "4000"
+    ],
+    "machine_max_acceleration_x": [
+        "4000"
+    ],
+    "machine_max_acceleration_y": [
+        "4000"
+    ],
+    "machine_max_acceleration_z": [
+        "600"
+    ],
+    "machine_max_acceleration_travel": [
+        "4000"
+    ],
+    "machine_max_speed_e": [
+        "50"
+    ],
+    "machine_max_speed_x": [
+        "350"
+    ],
+    "machine_max_speed_y": [
+        "350"
+    ],
+    "machine_max_speed_z": [
+        "30"
+    ],
+    "machine_max_jerk_e": [
+        "0"
+    ],
+    "machine_max_jerk_x": [
+        "0"
+    ],
+    "machine_max_jerk_y": [
+        "0"
+    ],
+    "machine_max_jerk_z": [
+        "0"
+    ],
+    "machine_min_extruding_rate": [
+        "0"
+    ],
+    "machine_min_travel_rate": [
+        "60"
+    ],
+    "max_layer_height": [
+        "0.6"
+    ],
+    "min_layer_height": [
+        "0.05"
+    ],
+    "printer_settings_id": "",
+    "retraction_minimum_travel": [
+        "0.5"
+    ],
+    "retract_before_wipe": [
+        "0%"
+    ],
+    "retract_when_changing_layer": [
+        "1"
+    ],
+    "retraction_length": [
+        "0.5"
+    ],
+    "retract_length_toolchange": [
+        "3"
+    ],
+    "z_hop": [
+        "0"
+    ],
+    "retract_restart_extra": [
+        "0"
+    ],
+    "retract_restart_extra_toolchange": [
+        "0"
+    ],
+    "retraction_speed": [
+        "60"
+    ],
+    "single_extruder_multi_material": "1",
+    "support_air_filtration": "0",
+    "wipe": [
+        "1"
+    ]
+}
