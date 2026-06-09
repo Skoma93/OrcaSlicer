@@ -1,0 +1,46 @@
+{
+    "type": "machine",
+    "name": "Craftbot XL 0.4 nozzle",
+    "inherits": "fdm_craftbotplus_common",
+    "from": "system",
+    "setting_id": "GM0502",
+    "instantiation": "true",
+    "nozzle_diameter": [
+        "0.4"
+    ],
+    "printer_model": "Craftbot XL",
+    "printer_variant": "0.4",
+    "auxiliary_fan": "0",
+    "default_filament_profile": [
+        "Craftbot Generic PLA"
+    ],
+    "default_print_profile": "0.20mm Standard @CraftbotPlus",
+    "extruder_clearance_height_to_lid": "250",
+    "extruder_clearance_height_to_rod": "30",
+    "extruder_clearance_max_radius": "45",
+    "extruder_clearance_radius": "45",
+    "printer_structure": "i3",
+    "nozzle_type": "brass",
+    "retraction_length": [
+        "1"
+    ],
+    "printable_area": [
+        "13x0",
+        "313x0",
+        "313x200",
+        "13x200"
+    ],
+    "bed_exclude_area": [
+    ],
+    "max_layer_height": [
+        "0.3"
+    ],
+    "min_layer_height": [
+        "0.05"
+    ],
+    "is_idex_printer": "0",
+    "single_extruder_multi_material": "0",
+    "extruders_count": ["1"],
+    "printable_height": "440",
+    "upward_compatible_machine": []
+}

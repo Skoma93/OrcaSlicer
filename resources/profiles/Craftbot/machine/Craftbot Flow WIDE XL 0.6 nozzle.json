@@ -1,0 +1,27 @@
+{
+    "type": "machine",
+    "name": "Craftbot Flow WIDE XL 0.6 nozzle",
+    "inherits": "Craftbot Flow WIDE XL 0.4 nozzle",
+    "from": "system",
+    "setting_id": "GM0703",
+    "instantiation": "true",
+    "printer_model": "Craftbot Flow WIDE XL",
+    "printer_variant": "0.6",
+    "nozzle_type": "brass",
+    "nozzle_diameter": [
+        "0.6",
+        "0.6"
+    ],
+    "retraction_length": [
+        "1.5",
+        "1.5"
+    ],
+    "max_layer_height": [
+        "0.42",
+        "0.42"
+    ],
+    "min_layer_height": [
+        "0.12",
+        "0.12"
+    ]
+}

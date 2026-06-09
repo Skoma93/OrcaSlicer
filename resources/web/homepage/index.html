@@ -18,9 +18,12 @@
 <script type="text/javascript" src="../data/text.js"></script>		
 	
 <script type="text/javascript" src="js/home.js"></script>
+<script type="text/javascript" src="js/craft.js"></script>
 </head>
 <body class="ZScrol" onLoad="OnInit()">
-<div id="LeftBoard">
+
+	<div id="craftHeader" style="cursor: pointer; text-decoration: none; position: absolute; top: 0; left: 0; width: 100%; padding: 1em; background: purple; display: none; z-index: 999; color: white; font-weight: bold; text-align: center; justify-content: center; align-items: center;"></div>
+	<div id="LeftBoard">
 	<div id="LoginArea">
 
 	<!-- Orca Login Section -->
@@ -120,7 +123,13 @@
 				<div class="trans TextS1" tid="t33">open project</div>
 				<div class="MenuDesc">3mf</div>
 			</div>
-		</div>		
+		</div>
+		<div class="MenuItem" onClick="OpenExternalURL('https://help.craftbot.com/category/orcaslicer/')">
+			<div class="MenuIcon"><img src="img/craftbot-logo.svg"></div>
+			<div>
+				<div class="trans TextS1" tid="open_ext_btn">Support</div>
+			</div>
+		</div>
 	</div>
 	
 	<div id="DebugText"></div>	
