@@ -615,17 +615,16 @@ struct Sidebar::priv
 void Sidebar::priv::layout_printer(bool isBBL, bool isDual)
 {
     // Printer - preset
-    if (auto sizer = static_cast<wxBoxSizer *>(panel_printer_preset->GetSizer());
-            sizer == nullptr /*|| isBBL != (sizer->GetOrientation() == wxVERTICAL)*/) {
-
-        //if (isBBL) {
-            wxBoxSizer *hsizer = new wxBoxSizer(wxHORIZONTAL);
-            hsizer->Add(image_printer, 0, wxLEFT  | wxALIGN_LEFT  | wxALIGN_CENTER_VERTICAL, FromDIP(10));
-            hsizer->Add(combo_printer, 1, wxALIGN_CENTER_VERTICAL | wxALL, FromDIP(2)); // 1 already triggers wxEXPAND
-            hsizer->AddSpacer(FromDIP(2));
-            hsizer->Add(btn_edit_printer, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL, FromDIP(SidebarProps::IconSpacing()));
-            //hsizer->Add(btn_connect_printer, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL, FromDIP(SidebarProps::IconSpacing()));
-            panel_printer_preset->SetSizer(hsizer);
+    if (auto sizer = static_cast<wxBoxSizer*>(panel_printer_preset->GetSizer());
+        sizer == nullptr /*|| isBBL != (sizer->GetOrientation() == wxVERTICAL)*/) {
+        // if (isBBL) {
+        wxBoxSizer* hsizer = new wxBoxSizer(wxHORIZONTAL);
+        hsizer->Add(image_printer, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL, FromDIP(10));
+        hsizer->Add(combo_printer, 1, wxALIGN_CENTER_VERTICAL | wxALL, FromDIP(2)); // 1 already triggers wxEXPAND
+        hsizer->AddSpacer(FromDIP(2));
+        hsizer->Add(btn_edit_printer, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL, FromDIP(SidebarProps::IconSpacing()));
+        // hsizer->Add(btn_connect_printer, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL, FromDIP(SidebarProps::IconSpacing()));
+        panel_printer_preset->SetSizer(hsizer);
         //} else {
         //    wxBoxSizer *hsizer = new wxBoxSizer(wxHORIZONTAL);
         //    hsizer->Add(image_printer, 0, wxLEFT | wxALIGN_CENTER, FromDIP(4));
@@ -637,15 +636,15 @@ void Sidebar::priv::layout_printer(bool isBBL, bool isDual)
     }
 
     if (vsizer_printer->GetItemCount() == 0) {
-        wxBoxSizer *hsizer_printer = new wxBoxSizer(wxHORIZONTAL);
+        wxBoxSizer* hsizer_printer = new wxBoxSizer(wxHORIZONTAL);
         hsizer_printer->Add(panel_printer_preset, 1, wxEXPAND, 0);
-        hsizer_printer->Add(panel_nozzle_dia , 0, wxLEFT, FromDIP(4));
+        hsizer_printer->Add(panel_nozzle_dia, 0, wxLEFT, FromDIP(4));
         hsizer_printer->Add(panel_printer_bed, 0, wxLEFT, FromDIP(4));
-        //hsizer_printer->Add(btn_sync_printer , 0, wxLEFT, FromDIP(4));
+        // hsizer_printer->Add(btn_sync_printer , 0, wxLEFT, FromDIP(4));
         vsizer_printer->AddSpacer(FromDIP(SidebarProps::ContentMarginV()));
         vsizer_printer->Add(hsizer_printer, 0, wxEXPAND | wxLEFT | wxRIGHT, FromDIP(SidebarProps::ContentMargin()));
 
-        // IDEX mode
+                // IDEX mode
         if (panel_idex_mode) {
             vsizer_printer->Add(panel_idex_mode, 0, wxEXPAND | wxLEFT | wxRIGHT | wxTOP, FromDIP(SidebarProps::ContentMargin()));
         }
@@ -659,9 +658,9 @@ void Sidebar::priv::layout_printer(bool isBBL, bool isDual)
         extruder_dual_sizer->Add(right_extruder->sizer, 1, wxEXPAND, 0);
 
         // single
-        extruder_single_sizer = single_extruder->sizer;
-        wxBoxSizer * extruder_sizer = new wxBoxSizer(wxVERTICAL);
-        extruder_sizer->Add(extruder_dual_sizer  , 0, wxEXPAND | wxLEFT | wxRIGHT, FromDIP(SidebarProps::ContentMargin()));
+        extruder_single_sizer      = single_extruder->sizer;
+        wxBoxSizer* extruder_sizer = new wxBoxSizer(wxVERTICAL);
+        extruder_sizer->Add(extruder_dual_sizer, 0, wxEXPAND | wxLEFT | wxRIGHT, FromDIP(SidebarProps::ContentMargin()));
         extruder_sizer->Add(extruder_single_sizer, 0, wxEXPAND | wxLEFT | wxRIGHT, FromDIP(SidebarProps::ContentMargin()));
 
         vsizer_printer->Add(extruder_sizer, 1, wxEXPAND | wxTOP, FromDIP(2));
@@ -669,9 +668,9 @@ void Sidebar::priv::layout_printer(bool isBBL, bool isDual)
         vsizer_printer->AddSpacer(FromDIP(SidebarProps::ContentMarginV()));
     }
 
-    //btn_connect_printer->Show(!isBBL);
+    // btn_connect_printer->Show(!isBBL);
     m_printer_connect->Show(!isBBL);
-    //btn_sync_printer->Show(isBBL);
+    // btn_sync_printer->Show(isBBL);
     m_printer_bbl_sync->Show(isBBL);
 
     // ORCA show plate type combo box only when its supported
@@ -680,6 +679,20 @@ void Sidebar::priv::layout_printer(bool isBBL, bool isDual)
     // Orca: we use preset_bundle.is_bbl_vendor() instead of isBBL to determine if the plate type combo box should be shown
     // ref: https://github.com/OrcaSlicer/OrcaSlicer/pull/11610#discussion_r2607411847
     panel_printer_bed->Show(preset_bundle.is_bbl_vendor() || cfg.opt_bool("support_multi_bed_types"));
+
+    if (cfg.opt_bool("is_idex_printer")) {
+        panel_idex_mode->Show(true);
+        DynamicPrintConfig& proj_config = wxGetApp().preset_bundle->project_config;
+        IdexPrintMode print_mode        = proj_config.opt_enum<IdexPrintMode>("idex_print_mode");
+        if (print_mode != IdexPrintMode::Normal) {
+            panel_nozzle_dia->Show(true);
+            extruder_dual_sizer->Show(false);
+        } else {
+            panel_nozzle_dia->Show(false);
+            extruder_dual_sizer->Show(true);
+        }
+    }else{
+    panel_idex_mode->Show(false);
     extruder_dual_sizer->Show(isDual);
 
     // NEEDFIX requires AMS check or any type of ???
@@ -706,6 +719,7 @@ void Sidebar::priv::layout_printer(bool isBBL, bool isDual)
         }
     }
 }
+
 
 void Sidebar::priv::flush_printer_sync(bool restart)
 {
@@ -2076,33 +2090,56 @@ Sidebar::Sidebar(Plater *parent)
         p->combo_idex_mode->SetBorderWidth(0);
         p->combo_idex_mode->GetDropDown().SetUseContentWidth(true);
 
-        p->combo_idex_mode->Append(_L("Normal"));
-        p->combo_idex_mode->Append(_L("Parallel"));
-        p->combo_idex_mode->Append(_L("Mirror"));
-        p->combo_idex_mode->Append(_L("Backup"));
-        p->combo_idex_mode->SetSelection(0);
+        const ConfigOptionDef* idex_mode_def = print_config_def.get("idex_print_mode");
+        if (idex_mode_def && idex_mode_def->enum_keys_map) {
+            for (auto item : idex_mode_def->enum_labels) {
+                p->combo_idex_mode->AppendString(_L(item));
+            }
+        }
 
         p->combo_idex_mode->Bind(wxEVT_COMBOBOX, [this](wxCommandEvent& e) {
-            const int selection = e.GetSelection();
+            int selected_index              = p->combo_idex_mode->GetSelection();
+            int new_value                   = selected_index;
+            IdexPrintMode mode              = static_cast<IdexPrintMode>(new_value);
+            DynamicPrintConfig& proj_config = wxGetApp().preset_bundle->project_config;
 
-            if (selection < 0 || selection > 3) {
-                e.Skip();
-                return;
+            IdexPrintMode old_mode = proj_config.opt_enum<IdexPrintMode>("idex_print_mode");
+            if (old_mode == mode)
+                return; // no change
+            proj_config.set_key_value("idex_print_mode", new ConfigOptionEnum<IdexPrintMode>(mode));
+            if (mode == IdexPrintMode::Normal) {
+                wxColour new_col      = Plater::get_next_color_for_filament();
+                std::string new_color = new_col.GetAsString(wxC2S_HTML_SYNTAX).ToStdString();
+                wxGetApp().preset_bundle->set_num_filaments(2, new_color);
+                wxGetApp().plater()->on_filament_count_change(2);
+            } else {
+                wxGetApp().plater()->select_all();
+                wxGetApp().obj_list()->set_extruder_for_selected_items(1);
+                wxGetApp().plater()->deselect_all();
+                wxGetApp().preset_bundle->set_num_filaments(1);
+                wxGetApp().plater()->on_filament_count_change(1);
             }
-
-            const IdexPrintMode mode = static_cast<IdexPrintMode>(selection);
-
-            DynamicPrintConfig& project_config = wxGetApp().preset_bundle->project_config;
-
-            project_config.set_key_value("idex_print_mode", new ConfigOptionEnum<IdexPrintMode>(mode));
-
+            // Update
             wxGetApp().plater()->update_project_dirty_from_presets();
-
-            auto full_config = wxGetApp().preset_bundle->full_config();
+            AppConfig* app_config = wxGetApp().app_config;
+            auto full_config      = wxGetApp().preset_bundle->full_config();
             wxGetApp().mainframe->on_config_changed(&full_config);
-
-            e.Skip();
+            update_presets(Preset::TYPE_PRINTER);
         });
+
+        // Init IDEX print mode
+        DynamicPrintConfig& proj_config = wxGetApp().preset_bundle->project_config;
+        IdexPrintMode init_mode         = IdexPrintMode::Normal;
+        const auto* idex_mode_opt       = proj_config.option<ConfigOptionEnum<IdexPrintMode>>("idex_print_mode");
+
+        if (idex_mode_opt) {
+            init_mode = idex_mode_opt->value;
+        } else {
+            proj_config.set_key_value("idex_print_mode", new ConfigOptionEnum<IdexPrintMode>(IdexPrintMode::Normal));
+        }
+
+        int selection = static_cast<int>(init_mode);
+        p->combo_idex_mode->SetSelection(selection);
 
         auto* idex_mode_sizer = new wxBoxSizer(wxHORIZONTAL);
 
@@ -2735,7 +2772,6 @@ void Sidebar::update_presets(Preset::Type preset_type)
         }
 
         Preset& printer_preset = wxGetApp().preset_bundle->printers.get_edited_preset();
-
         if (auto printer_structure_opt = printer_preset.config.option<ConfigOptionEnum<PrinterStructure>>("printer_structure")) {
             wxGetApp().plater()->get_current_canvas3D()->get_arrange_settings().align_to_y_axis = (printer_structure_opt->value == PrinterStructure::psI3);
         }
