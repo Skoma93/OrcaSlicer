@@ -54,7 +54,8 @@ static std::vector<std::string> s_project_options {
     "flush_multiplier",
     "nozzle_volume_type",
     "filament_map_mode",
-    "filament_map"
+    "filament_map",
+    "idex_print_mode",
 };
 
 //Orca: add custom as default
