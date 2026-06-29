@@ -1399,6 +1399,9 @@ void GCodeViewer::load_as_gcode(const GCodeProcessorResult& gcode_result, const 
         //BBS: add bed exclude area
         Pointfs bed_exclude_area = Pointfs();
         Pointfs wrapping_exclude_area = Pointfs();
+        Pointfs mirror_exclude_area   = Pointfs();
+        Pointfs parallel_exclude_area = Pointfs();
+        IdexPrintMode idex_print_mode      = IdexPrintMode::Normal;
         std::vector<Pointfs> extruder_areas;
         std::vector<double> extruder_heights;
         std::string texture;
@@ -1422,13 +1425,23 @@ void GCodeViewer::load_as_gcode(const GCodeProcessorResult& gcode_result, const 
 
             if (!gcode_result.wrapping_exclude_area.empty())
                 wrapping_exclude_area = gcode_result.wrapping_exclude_area;
+            
+     
+            idex_print_mode = gcode_result.idex_print_mode;
+
+
+            if (!gcode_result.mirror_exclude_area.empty())
+                mirror_exclude_area = gcode_result.mirror_exclude_area;
+
+            if (!gcode_result.parallel_exclude_area.empty())
+                parallel_exclude_area = gcode_result.parallel_exclude_area;
 
             if (!gcode_result.extruder_areas.empty())
                 extruder_areas = gcode_result.extruder_areas;
             if (!gcode_result.extruder_heights.empty())
                 extruder_heights = gcode_result.extruder_heights;
 
-            wxGetApp().plater()->set_bed_shape(printable_area, bed_exclude_area, wrapping_exclude_area, gcode_result.printable_height, extruder_areas, extruder_heights, texture, model, gcode_result.printable_area.empty());
+            wxGetApp().plater()->set_bed_shape(printable_area, bed_exclude_area, wrapping_exclude_area, idex_print_mode, mirror_exclude_area, parallel_exclude_area, gcode_result.printable_height, extruder_areas, extruder_heights, texture, model, gcode_result.printable_area.empty());
         }
         /*else {
             // adjust printbed size in dependence of toolpaths bbox

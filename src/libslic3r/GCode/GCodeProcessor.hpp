@@ -233,6 +233,9 @@ class Print;
         //BBS: add bed exclude area
         Pointfs bed_exclude_area;
         Pointfs wrapping_exclude_area;
+        IdexPrintMode idex_print_mode;
+        Pointfs mirror_exclude_area;
+        Pointfs parallel_exclude_area;
         std::vector<Pointfs> extruder_areas;
         std::vector<double> extruder_heights;
         //BBS: add toolpath_outside

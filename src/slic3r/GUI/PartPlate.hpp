@@ -119,6 +119,8 @@ private:
 
     Pointfs m_shape;
     Pointfs m_exclude_area;
+    Pointfs m_mirror_exclude_areas;
+    Pointfs m_parallel_exclude_areas;
     std::vector<Pointfs> m_extruder_areas;
     std::vector<double> m_extruder_heights;
     BoundingBoxf3 m_bounding_box;
@@ -131,6 +133,8 @@ private:
     ExPolygon m_print_polygon;
     PickingModel m_triangles;
     GLModel m_exclude_triangles;
+    GLModel m_parallel_exclude_triangles;
+    GLModel m_mirror_exclude_triangles;
     GLModel m_wrapping_detection_triangles;
     GLModel m_logo_triangles;
     GLModel m_gridlines;
@@ -169,11 +173,11 @@ private:
     void init();
     bool valid_instance(int obj_id, int instance_id);
     void generate_print_polygon(ExPolygon &print_polygon);
-    void generate_exclude_polygon(ExPolygon &exclude_polygon);
+    void generate_exclude_polygon(ExPolygon& exclude_polygon, Pointfs& area);
     void generate_logo_polygon(ExPolygon &logo_polygon);
     void calc_bounding_boxes() const;
     void calc_triangles(const ExPolygon& poly);
-    void calc_exclude_triangles(const ExPolygon& poly);
+    void calc_exclude_triangles(const ExPolygon& poly, GLModel& triangles);
     void calc_triangles_from_polygon(const ExPolygon &poly, GLModel& render_model);
     void calc_gridlines(const ExPolygon& poly, const BoundingBox& pp_bbox);
     void calc_height_limit();
@@ -397,7 +401,7 @@ public:
 
     /*rendering related functions*/
     const Pointfs& get_shape() const { return m_shape; }
-    bool set_shape(const Pointfs& shape, const Pointfs& exclude_areas, const std::vector<Pointfs>& extruder_areas, const std::vector<double>& extruder_heights, Vec2d position, float height_to_lid, float height_to_rod);
+    bool set_shape(const Pointfs& shape, const Pointfs& exclude_areas, const Pointfs& mirror_exclude_areas, const Pointfs& parallel_exclude_areas, const std::vector<Pointfs>& extruder_areas, const std::vector<double>& extruder_heights, Vec2d position, float height_to_lid, float height_to_rod);
     const std::vector<Pointfs>& get_extruder_areas() const { return m_extruder_areas; }
     const std::vector<double>& get_extruder_heights() const { return m_extruder_heights; }
     bool contains(const Vec3d& point) const;
@@ -583,6 +587,9 @@ class PartPlateList : public ObjectBase
     Pointfs m_shape;
     Pointfs m_exclude_areas;
     Pointfs m_wrapping_exclude_areas;
+    Pointfs m_mirror_exclude_areas;
+    Pointfs m_parallel_exclude_areas;
+    IdexPrintMode m_idex_print_mode;
     std::vector<Pointfs> m_extruder_areas;
     std::vector<double> m_extruder_heights;
     BoundingBoxf3 m_bounding_box;
@@ -762,6 +769,10 @@ public:
     Vec2d get_current_shape_position() { return compute_shape_position(m_current_plate, m_plate_cols); }
     Pointfs get_exclude_area() { return m_exclude_areas; }
     Pointfs get_wrapping_exclude_area() const { return m_wrapping_exclude_areas; }
+    IdexPrintMode get_idex_print_mode() const { return m_idex_print_mode; }
+    Pointfs get_mirror_exclude_area() const { return m_mirror_exclude_areas; }
+    Pointfs get_parallel_exclude_area() const { return m_parallel_exclude_areas; }
+
 
     std::set<int> get_extruders(bool conside_custom_gcode = false) const;
 
@@ -851,6 +862,8 @@ public:
     bool set_shapes(const Pointfs              &shape,
                     const Pointfs              &exclude_areas,
                     const Pointfs              &wrapping_exclude_areas,
+                    const Pointfs              &mirror_exclude_areas,
+                    const Pointfs              &parallel_exclude_areas,
                     const std::vector<Pointfs> &extruder_areas,
                     const std::vector<double>  &extruder_heights,
                     const std::string          &custom_texture,
