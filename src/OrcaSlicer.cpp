@@ -3706,6 +3706,8 @@ int CLI::run(int argc, char **argv)
     //use Pointfs insteadof Points
     Pointfs current_printable_area = m_print_config.opt<ConfigOptionPoints>("printable_area")->values;
     Pointfs current_exclude_area = m_print_config.opt<ConfigOptionPoints>("bed_exclude_area")->values;
+    Pointfs current_mirror_exclude_area   = m_print_config.opt<ConfigOptionPoints>("bed_exclude_area_mirror_mode")->values;
+    Pointfs current_parallel_exclude_area   = m_print_config.opt<ConfigOptionPoints>("bed_exclude_area_parallel_mode")->values;
     std::vector<Pointfs> current_extruder_areas;
     //update part plate's size
     double print_height = m_print_config.opt_float("printable_height");
@@ -3804,7 +3806,7 @@ int CLI::run(int argc, char **argv)
         else {
             partplate_list.reset_size(old_printable_width, old_printable_depth, old_printable_height, false);
         }
-        partplate_list.set_shapes(make_counter_clockwise(current_printable_area), current_exclude_area, current_wrapping_exclude_area, current_extruder_areas, current_extruder_print_heights, bed_texture,
+        partplate_list.set_shapes(make_counter_clockwise(current_printable_area), current_exclude_area, current_wrapping_exclude_area, current_mirror_exclude_area, current_parallel_exclude_area, current_extruder_areas, current_extruder_print_heights, bed_texture,
                                   height_to_lid, height_to_rod);
         //plate_stride = partplate_list.plate_stride_x();
     }

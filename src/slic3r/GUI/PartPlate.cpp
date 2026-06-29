@@ -443,11 +443,11 @@ void PartPlate::calc_triangles(const ExPolygon &poly)
 		BOOST_LOG_TRIVIAL(error) << __FUNCTION__ << ":Unable to create plate triangles\n";
 }
 
-void PartPlate::calc_exclude_triangles(const ExPolygon &poly)
+void PartPlate::calc_exclude_triangles(const ExPolygon& poly, GLModel& triangles)
 {
-    m_exclude_triangles.reset();
+    triangles.reset();
 
-    if (!init_model_from_poly(m_exclude_triangles, poly, GROUND_Z))
+    if (!init_model_from_poly(triangles, poly, GROUND_Z))
 		BOOST_LOG_TRIVIAL(error) << __FUNCTION__ << ":Unable to create exclude triangles\n";
 }
 
@@ -941,7 +941,11 @@ void PartPlate::render_exclude_area(bool force_default_color) {
 	}
 
 	m_exclude_triangles.set_color(m_selected ? select_color : unselect_color);
+    m_parallel_exclude_triangles.set_color(m_selected ? select_color : unselect_color);
+    m_mirror_exclude_triangles.set_color(m_selected ? select_color : unselect_color);
     m_exclude_triangles.render();
+    m_parallel_exclude_triangles.render();
+    m_mirror_exclude_triangles.render();
 	glsafe(::glDepthMask(GL_TRUE));
 }
 
@@ -3110,7 +3114,7 @@ void PartPlate::generate_print_polygon(ExPolygon &print_polygon)
 		}
 }
 
-void PartPlate::generate_exclude_polygon(ExPolygon &exclude_polygon)
+void PartPlate::generate_exclude_polygon(ExPolygon& exclude_polygon, Pointfs& area)
 {
 	auto compute_exclude_points = [&exclude_polygon](Vec2d& center, double radius, double start_angle, double stop_angle, int count)
 	{
@@ -3126,12 +3130,12 @@ void PartPlate::generate_exclude_polygon(ExPolygon &exclude_polygon)
 	};
 
 	int points_count = 8;
-	if (m_exclude_area.size() == 4)
+    if (area.size() == 4)
 	{
 		//rectangle case
 		for (int i = 0; i < 4; i++)
 		{
-			const Vec2d& p = m_exclude_area[i];
+            const Vec2d& p = area[i];
 			Vec2d center;
 			double start_angle, stop_angle, radius;
 			radius = 1.f; // ORCA use equal rounding for all corners
@@ -3168,7 +3172,7 @@ void PartPlate::generate_exclude_polygon(ExPolygon &exclude_polygon)
 		}
 	}
 	else {
-		for (const Vec2d& p : m_exclude_area) {
+        for (const Vec2d& p : area) {
 			exclude_polygon.contour.append({ scale_(p(0)), scale_(p(1)) });
 		}
 	}
@@ -3176,9 +3180,9 @@ void PartPlate::generate_exclude_polygon(ExPolygon &exclude_polygon)
 	exclude_polygon.contour.make_counter_clockwise();
 }
 
-bool PartPlate::set_shape(const Pointfs& shape, const Pointfs& exclude_areas, const std::vector<Pointfs>& extruder_areas, const std::vector<double>& extruder_heights, Vec2d position, float height_to_lid, float height_to_rod)
+bool PartPlate::set_shape(const Pointfs& shape, const Pointfs& exclude_areas, const Pointfs& mirror_exclude_areas, const Pointfs& parallel_exclude_areas, const std::vector<Pointfs>& extruder_areas, const std::vector<double>& extruder_heights, Vec2d position, float height_to_lid, float height_to_rod)
 {
-	Pointfs new_shape, new_exclude_areas;
+	Pointfs new_shape, new_exclude_areas, new_mirror_exclude_areas, new_parallel_exclude_areas;
 	m_extruder_heights = extruder_heights;
 	for (const Vec2d& p : shape) {
 		new_shape.push_back(Vec2d(p.x() + position.x(), p.y() + position.y()));
@@ -3187,6 +3191,14 @@ bool PartPlate::set_shape(const Pointfs& shape, const Pointfs& exclude_areas, co
 	for (const Vec2d& p : exclude_areas) {
 		new_exclude_areas.push_back(Vec2d(p.x() + position.x(), p.y() + position.y()));
 	}
+
+	for (const Vec2d& p : mirror_exclude_areas) {
+        new_mirror_exclude_areas.push_back(Vec2d(p.x() + position.x(), p.y() + position.y()));
+    }
+
+	for (const Vec2d& p : parallel_exclude_areas) {
+        new_parallel_exclude_areas.push_back(Vec2d(p.x() + position.x(), p.y() + position.y()));
+    }
 
 	std::vector<Pointfs> new_extruder_areas;
 	for (const Pointfs& shape : extruder_areas) {
@@ -3200,6 +3212,7 @@ bool PartPlate::set_shape(const Pointfs& shape, const Pointfs& exclude_areas, co
 	m_extruder_areas = std::move(new_extruder_areas);
 
 	if ((m_shape == new_shape)&&(m_exclude_area == new_exclude_areas)
+		&&(m_mirror_exclude_areas == new_mirror_exclude_areas) &&(m_parallel_exclude_areas == new_parallel_exclude_areas)
 		&&(m_height_to_lid == height_to_lid)&&(m_height_to_rod == height_to_rod)) {
 		BOOST_LOG_TRIVIAL(info) << "PartPlate same shape, skip directly";
 		return false;
@@ -3208,7 +3221,7 @@ bool PartPlate::set_shape(const Pointfs& shape, const Pointfs& exclude_areas, co
 	m_height_to_lid =  height_to_lid;
 	m_height_to_rod =  height_to_rod;
 
-	if ((m_shape != new_shape) || (m_exclude_area != new_exclude_areas))
+	if ((m_shape != new_shape) || (m_exclude_area != new_exclude_areas) || (m_mirror_exclude_areas != new_mirror_exclude_areas) || (m_parallel_exclude_areas != new_parallel_exclude_areas) )
 	{
 		/*m_shape.clear();
 		for (const Vec2d& p : shape) {
@@ -3221,6 +3234,8 @@ bool PartPlate::set_shape(const Pointfs& shape, const Pointfs& exclude_areas, co
 		}*/
 		m_shape = std::move(new_shape);
 		m_exclude_area = std::move(new_exclude_areas);
+        m_mirror_exclude_areas = std::move(new_mirror_exclude_areas);
+        m_parallel_exclude_areas = std::move(new_parallel_exclude_areas);
 
 		calc_bounding_boxes();
 
@@ -3240,9 +3255,13 @@ bool PartPlate::set_shape(const Pointfs& shape, const Pointfs& exclude_areas, co
 			m_wrapping_detection_triangles.reset();
 			init_raycaster_from_model(m_triangles);
 
-			ExPolygon exclude_poly;
-			generate_exclude_polygon(exclude_poly);
-			calc_exclude_triangles(exclude_poly);
+			ExPolygon exclude_poly, mirror_excl_poly, parallel_excl_poly;
+            generate_exclude_polygon(exclude_poly, m_exclude_area);
+            generate_exclude_polygon(mirror_excl_poly, m_mirror_exclude_areas);
+            generate_exclude_polygon(parallel_excl_poly, m_parallel_exclude_areas);
+            calc_exclude_triangles(exclude_poly, m_exclude_triangles);
+            calc_exclude_triangles(mirror_excl_poly, m_mirror_exclude_triangles);
+            calc_exclude_triangles(parallel_excl_poly, m_parallel_exclude_triangles);
 
 			const BoundingBox& pp_bbox = poly.contour.bounding_box();
 			calc_gridlines(poly, pp_bbox);
@@ -4294,7 +4313,7 @@ void PartPlateList::reset_size(int width, int depth, int height, bool reload_obj
 		m_plate_height = height;
 		update_all_plates_pos_and_size(false, false, true);
 		if (update_shapes) {
-			set_shapes(m_shape, m_exclude_areas, m_wrapping_exclude_areas, m_extruder_areas, m_extruder_heights, m_logo_texture_filename, m_height_to_lid, m_height_to_rod);
+			set_shapes(m_shape, m_exclude_areas, m_wrapping_exclude_areas, m_mirror_exclude_areas, m_parallel_exclude_areas, m_extruder_areas, m_extruder_heights, m_logo_texture_filename, m_height_to_lid, m_height_to_rod);
 		}
 		if (reload_objects)
 			reload_all_objects();
@@ -4379,7 +4398,9 @@ void PartPlateList::reinit()
 
 	//reset plate 0's position
 	Vec2d pos = compute_shape_position(0, m_plate_cols);
-	m_plate_list[0]->set_shape(m_shape, m_exclude_areas, m_extruder_areas, m_extruder_heights, pos, m_height_to_lid, m_height_to_rod);
+    m_plate_list[0]->set_shape(m_shape, m_exclude_areas, m_mirror_exclude_areas, m_parallel_exclude_areas, m_extruder_areas, m_extruder_heights, pos,
+                               m_height_to_lid,
+                               m_height_to_rod);
 	//reset unprintable plate's position
 	Vec3d origin2 = compute_origin_for_unprintable();
 	unprintable_plate.set_pos_and_size(origin2, m_plate_width, m_plate_depth, m_plate_height, false);
@@ -4401,7 +4422,7 @@ void PartPlateList::reinit()
 void PartPlateList::update_plates()
 {
     update_all_plates_pos_and_size(true, false);
-    set_shapes(m_shape, m_exclude_areas, m_wrapping_exclude_areas, m_extruder_areas, m_extruder_heights, m_logo_texture_filename, m_height_to_lid, m_height_to_rod);
+    set_shapes(m_shape, m_exclude_areas, m_wrapping_exclude_areas, m_mirror_exclude_areas, m_parallel_exclude_areas, m_extruder_areas, m_extruder_heights, m_logo_texture_filename, m_height_to_lid, m_height_to_rod);
 }
 
 int PartPlateList::create_plate(bool adjust_position)
@@ -4434,7 +4455,8 @@ int PartPlateList::create_plate(bool adjust_position)
 
 	plate->set_index(new_index);
 	Vec2d pos = compute_shape_position(new_index, cols);
-	plate->set_shape(m_shape, m_exclude_areas, m_extruder_areas, m_extruder_heights, pos, m_height_to_lid, m_height_to_rod);
+    plate->set_shape(m_shape, m_exclude_areas, m_mirror_exclude_areas, m_parallel_exclude_areas, m_extruder_areas, m_extruder_heights, pos, m_height_to_lid,
+                     m_height_to_rod);
 	m_plate_list.emplace_back(plate);
 	update_plate_cols();
 	if (old_cols != cols)
@@ -4442,7 +4464,7 @@ int PartPlateList::create_plate(bool adjust_position)
 		BOOST_LOG_TRIVIAL(debug) << __FUNCTION__ << boost::format(":old_cols %1% -> new_cols %2%") % old_cols % cols;
 		//update the origin of each plate
 		update_all_plates_pos_and_size(adjust_position, false);
-		set_shapes(m_shape, m_exclude_areas, m_wrapping_exclude_areas, m_extruder_areas, m_extruder_heights, m_logo_texture_filename, m_height_to_lid, m_height_to_rod);
+		set_shapes(m_shape, m_exclude_areas, m_wrapping_exclude_areas, m_mirror_exclude_areas, m_parallel_exclude_areas, m_extruder_areas, m_extruder_heights, m_logo_texture_filename, m_height_to_lid, m_height_to_rod);
 
 		if (m_plater) {
 			Vec2d pos = compute_shape_position(m_current_plate, cols);
@@ -4613,7 +4635,9 @@ int PartPlateList::delete_plate(int index)
 
 		//update render shapes
 		Vec2d pos = compute_shape_position(i, m_plate_cols);
-		plate->set_shape(m_shape, m_exclude_areas, m_extruder_areas, m_extruder_heights, pos, m_height_to_lid, m_height_to_rod);
+        plate->set_shape(m_shape, m_exclude_areas, m_mirror_exclude_areas, m_parallel_exclude_areas, m_extruder_areas, m_extruder_heights, pos,
+                         m_height_to_lid,
+                         m_height_to_rod);
 	}
 
 	//update current_plate if delete current
@@ -4636,7 +4660,7 @@ int PartPlateList::delete_plate(int index)
 	{
 		//update the origin of each plate
 		update_all_plates_pos_and_size();
-		set_shapes(m_shape, m_exclude_areas, m_wrapping_exclude_areas, m_extruder_areas, m_extruder_heights, m_logo_texture_filename, m_height_to_lid, m_height_to_rod);
+		set_shapes(m_shape, m_exclude_areas, m_wrapping_exclude_areas, m_mirror_exclude_areas, m_parallel_exclude_areas, m_extruder_areas, m_extruder_heights, m_logo_texture_filename, m_height_to_lid, m_height_to_rod);
 	}
 	else
 	{
@@ -5792,6 +5816,8 @@ void PartPlateList::select_plate_view()
 bool PartPlateList::set_shapes(const Pointfs              &shape,
                                const Pointfs              &exclude_areas,
                                const Pointfs              &wrapping_exclude_areas,
+                               const Pointfs			  &mirror_exclude_areas,
+                               const Pointfs		      &parallel_exclude_areas,
                                const std::vector<Pointfs> &extruder_areas,
                                const std::vector<double>  &extruder_heights,
                                const std::string          &texture_filename,
@@ -5802,6 +5828,8 @@ bool PartPlateList::set_shapes(const Pointfs              &shape,
 	m_shape = shape;
 	m_exclude_areas = exclude_areas;
     m_wrapping_exclude_areas = wrapping_exclude_areas;
+    m_mirror_exclude_areas   = mirror_exclude_areas;
+    m_parallel_exclude_areas = parallel_exclude_areas;
 	m_extruder_areas = extruder_areas;
 	m_extruder_heights = extruder_heights;
 	m_height_to_lid = height_to_lid;
@@ -5817,7 +5845,8 @@ bool PartPlateList::set_shapes(const Pointfs              &shape,
 		Vec2d pos;
 
 		pos = compute_shape_position(i, m_plate_cols);
-		plate->set_shape(shape, exclude_areas, extruder_areas, extruder_heights, pos, height_to_lid, height_to_rod);
+        plate->set_shape(shape, exclude_areas, mirror_exclude_areas, parallel_exclude_areas, extruder_areas, extruder_heights, pos,
+                         height_to_lid, height_to_rod);
 	}
 	is_load_bedtype_textures = false; //reload textures
     is_load_extruder_only_area_textures = false; // reload textures
@@ -5999,7 +6028,8 @@ int PartPlateList::rebuild_plates_after_deserialize(std::vector<bool>& previous_
     }
 	update_plate_cols();
 	update_all_plates_pos_and_size(false, false, false, false);
-	set_shapes(m_shape, m_exclude_areas, m_wrapping_exclude_areas, m_extruder_areas, m_extruder_heights, m_logo_texture_filename, m_height_to_lid, m_height_to_rod);
+    set_shapes(m_shape, m_exclude_areas, m_wrapping_exclude_areas, m_mirror_exclude_areas, m_parallel_exclude_areas, m_extruder_areas, m_extruder_heights,
+               m_logo_texture_filename, m_height_to_lid, m_height_to_rod);
 	for (unsigned int i = 0; i < (unsigned int)m_plate_list.size(); ++i)
 	{
 		bool need_reset_print = false;

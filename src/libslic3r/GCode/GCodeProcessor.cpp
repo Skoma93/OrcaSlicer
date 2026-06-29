@@ -1589,6 +1589,8 @@ void GCodeProcessorResult::reset() {
     //BBS: add bed exclude area
     bed_exclude_area = Pointfs();
     wrapping_exclude_area = Pointfs();
+    mirror_exclude_area = Pointfs();
+    parallel_exclude_area = Pointfs();
     //BBS: add toolpath_outside
     toolpath_outside = false;
     //BBS: add label_object_enabled
@@ -2131,6 +2133,14 @@ void GCodeProcessor::apply_config(const DynamicPrintConfig& config)
     const ConfigOptionPoints* wrapping_exclude_area = config.option<ConfigOptionPoints>("wrapping_exclude_area");
     if (wrapping_exclude_area != nullptr)
         m_result.wrapping_exclude_area = wrapping_exclude_area->values;
+
+    const ConfigOptionPoints* mirror_exclude_area = config.option<ConfigOptionPoints>("bed_exclude_area_mirror_mode");
+    if (mirror_exclude_area != nullptr)
+        m_result.mirror_exclude_area = mirror_exclude_area->values;
+
+    const ConfigOptionPoints* parallel_exclude_area = config.option<ConfigOptionPoints>("bed_exclude_area_parallel_mode");
+    if (parallel_exclude_area != nullptr)
+        m_result.parallel_exclude_area = parallel_exclude_area->values;
 
     const ConfigOptionString* print_settings_id = config.option<ConfigOptionString>("print_settings_id");
     if (print_settings_id != nullptr)
