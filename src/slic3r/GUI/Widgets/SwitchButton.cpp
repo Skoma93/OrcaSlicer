@@ -226,18 +226,18 @@ ModeSwitchButton::ModeSwitchButton(wxWindow* parent, wxWindowID id)
     border_color = StateColor(
         std::make_pair(wxColour("#D9D9D9"), (int) StateColor::Disabled),
         std::make_pair(wxColour("#D9D9D9"), (int) StateColor::Hovered | ~StateColor::Focused),
-        std::make_pair(wxColour("#26A69A"), (int) StateColor::Focused),
+        std::make_pair(wxColour("#9126A6"), (int) StateColor::Focused),
         std::make_pair(wxColour("#D9D9D9"), (int) StateColor::Normal)
     );
     track_background = StateColor(
-        std::make_pair(wxColour("#009688"), (int) StateColor::Disabled),
-        std::make_pair(wxColour("#009688"), (int) StateColor::Normal)
+        std::make_pair(wxColour("#7D0096"), (int) StateColor::Disabled),
+        std::make_pair(wxColour("#7D0096"), (int) StateColor::Normal)
     );
     track_border = StateColor(
         std::make_pair(wxColour("#D9D9D9"), (int) StateColor::Disabled),
-        std::make_pair(wxColour("#009688"), (int) StateColor::Hovered | ~StateColor::Focused),
-        std::make_pair(wxColour("#26A69A"), (int) StateColor::Focused),
-        std::make_pair(wxColour("#009688"), (int) StateColor::Normal)
+        std::make_pair(wxColour("#7D0096"), (int) StateColor::Hovered | ~StateColor::Focused),
+        std::make_pair(wxColour("#9126A6"), (int) StateColor::Focused),
+        std::make_pair(wxColour("#7D0096"), (int) StateColor::Normal)
     );
     dot_active = StateColor(
         std::make_pair(wxColour("#FFFEFE"), (int) StateColor::Disabled),
@@ -615,7 +615,7 @@ MultiSwitchButton::MultiSwitchButton(wxWindow *parent, wxWindowID id, const wxPo
     : StaticBox(parent, id, pos, size, style)
     , m_bg_color(StateColor(
           std::make_pair(0xE8E8E8, (int) StateColor::NotChecked),
-          std::make_pair(0x009688, (int) StateColor::Normal)))
+          std::make_pair(0x7D0096, (int) StateColor::Normal)))
     , m_text_color(StateColor(
           std::make_pair(0x6B6B6B, (int) StateColor::NotChecked),
           std::make_pair(0xFFFFFE, (int) StateColor::Normal)))
