@@ -684,17 +684,18 @@ void Sidebar::priv::layout_printer(bool isBBL, bool isDual)
         panel_idex_mode->Show(true);
         DynamicPrintConfig& proj_config = wxGetApp().preset_bundle->project_config;
         IdexPrintMode print_mode        = proj_config.opt_enum<IdexPrintMode>("idex_print_mode");
-        if (print_mode != IdexPrintMode::Normal) {
-            panel_nozzle_dia->Show(true);
-            extruder_dual_sizer->Show(false);
+        if (print_mode == IdexPrintMode::Normal) {
+            isDual = true;  
         } else {
-            panel_nozzle_dia->Show(false);
-            extruder_dual_sizer->Show(true);
+            isDual = false;
         }
-    }else{
-    panel_idex_mode->Show(false);
-    extruder_dual_sizer->Show(isDual);
+    }
+    else
+    {
+        panel_idex_mode->Show(false);
+    }
 
+    extruder_dual_sizer->Show(isDual);
     // NEEDFIX requires AMS check or any type of ???
     // Single nozzle & non ams
     if (!isDual) {
@@ -2786,6 +2787,12 @@ void Sidebar::update_presets(Preset::Type preset_type)
         bool isBBL = preset_bundle.is_bbl_vendor();
         bool isCU  = preset_bundle.is_cu_vendor();
         bool is_dual_extruder = extruder_variants->size() == 2;
+
+        if (is_dual_extruder && printer_preset.config.opt_bool("is_idex_printer")) {
+            const IdexPrintMode idex_mode = preset_bundle.project_config.opt_enum<IdexPrintMode>("idex_print_mode");
+
+            is_dual_extruder = idex_mode == IdexPrintMode::Normal;
+        }
         p->layout_printer(preset_bundle.use_bbl_network(), (isBBL || isCU ) && is_dual_extruder);
 
         // Update nozzle titles from printer config (e.g. "Main Nozzle" / "Auxiliary Nozzle" for N6)
