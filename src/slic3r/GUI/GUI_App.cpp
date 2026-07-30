@@ -8325,7 +8325,10 @@ void GUI_App::load_current_presets(bool active_preset_combox/*= false*/, bool ch
     if (printer_technology == ptFFF && !edited_printer_preset.config.opt_bool("single_extruder_multi_material")) {
         auto* nozzle_diameter = edited_printer_preset.config.option<ConfigOptionFloats>("nozzle_diameter");
         if (nozzle_diameter) {
-            preset_bundle->set_num_filaments(nozzle_diameter->values.size());
+            const bool single_filament_idex =
+                edited_printer_preset.config.opt_bool("is_idex_printer") &&
+                preset_bundle->project_config.opt_enum<IdexPrintMode>("idex_print_mode") != IdexPrintMode::Normal;
+            preset_bundle->set_num_filaments(single_filament_idex ? 1 : nozzle_diameter->values.size());
         }
     }
 	this->plater()->set_printer_technology(printer_technology);

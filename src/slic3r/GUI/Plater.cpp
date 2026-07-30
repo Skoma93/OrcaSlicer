@@ -2569,7 +2569,13 @@ void Sidebar::remove_unused_filament_combos(const size_t current_extruder_count)
         const int last = p->combos_filament.size() - 1;
         auto sizer_filaments = this->p->sizer_filaments->GetItem(last % 2)->GetSizer();
         sizer_filaments->Remove(last / 2);
-        (*p->combos_filament[last]).Destroy();
+        PlaterPresetComboBox *combo = p->combos_filament[last];
+        combo->Hide();
+        if (combo->clr_picker)
+            combo->clr_picker->Hide();
+        if (combo->edit_btn)
+            combo->edit_btn->Hide();
+        combo->Destroy();
         p->combos_filament.pop_back();
     }
     // BBS:  filament double columns
@@ -3343,8 +3349,13 @@ void Sidebar::on_filaments_delete(size_t filament_id)
         auto      sizer_filaments = this->p->sizer_filaments->GetItem(last % 2)->GetSizer();
         sizer_filaments->Remove(last / 2);
 
-        PlaterPresetComboBox* to_delete_combox = p->combos_filament[filament_id];
-        (*p->combos_filament[last]).Destroy();
+        PlaterPresetComboBox *combo = p->combos_filament[last];
+        combo->Hide();
+        if (combo->clr_picker)
+            combo->clr_picker->Hide();
+        if (combo->edit_btn)
+            combo->edit_btn->Hide();
+        combo->Destroy();
         p->combos_filament.pop_back();
 
         // BBS:  filament double columns

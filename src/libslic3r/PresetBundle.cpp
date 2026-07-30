@@ -3828,7 +3828,17 @@ void PresetBundle::update_filament_count()
 {
     if (printers.get_edited_preset().printer_technology() != ptFFF)
         return;
-    const size_t num_extruders = static_cast<size_t>(get_printer_extruder_count());
+
+    const DynamicPrintConfig &printer_config = printers.get_edited_preset().config;
+    const bool single_filament_idex =
+        printer_config.opt_bool("is_idex_printer") &&
+        project_config.opt_enum<IdexPrintMode>("idex_print_mode") != IdexPrintMode::Normal;
+    const size_t num_extruders = single_filament_idex ? 1 : static_cast<size_t>(get_printer_extruder_count());
+
+    if (single_filament_idex && filament_presets.size() > num_extruders) {
+        filament_presets.resize(num_extruders);
+        return;
+    }
     if (filament_presets.size() >= num_extruders)
         return;
     filament_presets.resize(num_extruders, filament_presets.empty()
@@ -5183,12 +5193,21 @@ void PresetBundle::update_multi_material_filament_presets(size_t to_delete_filam
 
     auto* nozzle_diameter = static_cast<const ConfigOptionFloats*>(printers.get_edited_preset().config.option("nozzle_diameter"));
     size_t num_extruders  = nozzle_diameter->values.size();
-    if (num_extruders > num_filaments) { // Verify validity of the current filament presets.
-        for (size_t i = 0; i < std::min(this->filament_presets.size(), num_extruders); ++i)
+    const bool single_filament_idex =
+        printers.get_edited_preset().config.opt_bool("is_idex_printer") &&
+        project_config.opt_enum<IdexPrintMode>("idex_print_mode") != IdexPrintMode::Normal;
+    const size_t required_filaments = single_filament_idex ? 1 : num_extruders;
+
+    if (single_filament_idex && num_filaments > required_filaments) {
+        this->filament_presets.resize(required_filaments);
+        num_filaments = required_filaments;
+    }
+    if (required_filaments > num_filaments) { // Verify validity of the current filament presets.
+        for (size_t i = 0; i < std::min(this->filament_presets.size(), required_filaments); ++i)
             this->filament_presets[i] = this->filaments.find_preset(this->filament_presets[i], true)->name;
         // Append the rest of filament presets.
-        this->filament_presets.resize(num_extruders, this->filament_presets.empty() ? this->filaments.first_visible().name :
-                                                                                      this->filament_presets.back());
+        this->filament_presets.resize(required_filaments, this->filament_presets.empty() ? this->filaments.first_visible().name :
+                                                                                             this->filament_presets.back());
         num_filaments = this->filament_presets.size();
     }
     if (to_delete_filament_id == -1)
