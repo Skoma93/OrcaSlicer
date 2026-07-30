@@ -2353,8 +2353,14 @@ void GCodeViewer::render_toolpaths()
         Transform3d preview_transform = Transform3d::Identity();
         bool valid_transform = true;
         if (preview_mode == IdexPrintMode::Mirror) {
+            double plate_offset_x = 0.0;
+            if (wxGetApp().is_editor()) {
+                PartPlate* current_plate = wxGetApp().plater()->get_partplate_list().get_curr_plate();
+                if (current_plate != nullptr)
+                    plate_offset_x = current_plate->get_origin().x();
+            }
             preview_transform.matrix()(0, 0) = -1.0;
-            preview_transform.matrix()(0, 3) = bed_min_x + bed_max_x;
+            preview_transform.matrix()(0, 3) = bed_min_x + bed_max_x + 2.0 * plate_offset_x;
         } else if (!parallel_exclude_area.empty()) {
             double exclude_min_x = std::numeric_limits<double>::max();
             for (const Vec2d& point : parallel_exclude_area)
@@ -2571,6 +2577,70 @@ void GCodeViewer::render_shells(int canvas_width, int canvas_height)
     shader->set_uniform("z_far", camera.get_far_z());
     shader->set_uniform("z_near", camera.get_near_z());
     m_shells.volumes.render(GLVolumeCollection::ERenderType::Transparent, false, camera.get_view_matrix(), camera.get_projection_matrix(), {canvas_width, canvas_height});
+
+    if (wxGetApp().is_editor() && wxGetApp().preset_bundle != nullptr) {
+        PresetBundle* preset_bundle = wxGetApp().preset_bundle;
+        const IdexPrintMode preview_mode = preset_bundle->project_config.opt_enum<IdexPrintMode>("idex_print_mode");
+        const DynamicPrintConfig& printer_config = preset_bundle->printers.get_edited_preset().config;
+        if (printer_config.opt_bool("is_idex_printer") &&
+            (preview_mode == IdexPrintMode::Mirror || preview_mode == IdexPrintMode::Parallel)) {
+            const auto* printable_area = printer_config.option<ConfigOptionPoints>("printable_area");
+            if (printable_area != nullptr && !printable_area->values.empty()) {
+                double bed_min_x = std::numeric_limits<double>::max();
+                double bed_max_x = std::numeric_limits<double>::lowest();
+                for (const Vec2d& point : printable_area->values) {
+                    bed_min_x = std::min(bed_min_x, point.x());
+                    bed_max_x = std::max(bed_max_x, point.x());
+                }
+
+                Transform3d preview_transform = Transform3d::Identity();
+                bool valid_transform = true;
+                if (preview_mode == IdexPrintMode::Mirror) {
+                    PartPlate* current_plate = wxGetApp().plater()->get_partplate_list().get_curr_plate();
+                    const double plate_offset_x = current_plate == nullptr ? 0.0 : current_plate->get_origin().x();
+                    preview_transform.matrix()(0, 0) = -1.0;
+                    preview_transform.matrix()(0, 3) = bed_min_x + bed_max_x + 2.0 * plate_offset_x;
+                } else {
+                    const auto* exclude_area = printer_config.option<ConfigOptionPoints>("bed_exclude_area_parallel_mode");
+                    if (exclude_area == nullptr || exclude_area->values.empty()) {
+                        valid_transform = false;
+                    } else {
+                        double exclude_min_x = std::numeric_limits<double>::max();
+                        for (const Vec2d& point : exclude_area->values)
+                            exclude_min_x = std::min(exclude_min_x, point.x());
+                        preview_transform.matrix()(0, 3) = bed_max_x - exclude_min_x;
+                        valid_transform = preview_transform.matrix()(0, 3) > 0.0;
+                    }
+                }
+
+                if (valid_transform) {
+                    const ColorRGBA preview_color{0.20f, 0.65f, 1.0f, 0.32f};
+                    std::vector<ColorRGBA> original_colors;
+                    original_colors.reserve(m_shells.volumes.volumes.size());
+                    for (GLVolume* volume : m_shells.volumes.volumes) {
+                        original_colors.emplace_back(volume->color);
+                        volume->color = preview_color;
+                        volume->set_render_color();
+                    }
+
+                    const bool reverse_winding = preview_transform.matrix().block(0, 0, 3, 3).determinant() < 0.0;
+                    if (reverse_winding)
+                        glFrontFace(GL_CW);
+                    m_shells.volumes.render(GLVolumeCollection::ERenderType::Transparent, false,
+                                            camera.get_view_matrix() * preview_transform, camera.get_projection_matrix(),
+                                            {canvas_width, canvas_height});
+                    if (reverse_winding)
+                        glFrontFace(GL_CCW);
+
+                    for (size_t i = 0; i < m_shells.volumes.volumes.size(); ++i) {
+                        m_shells.volumes.volumes[i]->color = original_colors[i];
+                        m_shells.volumes.volumes[i]->set_render_color();
+                    }
+                }
+            }
+        }
+    }
+
     shader->set_uniform("emission_factor", 0.0f);
     shader->stop_using();
 
