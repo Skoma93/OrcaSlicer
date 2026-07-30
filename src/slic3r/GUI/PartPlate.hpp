@@ -440,7 +440,7 @@ public:
     }
     void update_slice_ready_status(bool ready_slice)
     {
-        m_ready_for_slice = ready_slice;
+        m_ready_for_slice = ready_slice && instance_outside_set.empty();
     }
 
     //bedtype mismatch or not

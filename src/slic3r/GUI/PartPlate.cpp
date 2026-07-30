@@ -418,22 +418,30 @@ void PartPlate::calc_bounding_boxes() const {
 
     //calc exclude area bounding box
     m_exclude_bounding_box.clear();
-    BoundingBoxf3 exclude_bb;
-    for (int index = 0; index < m_exclude_area.size(); index ++) {
-		const Vec2d& p = m_exclude_area[index];
 
-		if (index % 4 == 0)
-			exclude_bb = BoundingBoxf3();
+	 auto add_area = [&](const Pointfs& area) {
+        BoundingBoxf3 exclude_bb;
 
-		exclude_bb.merge({ p(0), p(1), 0.0 });
+        for (int index = 0; index < area.size(); index++) {
+            const Vec2d& p = area[index];
 
-		if (index % 4 == 3)
-		{
-			exclude_bb.max(2) = m_depth;
-			exclude_bb.min(2) = GROUND_Z;
-			m_exclude_bounding_box.emplace_back(exclude_bb);
-		}
-	}
+            if (index % 4 == 0)
+                exclude_bb = BoundingBoxf3();
+
+            exclude_bb.merge({p(0), p(1), 0.0});
+
+            if (index % 4 == 3) {
+                exclude_bb.max(2) = m_depth;
+                exclude_bb.min(2) = GROUND_Z;
+                m_exclude_bounding_box.emplace_back(exclude_bb);
+            }
+        }
+    };
+
+     add_area(m_exclude_area);
+     add_area(m_mirror_exclude_areas);
+     add_area(m_parallel_exclude_areas);
+
 }
 
 void PartPlate::calc_triangles(const ExPolygon &poly)
@@ -2626,7 +2634,6 @@ bool PartPlate::check_outside(int obj_id, int instance_id, BoundingBoxf3* boundi
 	ModelInstance* instance = object->instances[instance_id];
 
 	BoundingBoxf3 instance_box = bounding_box? *bounding_box: object->instance_convex_hull_bounding_box(instance_id);
-	Polygon hull = instance->convex_hull_2d();
 	BoundingBoxf3 plate_box = get_plate_box();
 	if (instance_box.max.z() > plate_box.min.z())
 		plate_box.min.z() += instance_box.min.z(); // not considering outsize if sinking
@@ -2634,33 +2641,23 @@ bool PartPlate::check_outside(int obj_id, int instance_id, BoundingBoxf3* boundi
 	if (instance_box.min.z() < SINKING_Z_THRESHOLD) {
 		// Orca: For sinking object, we use a more expensive algorithm so part below build plate won't be considered
 		if (plate_box.intersects(instance_box)) {
-			// TODO: FIXME: this does not take exclusion area into account
             const BuildVolume build_volume(get_shape(), m_plater->build_volume().printable_height(), m_extruder_areas, m_extruder_heights);
 			const auto state = instance->calc_print_volume_state(build_volume);
 			outside = state == ModelInstancePVS_Partly_Outside;
 		}
 	}
-	else
-	if (plate_box.contains(instance_box))
-	{
-		if (m_exclude_bounding_box.size() > 0)
-		{
-			Polygon hull = instance->convex_hull_2d();
-			int index;
-			for (index = 0; index < m_exclude_bounding_box.size(); index ++)
-			{
-				Polygon p = m_exclude_bounding_box[index].polygon(true);  // instance convex hull is scaled, so we need to scale here
-				if (intersection({ p }, { hull }).empty() == false)
-				//if (m_exclude_bounding_box[index].intersects(instance_box))
-				{
-					break;
-				}
+	else if (plate_box.contains(instance_box))
+		outside = false;
+
+	if (!outside && !m_exclude_bounding_box.empty()) {
+		const Polygon hull = instance->convex_hull_2d();
+		for (const BoundingBoxf3 &exclude_box : m_exclude_bounding_box) {
+			const Polygon exclude_polygon = exclude_box.polygon(true);
+			if (!intersection({exclude_polygon}, {hull}).empty()) {
+				outside = true;
+				break;
 			}
-			if (index >= m_exclude_bounding_box.size())
-				outside = false;
 		}
-		else
-			outside = false;
 	}
 
 	return outside;
@@ -5846,8 +5843,13 @@ bool PartPlateList::set_shapes(const Pointfs              &shape,
 		Vec2d pos;
 
 		pos = compute_shape_position(i, m_plate_cols);
-        plate->set_shape(shape, exclude_areas, mirror_exclude_areas, parallel_exclude_areas, extruder_areas, extruder_heights, pos,
-                         height_to_lid, height_to_rod);
+        const bool shape_changed = plate->set_shape(shape, exclude_areas, mirror_exclude_areas, parallel_exclude_areas, extruder_areas,
+                                                    extruder_heights, pos, height_to_lid, height_to_rod);
+        if (shape_changed && m_plater != nullptr) {
+            for (const auto &[obj_id, instance_id] : plate->obj_to_instance_set)
+                plate->update_instance_exclude_status(obj_id, instance_id);
+            plate->update_states();
+        }
 	}
 	is_load_bedtype_textures = false; //reload textures
     is_load_extruder_only_area_textures = false; // reload textures

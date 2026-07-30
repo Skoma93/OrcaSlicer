@@ -753,7 +753,7 @@ wxString Tab::translate_category(const wxString& title, Preset::Type preset_type
 {
     if (preset_type == Preset::TYPE_PRINTER && title.Contains("Extruder ")) {
         auto preset = wxGetApp().preset_bundle;
-        if (preset && preset->is_bbl_vendor()) {
+        if (preset && (preset->is_bbl_vendor() || preset->is_cu_vendor())) {
             if (title == "Extruder 1") return _("Left Extruder");
             if (title == "Extruder 2") return _("Right Extruder");
         }

@@ -67,9 +67,20 @@
         "195x270"
     ],
 
+    "extruder_printable_area": [
+		"18x16,395x16,395x270,18x270",
+		"55x16,443x16,443x270,55x270"
+	],
+
+    "extruder_printable_height": [
+		"250",
+		"250"
+	],
+
     "is_idex_printer": "1",
     "single_extruder_multi_material": "0",
     "extruders_count": ["2"],
     "printable_height": "250"
+
 
 }

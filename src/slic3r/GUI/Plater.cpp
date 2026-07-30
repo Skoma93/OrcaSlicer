@@ -11558,7 +11558,14 @@ void Plater::priv::set_bed_shape(const Pointfs       &shape,
 
     //BBS: add shape position
     Vec2d shape_position = partplate_list.get_current_shape_position();
-    bool new_shape = bed.set_shape(shape, printable_height, extruder_areas, extruder_heights, custom_model, force_as_custom, shape_position);
+    std::vector<Pointfs> new_extruder_areas;
+
+    if (idex_print_mode == IdexPrintMode::Normal)
+    {
+        new_extruder_areas = extruder_areas;
+    }
+
+    bool new_shape = bed.set_shape(shape, printable_height, new_extruder_areas, extruder_heights, custom_model, force_as_custom, shape_position);
 
     float prev_height_lid, prev_height_rod;
     partplate_list.get_height_limits(prev_height_lid, prev_height_rod);
@@ -11589,10 +11596,13 @@ void Plater::priv::set_bed_shape(const Pointfs       &shape,
         double z = config->opt_float("printable_height");
 
         Pointfs new_mirror_exclude_area, new_parallel_exclude_area;
+        std::vector<Pointfs> new_extruder_areas;
+
 
         switch (idex_print_mode)
         {
         case IdexPrintMode::Normal:
+            new_extruder_areas = extruder_areas;
             break;
 
         case IdexPrintMode::Mirror:
@@ -11600,20 +11610,25 @@ void Plater::priv::set_bed_shape(const Pointfs       &shape,
             break;
         
         case IdexPrintMode::Parallel:
-            new_mirror_exclude_area= std::move(parallel_exclude_areas);
+            new_parallel_exclude_area= std::move(parallel_exclude_areas);
             break;
 
         case IdexPrintMode::Backup:
+            if (!extruder_areas.empty())
+                new_mirror_exclude_area = extruder_areas[0];
+
+            if (extruder_areas.size() > 1)
+                new_parallel_exclude_area = extruder_areas[1];
             break;
         }
         
         partplate_list.reset_size(max.x() - min.x() - Bed3D::Axes::DefaultTipRadius, max.y() - min.y() - Bed3D::Axes::DefaultTipRadius, z);
-        partplate_list.set_shapes(shape, exclude_areas, wrapping_exclude_areas, new_mirror_exclude_area, new_parallel_exclude_area, extruder_areas,
+        partplate_list.set_shapes(shape, exclude_areas, wrapping_exclude_areas, new_mirror_exclude_area, new_parallel_exclude_area, new_extruder_areas,
                                   extruder_heights, custom_texture, height_to_lid, height_to_rod);
 
         Vec2d new_shape_position = partplate_list.get_current_shape_position();
         if (shape_position != new_shape_position)
-            bed.set_shape(shape, printable_height, extruder_areas, extruder_heights, custom_model, force_as_custom, new_shape_position);
+            bed.set_shape(shape, printable_height, new_extruder_areas, extruder_heights, custom_model, force_as_custom, new_shape_position);
     }
 }
 
