@@ -55,16 +55,16 @@
         "18x270"
     ],
     "bed_exclude_area_mirror_mode":[
-        "175x16",
+        "210x16",
         "443x16",
         "443x270",
-        "175x270"
+        "210x270"
     ],
     "bed_exclude_area_parallel_mode":[
-        "195x16",
+        "228x16",
         "443x16",
         "443x270",
-        "195x270"
+        "228x270"
     ],
 
     "extruder_printable_area": [
