@@ -4780,6 +4780,8 @@ void TabPrinter::build()
 
     // ... and than for selected printer technology
     load_initial_data();
+    if (m_printer_technology == ptFFF && m_config->opt_bool("is_idex_printer"))
+        m_extruders_count_old = 0;
     m_printer_technology == ptSLA ? build_sla() : build_fff();
 }
 
