@@ -4,6 +4,9 @@
     "from": "system",
     "instantiation": "false",
     "inherits": "fdm_process_common",
+    "wall_generator": "classic",
+    "wall_loops": "2",
+    "support_threshold_angle": "40",
     "line_width": "0.45",
     "initial_layer_line_width": "0.45",
     "outer_wall_line_width": "0.42",
@@ -18,7 +21,6 @@
     "travel_acceleration": "2000",
     "support_line_width": "0.36",
     "bridge_flow": "0.95",
-    "host_type": "craftbotplus",
     "compatible_printers": [
       "Craftbot 3 0.4 nozzle"
     ]

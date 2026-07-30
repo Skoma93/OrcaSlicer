@@ -6,7 +6,7 @@
     "setting_id": "GM0701",
     "instantiation": "true",
     "printer_model": "Craftbot Flow WIDE XL",
-    "printer_variant": "0.8",
+    "printer_variant": "0.25",
     "nozzle_type": "brass",
     "nozzle_diameter": [
         "0.25",

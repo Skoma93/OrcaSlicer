@@ -13,7 +13,7 @@
   "internal_solid_infill_line_width": "0.85",
   "support_line_width": "0.85",
   "bridge_flow": "0.98",
-  "support_threshold_angle": "30",
+  "support_threshold_angle": "40",
   "support_top_z_distance": "0.35",
   "support_bottom_z_distance": "0.25",
   "outer_wall_speed": "40",
