@@ -48,9 +48,10 @@ function HandleModelList( pVal )
 
 	// ORCA ensure list correctly ordered
 	pModel = pModel.sort((a, b)=>(a["vendor"].localeCompare(b["vendor"])))
-	pModel = [ // move custom printers to top
+	pModel = [ // move Craftbot printers to top, followed by custom printers
+		...pModel.filter(i=>i.vendor === "Craftbot"),
 		...pModel.filter(i=>i.vendor === "Custom"),
-		...pModel.filter(i=>i.vendor !== "Custom")
+		...pModel.filter(i=>i.vendor !== "Craftbot" && i.vendor !== "Custom")
 	];
 	
 	let nTotal=pModel.length;
