@@ -2322,6 +2322,72 @@ void GCodeViewer::render_toolpaths()
 #endif // VGCODE_ENABLE_COG_AND_TOOL_MARKERS
     m_viewer.render(converted_view_matrix, converted_projetion_matrix);
 
+    IdexPrintMode preview_mode = IdexPrintMode::Normal;
+    Pointfs printable_area;
+    Pointfs parallel_exclude_area;
+    if (wxGetApp().is_editor() && wxGetApp().preset_bundle != nullptr) {
+        PresetBundle* preset_bundle = wxGetApp().preset_bundle;
+        const auto* mode_option = preset_bundle->project_config.option<ConfigOptionEnum<IdexPrintMode>>("idex_print_mode");
+        if (mode_option != nullptr)
+            preview_mode = mode_option->value;
+
+        const DynamicPrintConfig& printer_config = preset_bundle->printers.get_edited_preset().config;
+        if (const auto* area = printer_config.option<ConfigOptionPoints>("printable_area"))
+            printable_area = area->values;
+        if (const auto* area = printer_config.option<ConfigOptionPoints>("bed_exclude_area_parallel_mode"))
+            parallel_exclude_area = area->values;
+    } else if (m_gcode_result != nullptr) {
+        preview_mode = m_gcode_result->idex_print_mode;
+        printable_area = m_gcode_result->printable_area;
+        parallel_exclude_area = m_gcode_result->parallel_exclude_area;
+    }
+
+    if ((preview_mode == IdexPrintMode::Mirror || preview_mode == IdexPrintMode::Parallel) && !printable_area.empty()) {
+        double bed_min_x = std::numeric_limits<double>::max();
+        double bed_max_x = std::numeric_limits<double>::lowest();
+        for (const Vec2d& point : printable_area) {
+            bed_min_x = std::min(bed_min_x, point.x());
+            bed_max_x = std::max(bed_max_x, point.x());
+        }
+
+        Transform3d preview_transform = Transform3d::Identity();
+        bool valid_transform = true;
+        if (preview_mode == IdexPrintMode::Mirror) {
+            preview_transform.matrix()(0, 0) = -1.0;
+            preview_transform.matrix()(0, 3) = bed_min_x + bed_max_x;
+        } else if (!parallel_exclude_area.empty()) {
+            double exclude_min_x = std::numeric_limits<double>::max();
+            for (const Vec2d& point : parallel_exclude_area)
+                exclude_min_x = std::min(exclude_min_x, point.x());
+            preview_transform.matrix()(0, 3) = bed_max_x - exclude_min_x;
+            valid_transform = preview_transform.matrix()(0, 3) > 0.0;
+        } else {
+            valid_transform = false;
+        }
+
+        if (valid_transform) {
+#if VGCODE_ENABLE_COG_AND_TOOL_MARKERS
+            const bool tool_marker_visible = m_viewer.is_option_visible(libvgcode::EOptionType::ToolMarker);
+            const bool cog_marker_visible = m_viewer.is_option_visible(libvgcode::EOptionType::CenterOfGravity);
+            if (tool_marker_visible)
+                m_viewer.toggle_option_visibility(libvgcode::EOptionType::ToolMarker);
+            if (cog_marker_visible)
+                m_viewer.toggle_option_visibility(libvgcode::EOptionType::CenterOfGravity);
+#endif // VGCODE_ENABLE_COG_AND_TOOL_MARKERS
+
+            const Transform3d preview_view_matrix = camera.get_view_matrix() * preview_transform;
+            m_viewer.render(libvgcode::convert(static_cast<Matrix4f>(preview_view_matrix.matrix().cast<float>())),
+                            converted_projetion_matrix);
+
+#if VGCODE_ENABLE_COG_AND_TOOL_MARKERS
+            if (tool_marker_visible)
+                m_viewer.toggle_option_visibility(libvgcode::EOptionType::ToolMarker);
+            if (cog_marker_visible)
+                m_viewer.toggle_option_visibility(libvgcode::EOptionType::CenterOfGravity);
+#endif // VGCODE_ENABLE_COG_AND_TOOL_MARKERS
+        }
+    }
+
 #if ENABLE_NEW_GCODE_VIEWER_DEBUG
     if (is_legend_shown()) {
         ImGuiWrapper& imgui = *wxGetApp().imgui();

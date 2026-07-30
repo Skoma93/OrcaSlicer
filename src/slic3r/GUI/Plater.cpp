@@ -684,6 +684,7 @@ void Sidebar::priv::layout_printer(bool isBBL, bool isDual)
         panel_idex_mode->Show(true);
         DynamicPrintConfig& proj_config = wxGetApp().preset_bundle->project_config;
         IdexPrintMode print_mode        = proj_config.opt_enum<IdexPrintMode>("idex_print_mode");
+        combo_idex_mode->SetSelection(static_cast<int>(print_mode));
         if (print_mode == IdexPrintMode::Normal) {
             isDual = true;  
         } else {
@@ -11625,6 +11626,7 @@ void Plater::priv::set_bed_shape(const Pointfs       &shape,
         partplate_list.reset_size(max.x() - min.x() - Bed3D::Axes::DefaultTipRadius, max.y() - min.y() - Bed3D::Axes::DefaultTipRadius, z);
         partplate_list.set_shapes(shape, exclude_areas, wrapping_exclude_areas, new_mirror_exclude_area, new_parallel_exclude_area, new_extruder_areas,
                                   extruder_heights, custom_texture, height_to_lid, height_to_rod);
+        partplate_list.set_idex_print_mode(idex_print_mode);
 
         Vec2d new_shape_position = partplate_list.get_current_shape_position();
         if (shape_position != new_shape_position)
@@ -17055,7 +17057,7 @@ void Plater::set_bed_shape() const
         //BBS: add bed exclude areas
         p->config->option<ConfigOptionPoints>("bed_exclude_area")->values,
         p->config->option<ConfigOptionPoints>("wrapping_exclude_area")->values,
-        p->config->option<ConfigOptionEnum<IdexPrintMode>>("idex_print_mode")->value,
+        wxGetApp().preset_bundle->project_config.opt_enum<IdexPrintMode>("idex_print_mode"),
         p->config->option<ConfigOptionPoints>("bed_exclude_area_mirror_mode")->values,
         p->config->option<ConfigOptionPoints>("bed_exclude_area_parallel_mode")->values,
         p->config->option<ConfigOptionFloat>("printable_height")->value,

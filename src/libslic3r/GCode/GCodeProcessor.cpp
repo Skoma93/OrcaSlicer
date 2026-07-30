@@ -1589,6 +1589,7 @@ void GCodeProcessorResult::reset() {
     //BBS: add bed exclude area
     bed_exclude_area = Pointfs();
     wrapping_exclude_area = Pointfs();
+    idex_print_mode = IdexPrintMode::Normal;
     mirror_exclude_area = Pointfs();
     parallel_exclude_area = Pointfs();
     //BBS: add toolpath_outside
@@ -2133,6 +2134,10 @@ void GCodeProcessor::apply_config(const DynamicPrintConfig& config)
     const ConfigOptionPoints* wrapping_exclude_area = config.option<ConfigOptionPoints>("wrapping_exclude_area");
     if (wrapping_exclude_area != nullptr)
         m_result.wrapping_exclude_area = wrapping_exclude_area->values;
+
+    const ConfigOptionEnum<IdexPrintMode>* idex_print_mode = config.option<ConfigOptionEnum<IdexPrintMode>>("idex_print_mode");
+    if (idex_print_mode != nullptr)
+        m_result.idex_print_mode = idex_print_mode->value;
 
     const ConfigOptionPoints* mirror_exclude_area = config.option<ConfigOptionPoints>("bed_exclude_area_mirror_mode");
     if (mirror_exclude_area != nullptr)

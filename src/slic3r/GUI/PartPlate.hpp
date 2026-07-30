@@ -589,7 +589,7 @@ class PartPlateList : public ObjectBase
     Pointfs m_wrapping_exclude_areas;
     Pointfs m_mirror_exclude_areas;
     Pointfs m_parallel_exclude_areas;
-    IdexPrintMode m_idex_print_mode;
+    IdexPrintMode m_idex_print_mode{IdexPrintMode::Normal};
     std::vector<Pointfs> m_extruder_areas;
     std::vector<double> m_extruder_heights;
     BoundingBoxf3 m_bounding_box;
@@ -770,6 +770,7 @@ public:
     Pointfs get_exclude_area() { return m_exclude_areas; }
     Pointfs get_wrapping_exclude_area() const { return m_wrapping_exclude_areas; }
     IdexPrintMode get_idex_print_mode() const { return m_idex_print_mode; }
+    void set_idex_print_mode(IdexPrintMode mode) { m_idex_print_mode = mode; }
     Pointfs get_mirror_exclude_area() const { return m_mirror_exclude_areas; }
     Pointfs get_parallel_exclude_area() const { return m_parallel_exclude_areas; }
 
