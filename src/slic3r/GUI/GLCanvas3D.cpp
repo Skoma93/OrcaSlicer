@@ -8217,6 +8217,8 @@ void GLCanvas3D::_render_objects(GLVolumeCollection::ERenderType type, bool with
                 }
                 },
                 partly_inside_enable);
+            if (m_canvas_type != CanvasAssembleView)
+                _render_idex_preview(camera);
             if (m_canvas_type == CanvasAssembleView && m_gizmos.m_assemble_view_data->model_objects_clipper()->get_position() > 0) {
                 const GLGizmosManager& gm = get_gizmos_manager();
                 shader->stop_using();
@@ -8235,6 +8237,100 @@ void GLCanvas3D::_render_objects(GLVolumeCollection::ERenderType type, bool with
     }
 
     m_camera_clipping_plane = ClippingPlane::ClipsNothing();
+}
+
+void GLCanvas3D::_render_idex_preview(const Camera& camera) const
+{
+    PresetBundle* preset_bundle = wxGetApp().preset_bundle;
+    if (preset_bundle == nullptr)
+        return;
+
+    const DynamicPrintConfig& printer_config = preset_bundle->printers.get_edited_preset().config;
+    if (!printer_config.opt_bool("is_idex_printer"))
+        return;
+
+    const auto* mode_option = preset_bundle->project_config.option<ConfigOptionEnum<IdexPrintMode>>("idex_print_mode");
+    if (mode_option == nullptr || (mode_option->value != IdexPrintMode::Mirror && mode_option->value != IdexPrintMode::Parallel))
+        return;
+
+    const auto* printable_area = printer_config.option<ConfigOptionPoints>("printable_area");
+    if (printable_area == nullptr || printable_area->values.empty())
+        return;
+
+    double bed_min_x = std::numeric_limits<double>::max();
+    double bed_max_x = std::numeric_limits<double>::lowest();
+    for (const Vec2d& point : printable_area->values) {
+        bed_min_x = std::min(bed_min_x, point.x());
+        bed_max_x = std::max(bed_max_x, point.x());
+    }
+
+    double parallel_offset = 0.0;
+    if (mode_option->value == IdexPrintMode::Parallel) {
+        const auto* exclude_area = printer_config.option<ConfigOptionPoints>("bed_exclude_area_parallel_mode");
+        if (exclude_area == nullptr || exclude_area->values.empty())
+            return;
+
+        double exclude_min_x = std::numeric_limits<double>::max();
+        for (const Vec2d& point : exclude_area->values)
+            exclude_min_x = std::min(exclude_min_x, point.x());
+        parallel_offset = bed_max_x - exclude_min_x;
+        if (parallel_offset <= 0.0)
+            return;
+    }
+
+    PartPlateList& plate_list = wxGetApp().plater()->get_partplate_list();
+    GLShaderProgram* shader = wxGetApp().get_current_shader();
+    if (shader == nullptr)
+        return;
+
+    glsafe(::glEnable(GL_BLEND));
+    glsafe(::glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
+    glsafe(::glDepthMask(GL_FALSE));
+
+    const ColorRGBA preview_color{0.20f, 0.65f, 1.0f, 0.32f};
+    for (GLVolume* volume : m_volumes.volumes) {
+        if (volume == nullptr || !volume->is_active || !volume->visible || volume->is_modifier || volume->is_wipe_tower ||
+            volume->composite_id.object_id < 0 || volume->composite_id.volume_id < 0 || volume->composite_id.instance_id < 0)
+            continue;
+
+        const int plate_index = plate_list.find_instance(volume->composite_id.object_id, volume->composite_id.instance_id);
+        if (plate_index < 0)
+            continue;
+
+        Transform3d preview_transform = Transform3d::Identity();
+        if (mode_option->value == IdexPrintMode::Mirror) {
+            const double plate_offset_x = plate_list.get_plate(plate_index)->get_origin().x();
+            preview_transform.matrix()(0, 0) = -1.0;
+            preview_transform.matrix()(0, 3) = bed_min_x + bed_max_x + 2.0 * plate_offset_x;
+        } else {
+            preview_transform.matrix()(0, 3) = parallel_offset;
+        }
+
+        const Transform3d model_matrix = preview_transform * volume->world_matrix();
+        shader->set_uniform("volume_world_matrix", model_matrix);
+        shader->set_uniform("view_model_matrix", camera.get_view_matrix() * model_matrix);
+        shader->set_uniform("projection_matrix", camera.get_projection_matrix());
+        const Matrix3d view_normal_matrix = camera.get_view_matrix().matrix().block(0, 0, 3, 3) *
+                                             model_matrix.matrix().block(0, 0, 3, 3).inverse().transpose();
+        shader->set_uniform("view_normal_matrix", view_normal_matrix);
+        shader->set_uniform("slope.actived", false);
+        shader->set_uniform("print_volume.type", -1);
+
+        const bool reverse_winding = model_matrix.matrix().block(0, 0, 3, 3).determinant() < 0.0;
+        if (reverse_winding)
+            glFrontFace(GL_CW);
+
+        const ColorRGBA original_color = volume->model.get_color();
+        volume->model.set_color(preview_color);
+        volume->model.render(shader);
+        volume->model.set_color(original_color);
+
+        if (reverse_winding)
+            glFrontFace(GL_CCW);
+    }
+
+    glsafe(::glDepthMask(GL_TRUE));
+    glsafe(::glDisable(GL_BLEND));
 }
 
 //BBS: GUI refactor: add canvas size as parameters
