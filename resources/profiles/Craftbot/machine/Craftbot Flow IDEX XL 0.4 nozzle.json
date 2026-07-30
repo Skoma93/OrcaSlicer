@@ -35,38 +35,47 @@
         "0.75"
     ],
     "printable_area": [
-        "18x16",
-        "443x16",
-        "443x270",
-        "18x270"
+        "18x18",
+        "443x18",
+        "443x268",
+        "18x268"
     ],
     "bed_exclude_area": [
     ],
     "bed_exclude_area_left_mode":[
-        "395x16",
-        "443x16",
-        "443x270",
-        "395x270"
+        "395x18",
+        "443x18",
+        "443x268",
+        "395x268"
     ],
     "bed_exclude_area_right_mode":[
-        "18x16",
-        "55x16",
-        "55x270",
-        "18x270"
+        "18x18",
+        "55x18",
+        "55x268",
+        "18x268"
     ],
     "bed_exclude_area_mirror_mode":[
-        "175x16",
-        "443x16",
-        "443x270",
-        "175x270"
+        "175x18",
+        "443x18",
+        "443x268",
+        "175x268"
     ],
     "bed_exclude_area_parallel_mode":[
-        "195x16",
-        "443x16",
-        "443x270",
-        "195x270"
+        "195x18",
+        "443x18",
+        "443x268",
+        "195x268"
     ],
 
+    "extruder_printable_area": [
+        "18x18,395x18,395x268,18x268",
+        "55x18,443x18,443x268,55x268"
+    ],
+
+    "extruder_printable_height": [
+        "500",
+        "500"
+    ],
     "is_idex_printer": "1",
     "single_extruder_multi_material": "0",
     "extruders_count": ["2"],
