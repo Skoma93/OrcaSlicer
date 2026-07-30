@@ -756,7 +756,7 @@ void PrintConfigDef::init_common_params()
     def->enum_labels.push_back(L("Mirror"));
     def->enum_labels.push_back(L("Backup"));
     def->mode = comSimple;
-    def->set_default_value(new ConfigOptionEnum<IdexPrintMode>(IdexPrintMode::Mirror));
+    def->set_default_value(new ConfigOptionEnum<IdexPrintMode>(IdexPrintMode::Normal));
 
     def          = this->add("is_idex_printer", coBool);
     def->label   = L("IDEX printer");
