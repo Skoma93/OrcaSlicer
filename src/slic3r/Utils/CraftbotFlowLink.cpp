@@ -6,6 +6,7 @@
 
 #include <openssl/sha.h>
 #include <wx/string.h>
+#include <wx/secretstore.h>
 #include <boost/format.hpp>
 #include <boost/log/trivial.hpp>
 
@@ -19,9 +20,19 @@ CraftbotFlowLink::CraftbotFlowLink(DynamicPrintConfig* config)
 {
     // You can read these from config if needed
     if (config) {
-        m_host     = config->opt_string("print_host");         //"10.0.1.91";
-        m_username = config->opt_string("printhost_user");     //"craft";
-        m_password = config->opt_string("printhost_password"); //"craftunique";
+        m_host     = config->opt_string("print_host");
+        m_username = config->opt_string("printhost_user");
+        m_password = config->opt_string("printhost_password");
+    }
+    if (m_password.empty() && !m_host.empty()) {
+        wxSecretStore store = wxSecretStore::GetDefault();
+        wxString stored_user;
+        wxSecretValue secret;
+        if (store.IsOk() && store.Load(wxString::FromUTF8(credential_service(m_host)), stored_user, secret) && secret.IsOk()) {
+            if (m_username.empty())
+                m_username = stored_user.ToStdString();
+            m_password.assign(static_cast<const char*>(secret.GetData()), secret.GetSize());
+        }
     }
 }
 
@@ -30,12 +41,11 @@ const char* CraftbotFlowLink::get_name() const { return "Craftbot"; }
 bool CraftbotFlowLink::test(wxString& curl_msg) const
 {
     bool success = true;
-    auto url     = make_url("remoteupload");
+    auto url     = make_url("login");
 
     BOOST_LOG_TRIVIAL(info) << boost::format("%1%: Testing connection to %2%") % get_name() % url;
 
     auto http = Http::get(url);
-    set_auth(http);
 
     http.on_error([&](std::string body, std::string error, unsigned status) {
         curl_msg = format_error(body, error, status);
@@ -65,10 +75,6 @@ bool CraftbotFlowLink::upload(PrintHostUpload upload_data, ProgressFn progress_f
 }
 bool CraftbotFlowLink::send_file(const PrintHostUpload& upload_data, ProgressFn progress_fn, ErrorFn error_fn, InfoFn info_fn) const
 {
-    std::string pwd_sha   = calc_sha256("flow_admin_" + m_password);
-    std::string final_sha = calc_sha256("-" + m_username + "-" + pwd_sha + "-");
-    std::string auth      = base64_encode(m_username + ":" + final_sha);
-
     // Load file contents
     std::ifstream file(upload_data.source_path.string(), std::ios::binary);
     if (!file) {
@@ -89,7 +95,7 @@ bool CraftbotFlowLink::send_file(const PrintHostUpload& upload_data, ProgressFn 
     http.header("Content-Type", "application/octet-stream");
     http.header("Content-Length", std::to_string(data.size()));
     http.header("Name", upload_data.upload_path.filename().string());
-    http.header("Authorization", "Basic " + auth);
+    set_auth(http);
     http.header("Host", m_host);
     http.header("Cache-Control", "no-cache");
 
@@ -131,10 +137,6 @@ bool CraftbotFlowLink::send_file(const PrintHostUpload& upload_data, ProgressFn 
 
 bool CraftbotFlowLink::start_print(wxString& msg, const std::string& filename) const
 {
-    std::string pwd_sha   = calc_sha256("flow_admin_" + m_password);
-    std::string final_sha = calc_sha256("-" + m_username + "-" + pwd_sha + "-");
-    std::string auth      = base64_encode(m_username + ":" + final_sha);
-
     Http::set_extra_headers({{"User-Agent", "CraftWare"}});
 
     const std::string url  = "http://" + m_host + "/remotestartprint";
@@ -143,7 +145,7 @@ bool CraftbotFlowLink::start_print(wxString& msg, const std::string& filename) c
     http.remove_header("Accept");
 
     http.header("Content-Type", "application/json");
-    http.header("Authorization", "Basic " + auth);
+    set_auth(http);
     http.header("Host", m_host);
     http.header("Cache-Control", "no-cache");
 
@@ -203,10 +205,26 @@ std::string CraftbotFlowLink::base64_encode(const std::string& input) const
 
 void CraftbotFlowLink::set_auth(Http& http) const
 {
+    if (m_password.empty())
+        return;
     std::string pwd_sha   = calc_sha256("flow_admin_" + m_password);
     std::string final_sha = calc_sha256("-" + m_username + "-" + pwd_sha + "-");
     std::string auth      = base64_encode(m_username + ":" + final_sha);
     http.header("Authorization", "Basic " + auth);
+}
+
+std::string CraftbotFlowLink::credential_service(const std::string& host)
+{
+    return "OrcaSlicer Craftbot Flow " + host;
+}
+
+bool CraftbotFlowLink::save_password(const std::string& host, const std::string& username, const std::string& password)
+{
+    wxSecretStore store = wxSecretStore::GetDefault();
+    if (!store.IsOk())
+        return false;
+    return store.Save(wxString::FromUTF8(credential_service(host)), wxString::FromUTF8(username),
+                      wxSecretValue(wxString::FromUTF8(password)));
 }
 
 std::string CraftbotFlowLink::make_url(const std::string& path) const

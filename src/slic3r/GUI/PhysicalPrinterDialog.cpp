@@ -33,6 +33,8 @@
 #include "../Utils/ASCIIFolding.hpp"
 #include "../Utils/PrintHost.hpp"
 #include "../Utils/Flashforge.hpp"
+#include "../Utils/CraftbotPlusLink.hpp"
+#include "../Utils/CraftbotFlowLink.hpp"
 #include "../Utils/UndoRedo.hpp"
 #include "RemovableDriveManager.hpp"
 #include "BitmapCache.hpp"
@@ -248,6 +250,31 @@ void PhysicalPrinterDialog::build_printhost_settings(ConfigOptionsGroup* m_optgr
                         m_config->opt_string("print_host")                = printers[idx].ip_address;
                         m_config->opt_string("flashforge_serial_number") = printers[idx].serial_number;
                         update_printhost_buttons();
+                    }
+                }
+                return;
+            }
+
+            if (host_type == htCraftbotFlow || host_type == htCraftbotPlus) {
+                wxBusyCursor wait;
+                std::vector<CraftbotDiscoveredPrinter> printers;
+                wxString error_msg;
+                const bool discovered = host_type == htCraftbotFlow ?
+                    CraftbotPlusLink::discover_flow_printers(printers, error_msg) :
+                    CraftbotPlusLink::discover_printers(printers, error_msg);
+                if (!discovered) {
+                    show_error(this, error_msg);
+                    return;
+                }
+                wxArrayString choices;
+                for (const auto& printer : printers)
+                    choices.Add(from_u8((boost::format("%1% (%2%)") % printer.name % printer.ip_address).str()));
+                wxSingleChoiceDialog dialog(this, _L("Select a Craftbot printer"), _L("Discovered Printers"), choices);
+                if (dialog.ShowModal() == wxID_OK) {
+                    const int idx = dialog.GetSelection();
+                    if (idx >= 0 && idx < static_cast<int>(printers.size())) {
+                        m_optgroup->set_value("print_host", from_u8(printers[idx].ip_address), true);
+                        m_optgroup->get_field("print_host")->field_changed();
                     }
                 }
                 return;
@@ -655,6 +682,7 @@ void PhysicalPrinterDialog::update(bool printer_change)
         update_host_type(printer_change);
         const auto opt = m_config->option<ConfigOptionEnum<PrintHostType>>("host_type");
         m_optgroup->show_field("host_type");
+        m_optgroup->show_field("printer_agent");
 
         m_optgroup->enable_field("print_host");
         m_optgroup->show_field("print_host_webui");
@@ -754,13 +782,17 @@ void PhysicalPrinterDialog::update(bool printer_change)
         }
 
         if (opt->value == htCraftbotFlow) {
+            m_optgroup->hide_field("printer_agent");
             m_optgroup->hide_field("print_host_webui");
             m_optgroup->hide_field("printhost_apikey");
-            m_optgroup->disable_field("printhost_cafile");
-            m_optgroup->disable_field("printhost_ssl_ignore_revoke");
+            m_optgroup->hide_field("printhost_cafile");
+            m_optgroup->hide_field("printhost_ssl_ignore_revoke");
             m_optgroup->hide_field("printhost_authorization_type");
+            m_optgroup->show_field("printhost_user");
+            m_optgroup->show_field("printhost_password");
         } else if (opt->value == htCraftbotPlus) {
-            m_optgroup->disable_field("printhost_ssl_ignore_revoke");
+            m_optgroup->hide_field("printer_agent");
+            m_optgroup->hide_field("printhost_ssl_ignore_revoke");
             m_optgroup->hide_field("printhost_authorization_type");
             m_optgroup->hide_field("print_host_webui");
             m_optgroup->hide_field("printhost_cafile");
@@ -809,7 +841,7 @@ void PhysicalPrinterDialog::update_host_type(bool printer_change)
         return;
     Field* ht = m_optgroup->get_field("host_type");
     wxArrayString types;
-    int last_in_conf = m_config->option("host_type")->getInt(); //  this is real position in last choice
+    const int host_type = m_config->option("host_type")->getInt();
 
     // Append localized enum_labels
     assert(ht->m_opt.enum_labels.size() == ht->m_opt.enum_values.size());
@@ -820,17 +852,10 @@ void PhysicalPrinterDialog::update_host_type(bool printer_change)
 
     Choice* choice = dynamic_cast<Choice*>(ht);
     choice->set_values(types);
-    int index_in_choice = (printer_change ? std::clamp(last_in_conf - ((int)ht->m_opt.enum_values.size() - (int)types.size()), 0, (int)ht->m_opt.enum_values.size() - 1) : last_in_conf);
-    choice->set_value(index_in_choice);
-    if ("prusalink" == ht->m_opt.enum_values.at(index_in_choice))
-        m_config->set_key_value("host_type", new ConfigOptionEnum<PrintHostType>(htPrusaLink));
-    else if ("prusaconnect" == ht->m_opt.enum_values.at(index_in_choice))
-        m_config->set_key_value("host_type", new ConfigOptionEnum<PrintHostType>(htPrusaConnect));
-    else {
-        int host_type = std::clamp(index_in_choice + ((int)ht->m_opt.enum_values.size() - (int)types.size()), 0, (int)ht->m_opt.enum_values.size() - 1);
-        PrintHostType type = static_cast<PrintHostType>(host_type);
-        m_config->set_key_value("host_type", new ConfigOptionEnum<PrintHostType>(type));
-    }
+    const auto& enum_values = ConfigOptionEnum<PrintHostType>::get_enum_values();
+    const auto selected = std::find_if(ht->m_opt.enum_values.begin(), ht->m_opt.enum_values.end(),
+        [&enum_values, host_type](const std::string& key) { return enum_values.at(key) == host_type; });
+    choice->set_value(selected == ht->m_opt.enum_values.end() ? 0 : int(std::distance(ht->m_opt.enum_values.begin(), selected)));
 }
 
 void PhysicalPrinterDialog::update_printer_agent_type()
@@ -909,6 +934,15 @@ void PhysicalPrinterDialog::check_host_key_valid()
 
 void PhysicalPrinterDialog::OnOK(wxEvent& event)
 {
+    if (m_config->opt_enum<PrintHostType>("host_type") == htCraftbotFlow) {
+        std::string& password = m_config->opt_string("printhost_password");
+        if (!password.empty() && !CraftbotFlowLink::save_password(m_config->opt_string("print_host"),
+                                                                   m_config->opt_string("printhost_user"), password)) {
+            show_error(this, _L("Could not save the Craftbot Flow password in the system credential store."));
+            return;
+        }
+        password.clear();
+    }
     wxGetApp().get_tab(Preset::TYPE_PRINTER)->save_preset("", false, false, true, m_preset_name);
     event.Skip();
 

@@ -1773,11 +1773,9 @@ boost::any& Choice::get_value()
             const std::string &key = m_opt.enum_values[field->GetSelection()];
             m_value = int(m_opt.enum_keys_map->at(key));
         }
-        // Support ThirdPartyPrinter
-        else if (m_opt_id.compare("host_type") == 0 && m_opt.enum_values.size() > field->GetCount())
-        {
-            // for case, when PrusaLink isn't used as a HostType
-            m_value = field->GetSelection() + 1;
+        else if (m_opt_id == "host_type") {
+            const std::string& key = m_opt.enum_values[field->GetSelection()];
+            m_value = int(m_opt.enum_keys_map->at(key));
         }
         else
             m_value = field->GetSelection();

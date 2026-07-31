@@ -23,11 +23,12 @@ public:
     wxString                   get_test_ok_msg() const override;
     wxString                   get_test_failed_msg(wxString& msg) const override;
     bool                       upload(PrintHostUpload upload_data, ProgressFn prorgess_fn, ErrorFn error_fn, InfoFn info_fn) const override;
-    bool                       has_auto_discovery() const override { return false; }
+    bool                       has_auto_discovery() const override { return true; }
     bool                       can_test() const override { return true; }
     PrintHostPostUploadActions get_post_upload_actions() const override { return PrintHostPostUploadAction::StartPrint; }
     std::string                get_host() const override;
     std::string                make_url(const std::string& path) const;
+    static bool                save_password(const std::string& host, const std::string& username, const std::string& password);
 
 protected:
     virtual void set_auth(Http& http) const;
@@ -40,6 +41,7 @@ private:
     bool        send_file(const PrintHostUpload& upload_data, ProgressFn progress_fn, ErrorFn error_fn, InfoFn info_fn) const;
     std::string calc_sha256(const std::string& str) const;
     std::string base64_encode(const std::string& input) const;
+    static std::string credential_service(const std::string& host);
 };
 
 } // namespace Slic3r
