@@ -33,6 +33,14 @@ SCENARIO("set_speed emits values with fixed-point output.", "[GCodeWriter]") {
     }
 }
 
+SCENARIO("Craftbot Flow uses its native acceleration command", "[GCodeWriter]") {
+    GCodeWriter writer;
+    writer.config.gcode_flavor.value = gcfCraftbotFlow;
+
+    REQUIRE_THAT(writer.set_print_acceleration(1200), Catch::Matchers::Equals("M1203 A1200 D1200\n"));
+    REQUIRE_THAT(writer.set_travel_acceleration(1500), Catch::Matchers::Equals("M1203 A1500 D1500\n"));
+}
+
 SCENARIO("z_hop lifts the nozzle when a lift is requested", "[GCodeWriter]") {
     GIVEN("A writer with the nozzle parked at Z = 10") {
         GCodeWriter writer;

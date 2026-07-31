@@ -287,6 +287,10 @@ std::string GCodeWriter::set_acceleration_internal(Acceleration type, unsigned i
     std::ostringstream gcode;
     if (FLAVOR_IS(gcfRepetier))
         gcode << (separate_travel ? "M202 X" : "M201 X") << acceleration << " Y" << acceleration;
+    else if (FLAVOR_IS(gcfCraftbotFlow))
+        // Craftbot Flow firmware does not support M204. M1203's F parameter is
+        // the minimum-acceleration feed, which is independent of this value.
+        gcode << "M1203 A" << acceleration << " D" << acceleration;
     else if (FLAVOR_IS(gcfRepRapFirmware) || FLAVOR_IS(gcfMarlinFirmware))
         gcode << (separate_travel ? "M204 T" : "M204 P") << acceleration;
     else if (FLAVOR_IS(gcfKlipper)) {
