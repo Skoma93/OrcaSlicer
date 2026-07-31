@@ -22,7 +22,7 @@
     "bottom_shell_layers": "4",
     "bottom_shell_thickness": "0.5",
     "sparse_infill_density": "15%",
-    "sparse_infill_pattern": "crosshatch",
+    "sparse_infill_pattern": "rectilinear",
     "infill_wall_overlap": "23%",
     "infill_direction": "45",
     "minimum_sparse_infill_area": "15",

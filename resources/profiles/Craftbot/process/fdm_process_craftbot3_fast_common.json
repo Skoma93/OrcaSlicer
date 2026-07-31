@@ -12,7 +12,7 @@
     "outer_wall_acceleration": "1700",
     "bridge_acceleration": "1500",
     "sparse_infill_density": "10%",
-    "sparse_infill_pattern": "crosshatch",
+    "sparse_infill_pattern": "rectilinear",
     "initial_layer_acceleration": "2000",
     "gap_infill_speed": "120",
     "sparse_infill_speed": "100",
