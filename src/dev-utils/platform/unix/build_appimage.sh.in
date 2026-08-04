@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
+set -euo pipefail
+
 APPIMAGETOOLURL="https://github.com/AppImage/appimagetool/releases/download/continuous/appimagetool-$(uname -m).AppImage"
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
-REPO_ROOT="$(cd -- "${SCRIPT_DIR}/../../.." && pwd)"
+REPO_ROOT="$(cd -- "${SCRIPT_DIR}/.." && pwd)"
 
 
 APP_IMAGE="@SLIC3R_APP_KEY@_Linux_V@SoftFever_VERSION@.AppImage"
@@ -16,9 +18,14 @@ fi
 mv @SLIC3R_APP_CMD@ AppRun
 chmod +x AppRun
 
-cp resources/images/@SLIC3R_APP_KEY@_192px.png @SLIC3R_APP_KEY@.png
+ICON_SOURCE="resources/images/@SLIC3R_APP_KEY@_192px.png"
+if [ ! -f "${ICON_SOURCE}" ]; then
+  ICON_SOURCE="resources/images/OrcaSlicer_192px.png"
+fi
+test -f "${ICON_SOURCE}"
+cp "${ICON_SOURCE}" @SLIC3R_APP_KEY@.png
 mkdir -p usr/share/icons/hicolor/192x192/apps
-cp resources/images/@SLIC3R_APP_KEY@_192px.png usr/share/icons/hicolor/192x192/apps/@SLIC3R_APP_KEY@.png
+cp "${ICON_SOURCE}" usr/share/icons/hicolor/192x192/apps/@SLIC3R_APP_KEY@.png
 cat <<EOF > com.orcaslicer.@SLIC3R_APP_KEY@.desktop
 [Desktop Entry]
 Name=@SLIC3R_APP_KEY@
@@ -35,18 +42,23 @@ mkdir -p usr/share/applications
 cp com.orcaslicer.@SLIC3R_APP_KEY@.desktop usr/share/applications/
 
 mkdir -p usr/share/metainfo
-cp "${REPO_ROOT}/scripts/flatpak/com.orcaslicer.@SLIC3R_APP_KEY@.metainfo.xml" \
+METAINFO_SOURCE="${REPO_ROOT}/scripts/flatpak/com.orcaslicer.@SLIC3R_APP_KEY@.metainfo.xml"
+if [ ! -f "${METAINFO_SOURCE}" ]; then
+  METAINFO_SOURCE="${REPO_ROOT}/scripts/flatpak/com.orcaslicer.OrcaSlicer.metainfo.xml"
+fi
+test -f "${METAINFO_SOURCE}"
+cp "${METAINFO_SOURCE}" \
   "usr/share/metainfo/com.orcaslicer.@SLIC3R_APP_KEY@.metainfo.xml"
-cp "${REPO_ROOT}/scripts/flatpak/com.orcaslicer.@SLIC3R_APP_KEY@.metainfo.xml" \
+cp "${METAINFO_SOURCE}" \
   "usr/share/metainfo/com.orcaslicer.@SLIC3R_APP_KEY@.appdata.xml"
 
 
 export ARCH=$(uname -m)
 
 if [ -f /.dockerenv ] ; then # Only run if inside of a Docker Container
-  ../appimagetool.AppImage --appimage-extract-and-run . $([ -n "${container}" ] && echo '--appimage-extract-and-run')
+  ../appimagetool.AppImage --appimage-extract-and-run . $([ -n "${container:-}" ] && echo '--appimage-extract-and-run')
 else
-  ../appimagetool.AppImage . $([ -n "${container}" ] && echo '--appimage-extract-and-run')
+  ../appimagetool.AppImage . $([ -n "${container:-}" ] && echo '--appimage-extract-and-run')
 fi
 
 mv @SLIC3R_APP_KEY@-$(uname -m).AppImage ${APP_IMAGE}

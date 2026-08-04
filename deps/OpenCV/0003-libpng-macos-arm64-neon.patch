@@ -1,0 +1,10 @@
+--- a/3rdparty/libpng/CMakeLists.txt
++++ b/3rdparty/libpng/CMakeLists.txt
+@@ -28,6 +28,6 @@ file(GLOB lib_hdrs *.h)
+-if(ARM OR AARCH64)
++if(ARM OR AARCH64 OR (APPLE AND CMAKE_OSX_ARCHITECTURES MATCHES "arm64"))
+   if(ENABLE_NEON)
+     if(NOT AARCH64)
+       list(APPEND lib_srcs arm/filter_neon.S)
+     endif()
+     list(APPEND lib_srcs arm/arm_init.c arm/filter_neon_intrinsics.c arm/palette_neon_intrinsics.c)
