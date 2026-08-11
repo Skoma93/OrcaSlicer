@@ -11626,11 +11626,32 @@ void Plater::priv::set_bed_shape(const Pointfs       &shape,
             break;
 
         case IdexPrintMode::Backup:
-            if (!extruder_areas.empty())
-                new_mirror_exclude_area = extruder_areas[0];
+            // A backup print must be reachable by both extruders. Exclude the
+            // right side that the left extruder cannot reach and the left side
+            // that the right extruder cannot reach.
+            if (extruder_areas.size() > 1) {
+                const BoundingBoxf bed_bbox(shape);
+                const BoundingBoxf left_extruder_bbox(extruder_areas[0]);
+                const BoundingBoxf right_extruder_bbox(extruder_areas[1]);
 
-            if (extruder_areas.size() > 1)
-                new_parallel_exclude_area = extruder_areas[1];
+                if (left_extruder_bbox.max.x() < bed_bbox.max.x()) {
+                    new_mirror_exclude_area = {
+                        {left_extruder_bbox.max.x(), bed_bbox.min.y()},
+                        {bed_bbox.max.x(), bed_bbox.min.y()},
+                        {bed_bbox.max.x(), bed_bbox.max.y()},
+                        {left_extruder_bbox.max.x(), bed_bbox.max.y()}
+                    };
+                }
+
+                if (right_extruder_bbox.min.x() > bed_bbox.min.x()) {
+                    new_parallel_exclude_area = {
+                        {bed_bbox.min.x(), bed_bbox.min.y()},
+                        {right_extruder_bbox.min.x(), bed_bbox.min.y()},
+                        {right_extruder_bbox.min.x(), bed_bbox.max.y()},
+                        {bed_bbox.min.x(), bed_bbox.max.y()}
+                    };
+                }
+            }
             break;
         }
         
