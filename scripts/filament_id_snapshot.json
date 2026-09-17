@@ -1,5 +1,117 @@
 {
  "ids": {
+  "GFB98": {
+   "filaments": [
+    "Craftbot/Craftbot Generic ASA",
+    "Craftbot/Craftbot Generic ASA 0.25 nozzle"
+   ],
+   "name": "Craftbot Generic ASA",
+   "filament_type": "ASA",
+   "filament_vendor": "Generic"
+  },
+  "GFB99": {
+   "filaments": [
+    "Craftbot/Craftbot Generic ABS",
+    "Craftbot/Craftbot Generic ABS 0.25 nozzle"
+   ],
+   "name": "Craftbot Generic ABS",
+   "filament_type": "ABS",
+   "filament_vendor": "Generic"
+  },
+  "GFC99": {
+   "filaments": [
+    "Craftbot/Craftbot Generic PC",
+    "Craftbot/Craftbot Generic PC 0.25 nozzle"
+   ],
+   "name": "Craftbot Generic PC",
+   "filament_type": "PC",
+   "filament_vendor": "Generic"
+  },
+  "GFG98": {
+   "filaments": [
+    "Craftbot/Craftbot Generic PETG-CF"
+   ],
+   "name": "Craftbot Generic PETG-CF",
+   "filament_type": "PETG-CF",
+   "filament_vendor": "Generic"
+  },
+  "GFG99": {
+   "filaments": [
+    "Craftbot/Craftbot Generic PETG",
+    "Craftbot/Craftbot Generic PETG 0.25 nozzle"
+   ],
+   "name": "Craftbot Generic PETG",
+   "filament_type": "PETG",
+   "filament_vendor": "Generic"
+  },
+  "GFL95": {
+   "filaments": [
+    "Craftbot/Craftbot Generic PLA+",
+    "Craftbot/Craftbot Generic PLA+ 0.25 nozzle"
+   ],
+   "name": "Craftbot Generic PLA+",
+   "filament_type": "PLA",
+   "filament_vendor": "Generic"
+  },
+  "GFL96": {
+   "filaments": [
+    "Craftbot/Craftbot Generic PLA Silk",
+    "Craftbot/Craftbot Generic PLA Silk 0.25 nozzle"
+   ],
+   "name": "Craftbot Generic PLA Silk",
+   "filament_type": "PLA",
+   "filament_vendor": "Generic"
+  },
+  "GFL98": {
+   "filaments": [
+    "Craftbot/Craftbot Generic PLA-CF"
+   ],
+   "name": "Craftbot Generic PLA-CF",
+   "filament_type": "PLA-CF",
+   "filament_vendor": "Generic"
+  },
+  "GFL99": {
+   "filaments": [
+    "Craftbot/Craftbot Generic PLA",
+    "Craftbot/Craftbot Generic PLA 0.25 nozzle"
+   ],
+   "name": "Craftbot Generic PLA",
+   "filament_type": "PLA",
+   "filament_vendor": "Generic"
+  },
+  "GFN98": {
+   "filaments": [
+    "Craftbot/Craftbot Generic PA-CF"
+   ],
+   "name": "Craftbot Generic PA-CF",
+   "filament_type": "PA-CF",
+   "filament_vendor": "Generic"
+  },
+  "GFN99": {
+   "filaments": [
+    "Craftbot/Craftbot Generic PA",
+    "Craftbot/Craftbot Generic PA 0.25 nozzle"
+   ],
+   "name": "Craftbot Generic PA",
+   "filament_type": "PA",
+   "filament_vendor": "Generic"
+  },
+  "GFS99": {
+   "filaments": [
+    "Craftbot/Craftbot Generic PVA"
+   ],
+   "name": "Craftbot Generic PVA",
+   "filament_type": "PVA",
+   "filament_vendor": "Generic"
+  },
+  "GFU99": {
+   "filaments": [
+    "Craftbot/Craftbot Generic TPU"
+   ],
+   "name": "Craftbot Generic TPU",
+   "filament_type": "TPU",
+   "filament_vendor": "Generic"
+  },
   "OF02UAVh": {
    "filaments": [
     "Creality/Soleyin Ultra PLA"

@@ -84,10 +84,11 @@ setting_id policy (see AGENTS.md "Critical Constraints"):
     vendor + type + name, which "check" flags.
   * Only instantiated presets (instantiation == "true") carry a setting_id;
     base / template profiles do not.
-  * Bambu (BBL) owns the authoritative "G*" setting_id space and is the only
-    reserved vendor: its setting_ids are never rewritten, which keeps
-    Bambu-synced presets backward compatible. That exemption is setting_id's
-    alone — BBL's filament_ids are minted like every other vendor's.
+  * Bambu (BBL) and the Craftbot fork own authoritative legacy setting_id
+    spaces. Their setting_ids are never rewritten, which keeps synced Bambu
+    presets and earlier Craftbot projects backward compatible. BBL filament_ids
+    are still minted normally; Craftbot's legacy filament_ids are snapshot-
+    guarded instead of re-minted.
 
 The effective-id resolution below is loader-faithful (PresetBundle.cpp
 load_vendor_configs_from_json): own filament_id key, else walk `inherits` within
@@ -129,9 +130,15 @@ BAMBU_MAP_PATH = os.path.normpath(
 
 OFL = "OrcaFilamentLibrary"
 
-# Bambu (BBL) is the only vendor exempt from the setting_id rule: it keeps its
-# authoritative "G*" cloud ids. No vendor is exempt from the filament_id rule.
-RESERVED_VENDORS = {"BBL"}
+# Bambu (BBL) and the Craftbot fork keep their authoritative legacy setting ids.
+# Replacing Craftbot's ids would break references stored by earlier releases.
+RESERVED_VENDORS = {"BBL", "Craftbot"}
+
+# Craftbot filament ids predate the deterministic OF namespace and are persisted
+# in existing projects. They remain subject to snapshot, uniqueness and triple
+# integrity checks; only format/mint enforcement and automatic rewriting are
+# skipped. BBL is deliberately not included: its filament profiles use OF ids.
+LEGACY_FILAMENT_ID_VENDORS = {"Craftbot"}
 
 # The profile types that carry a setting_id; the subdir name is also the type
 # name, matching Preset::get_type_string() on the C++ side.
@@ -616,7 +623,9 @@ def check_filament_ids(profiles_dir=PROFILES_DIR, snapshot_path=SNAPSHOT_PATH,
     """Validate filament_id state across every vendor. Returns the error count.
 
     1. Format: every id occurring in the tree (declared or effective) must
-       match ^OF[0-9A-Za-z]{6}$. No exceptions: not the snapshot, not BBL.
+       match ^OF[0-9A-Za-z]{6}$, except compatibility-preserved ids in
+       LEGACY_FILAMENT_ID_VENDORS. Legacy ids still require an exact snapshot
+       entry and pass all remaining integrity checks.
     2. Snapshot equality, both directions: every id in the tree, the filaments
        claiming it and the triple its declarers resolve must equal the snapshot
        entry exactly (the snapshot diff is the maintainer gate).
@@ -637,7 +646,8 @@ def check_filament_ids(profiles_dir=PROFILES_DIR, snapshot_path=SNAPSHOT_PATH,
        each Bambu id at most once, and for every row whose key the tree claims,
        the tree's triple for that id must equal the row's (vendor, type, name).
 
-    Nothing is grandfathered: the snapshot sanctions state, never exceptions.
+    Nothing outside LEGACY_FILAMENT_ID_VENDORS is grandfathered: the snapshot
+    sanctions state, never exceptions.
     """
     _utf8_console()
     errors = 0
@@ -656,7 +666,7 @@ def check_filament_ids(profiles_dir=PROFILES_DIR, snapshot_path=SNAPSHOT_PATH,
     # -- 1. format ----------------------------------------------------------
     for vendor in sorted(analysis["vendor_ids"]):
         for fid in sorted(analysis["vendor_ids"][vendor]):
-            if OF_ID_RE.match(fid):
+            if OF_ID_RE.match(fid) or vendor in LEGACY_FILAMENT_ID_VENDORS:
                 continue
             print_error(
                 f'filament_id "{fid}" ({vendor}) is not a minted "OF" id; new '
@@ -713,7 +723,8 @@ def check_filament_ids(profiles_dir=PROFILES_DIR, snapshot_path=SNAPSHOT_PATH,
     for vendor, rec, fid, triple in sorted(
             analysis["declarer_triples"], key=lambda x: (x[0], x[1]["file"])):
         want = generate_filament_id(*triple)
-        if not OF_ID_RE.match(fid) or fid == want:
+        if (not OF_ID_RE.match(fid) or fid == want
+                or vendor in LEGACY_FILAMENT_ID_VENDORS):
             continue  # a non-OF id is check 1's error
         print_error(
             f'filament_id "{fid}" declared by "{rec["name"]}" ({rec["file"]}) does '
@@ -854,18 +865,19 @@ def check_setting_id_uniqueness(profiles_dir):
       1. Every instantiated preset must HAVE a setting_id.            (all vendors)
       2. A stored setting_id must equal generate_preset_setting_id(vendor, type,
          name); a stale value means the JSON was edited without rerunning
-         generate-id.               (all vendors EXCEPT the reserved ones, i.e. BBL)
+         generate-id.               (all vendors EXCEPT the reserved ones)
       3. Base profiles (instantiation != "true") must not carry a setting_id.
-      4. setting_id must be globally unique - no two files may share one.
+      4. setting_id must be globally unique, except that distinct reserved
+         vendor namespaces may retain a colliding legacy id.
       5. No profile may use the misspelled key "settings_id".
 
     Cross-vendor by nature (rule 4), so it always runs over the whole tree, never
-    narrowed by --vendor. BBL keeps its authoritative "G*" cloud ids, which the
-    formula does not produce, so only rule 2 is skipped for it; it is still held to
-    presence, uniqueness, base-no-id and the typo check.
+    narrowed by --vendor. Reserved vendors keep their authoritative legacy ids,
+    which the formula does not produce, so only rule 2 is skipped for them; they
+    are still held to presence, uniqueness, base-no-id and the typo check.
     """
     errors = 0
-    owners = {}  # setting_id -> [relative path], every vendor
+    owners = {}  # setting_id -> [(vendor, relative path)], every vendor
     for vendor in list_profile_dirs(profiles_dir):
         formula_exempt = vendor in RESERVED_VENDORS
         for path, sub in iter_profile_files(os.path.join(profiles_dir, vendor)):
@@ -909,13 +921,20 @@ def check_setting_id_uniqueness(profiles_dir):
                         f'"{expected}" for {vendor}/{sub}/{data.get("name", "")}; '
                         f"run {SETTING_ID_CMD}")
                     continue
-            owners.setdefault(sid, []).append(rel)
+            owners.setdefault(sid, []).append((vendor, rel))
 
-    # Rule 4: a setting_id shared by two files is an error. For managed vendors that
-    # means a duplicate vendor/type/name; for BBL a copy-pasted id.
-    for sid, locs in sorted(owners.items()):
-        if len(locs) < 2:
+    # Rule 4: a setting_id shared by two files is normally an error. Distinct
+    # reserved vendors may retain a legacy collision because rewriting either
+    # namespace would invalidate references persisted by earlier releases. A
+    # duplicate within one reserved vendor remains an error.
+    for sid, entries in sorted(owners.items()):
+        if len(entries) < 2:
             continue
+        vendors = [vendor for vendor, _rel in entries]
+        if (all(vendor in RESERVED_VENDORS for vendor in vendors)
+                and len(set(vendors)) == len(vendors)):
+            continue
+        locs = [rel for _vendor, rel in entries]
         errors += 1
         print_error(f'setting_id "{sid}" is shared by {len(locs)} files ({sorted(locs)}); '
                     f"setting_id must be globally unique")
@@ -1680,7 +1699,8 @@ def generate_filament_ids(profiles_dir=PROFILES_DIR, vendors=None, dry_run=False
                           changed_paths=None):
     """Make every filament carry the id its own triple mints.
 
-    One rule, applied to declarations and to id-less filaments alike:
+    One rule, applied to declarations and to id-less filaments alike, except
+    compatibility-preserved vendors in LEGACY_FILAMENT_ID_VENDORS:
       * a declared id that is not the one its own triple mints — a wrong OF id,
         or a foreign one such as a Bambu catalog id arriving with an upstream
         sync — is replaced in place;
@@ -1736,7 +1756,8 @@ def generate_filament_ids(profiles_dir=PROFILES_DIR, vendors=None, dry_run=False
     for vendor, rec, fid, triple in sorted(
             analysis["declarer_triples"], key=lambda x: (x[0], x[1]["file"])):
         want = generate_filament_id(*triple)
-        if (fid == want or (wanted is not None and vendor not in wanted)
+        if (vendor in LEGACY_FILAMENT_ID_VENDORS or fid == want
+                or (wanted is not None and vendor not in wanted)
                 or triple in colliding):
             continue
         missing = _incomplete_triple(triple)
@@ -1766,7 +1787,8 @@ def generate_filament_ids(profiles_dir=PROFILES_DIR, vendors=None, dry_run=False
     # 2. Instantiated filaments that resolve no id at all, grouped by filament.
     filaments = {}  # (vendor, filament name) -> [rec]
     for vendor, name, _file in analysis["missing_effective"]:
-        if wanted is not None and vendor not in wanted:
+        if (vendor in LEGACY_FILAMENT_ID_VENDORS
+                or (wanted is not None and vendor not in wanted)):
             continue
         rec = analysis["vendors"][vendor][name]
         if rec["id_source"] in ("cycle", "dangling"):
@@ -1839,8 +1861,8 @@ def generate_setting_ids(profiles_dir=PROFILES_DIR, vendors=None, dry_run=False,
     one composite edit per file: drop the misspelled "settings_id" key (the app
     never reads it), strip setting_id from base profiles (only instantiated
     presets carry one), and set generate_preset_setting_id(vendor, type, name) on
-    instantiated presets — except BBL's, which keep their authoritative "G*"
-    cloud ids. `changed_paths`, when a set is passed, collects the files that
+    instantiated presets — except reserved vendors, which keep their authoritative
+    legacy ids. `changed_paths`, when a set is passed, collects the files that
     changed. Returns (files_changed, errors).
     """
     _utf8_console()
@@ -1856,7 +1878,7 @@ def generate_setting_ids(profiles_dir=PROFILES_DIR, vendors=None, dry_run=False,
             return 0, len(unknown)
         names = [v for v in names if v in wanted]
         for v in sorted(wanted & RESERVED_VENDORS):
-            print_info(f'{v} keeps its authoritative "G*" setting_ids; only its base '
+            print_info(f'{v} keeps its authoritative legacy setting_ids; only its base '
                        f"declarations are stripped")
 
     verb = "would " if dry_run else ""

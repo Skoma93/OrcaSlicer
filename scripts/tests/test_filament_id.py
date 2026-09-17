@@ -450,6 +450,26 @@ class TestChecks(OfCleanTreeCase):
         self.assertIn('is not a minted "OF" id', out)
         self.assertIn("BOGUS_9", out)
 
+    def test_craftbot_snapshot_guarded_legacy_id_is_preserved(self):
+        legacy_id = "GFCB01"
+        self.t.add_vendor("Craftbot", [
+            preset("Craftbot PLA @base", filament_id=legacy_id,
+                   instantiation=False, filament_vendor="Craftbot",
+                   filament_type="PLA"),
+            preset("Craftbot PLA", inherits="Craftbot PLA @base",
+                   compatible_printers=["Craftbot Flow 0.4 nozzle"]),
+        ])
+        rc, out = self.t.update_snapshot()
+        self.assertEqual(rc, 0, out)
+        before = self.t.bytes_map()
+
+        errors, out = self.t.check()
+        self.assertEqual(errors, 0, out)
+        changed, errors, out = self.t.remint(["Craftbot"])
+        self.assertEqual((changed, errors), (0, 0), out)
+        self.assertEqual(self.t.bytes_map(), before)
+        self.assertEqual(afi.LEGACY_FILAMENT_ID_VENDORS, {"Craftbot"})
+
     def test_check2_new_claim_needs_snapshot_update(self):
         self.t.write_preset("VendorA", preset("ANEW @P2", inherits="APLA @base",
                                               compatible_printers=["P2"]))

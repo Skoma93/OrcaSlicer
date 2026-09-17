@@ -454,8 +454,32 @@ class TestAssignment(SettingTreeCase):
                          afi.generate_preset_setting_id("VendorA", "filament", "A PLA @P1"))
 
     def test_reserved_vendors_constant(self):
-        self.assertEqual(afi.RESERVED_VENDORS, {"BBL"})
+        self.assertEqual(afi.RESERVED_VENDORS, {"BBL", "Craftbot"})
         self.assertEqual(afi.PROFILE_SUBDIRS, ("filament", "process", "machine"))
+
+    def test_craftbot_legacy_setting_id_is_preserved_and_valid(self):
+        self.t.write("Craftbot", "filament",
+                     preset("Craftbot PLA", setting_id="GFSL99"))
+        before = self.t.raw("Craftbot", "filament", "Craftbot PLA")
+
+        changed, errors, out = self.t.run(vendors=["Craftbot"])
+
+        self.assertEqual((changed, errors), (0, 0), out)
+        self.assertEqual(self.t.raw("Craftbot", "filament", "Craftbot PLA"), before)
+        buf = io.StringIO()
+        with contextlib.redirect_stdout(buf):
+            validation_errors = afi.check_setting_id_uniqueness(self.t.profiles)
+        self.assertEqual(validation_errors, 0, buf.getvalue())
+
+    def test_distinct_reserved_namespaces_may_keep_one_legacy_id(self):
+        shared = "GFSL99"
+        self.t.write("BBL", "filament", preset("Generic PLA", setting_id=shared))
+        self.t.write("Craftbot", "filament",
+                     preset("Craftbot Generic PLA", setting_id=shared))
+        buf = io.StringIO()
+        with contextlib.redirect_stdout(buf):
+            errors = afi.check_setting_id_uniqueness(self.t.profiles)
+        self.assertEqual(errors, 0, buf.getvalue())
 
 
 # ---------------------------------------------------------------------------
