@@ -265,7 +265,10 @@ orientation::OrientMesh OrientJob::get_orient_mesh(ModelInstance* instance)
 {
     using OrientMesh = orientation::OrientMesh;
     OrientMesh om;
-    auto obj = instance->get_object();
+    ModelObject* obj = instance->get_object();
+    const auto instance_it = std::find(obj->instances.begin(), obj->instances.end(), instance);
+    assert(instance_it != obj->instances.end());
+    const size_t instance_idx = std::distance(obj->instances.begin(), instance_it);
     om.name = obj->name;
     om.mesh = obj->mesh(); // don't know the difference to obj->raw_mesh(). Both seem OK
     const Slic3r::DynamicPrintConfig& config = wxGetApp().preset_bundle->full_config();
@@ -291,11 +294,16 @@ orientation::OrientMesh OrientJob::get_orient_mesh(ModelInstance* instance)
         }
     }
 
-    om.setter = [instance](const OrientMesh& p) {
+    om.setter = [obj, instance_idx](const OrientMesh& p) {
+        ModelInstance* instance = obj->instances[instance_idx];
         instance->rotate(p.rotation_matrix);
         instance->rotate(p.rotation_matrix_vertical);
-        instance->get_object()->invalidate_bounding_box();
-        instance->get_object()->ensure_on_bed();
+        obj->invalidate_bounding_box();
+
+        // Auto orient is an explicit placement command, so it must put the
+        // oriented instance on the bed even when automatic dropping is disabled.
+        const double min_z = obj->instance_bounding_box(instance_idx).min.z();
+        obj->translate_instance(instance_idx, -min_z * Vec3d::UnitZ());
     };
     return om;
 }
